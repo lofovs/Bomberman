@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2;
+package no.uib.inf101.sem2.bomberman.view;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
