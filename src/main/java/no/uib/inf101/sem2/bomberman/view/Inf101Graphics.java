@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.view;
+package no.uib.inf101.sem2.bomberman.view;
 
 // University of Bergen INF101 helper methods for graphics with Swing.
 // Methods for drawing images are adapted with permission from
@@ -36,8 +36,8 @@ public class Inf101Graphics {
    */
   public static void drawCenteredString(Graphics g, String s, double x, double y) {
     FontMetrics metrics = g.getFontMetrics();
-    double txtX = x - ((double) metrics.stringWidth(s))/2;
-    double txtY = y - ((double) metrics.getHeight())/2 + metrics.getAscent();
+    double txtX = x - ((double) metrics.stringWidth(s)) / 2;
+    double txtY = y - ((double) metrics.getHeight()) / 2 + metrics.getAscent();
     g.drawString(s, (int) Math.round(txtX), (int) Math.round(txtY));
   }
 
@@ -59,16 +59,16 @@ public class Inf101Graphics {
    * rectangle, it will overflow. If the width and the height are 0, the
    * string will be centered around the x and y coordinates.
    *
-   * @param g The graphics context to draw on
-   * @param s The string to draw
-   * @param x The left edge of the rectangle
-   * @param y The top edge of the rectangle
-   * @param width The width of the rectangle
+   * @param g      The graphics context to draw on
+   * @param s      The string to draw
+   * @param x      The left edge of the rectangle
+   * @param y      The top edge of the rectangle
+   * @param width  The width of the rectangle
    * @param height The height of the rectangle
    */
   public static void drawCenteredString(Graphics g, String s, double x, double y,
-                                        double width, double height) {
-    drawCenteredString(g, s, x + width/2, y + height/2);
+      double width, double height) {
+    drawCenteredString(g, s, x + width / 2, y + height / 2);
   }
 
   /**
@@ -77,8 +77,8 @@ public class Inf101Graphics {
    * bounding box of the shape. If the string is too wide or to tall to
    * fit within the bounds, it will overflow.
    *
-   * @param g The graphics context to draw on
-   * @param s The string to draw
+   * @param g     The graphics context to draw on
+   * @param s     The string to draw
    * @param shape in whose bounding box the string will be centered
    */
   public static void drawCenteredString(Graphics g, String s, Shape shape) {
@@ -93,68 +93,68 @@ public class Inf101Graphics {
   /**
    * Draw the given image rotated and scaled with a top-left at x,y
    *
-   * @param g The graphics context to draw on
-   * @param image The image to draw
-   * @param x The x coordinate of the top-left corner
-   * @param y The y coordinate of the top-left corner
-   * @param scale The scale factor (1.0 is 100%)
+   * @param g       The graphics context to draw on
+   * @param image   The image to draw
+   * @param x       The x coordinate of the top-left corner
+   * @param y       The y coordinate of the top-left corner
+   * @param scale   The scale factor (1.0 is 100%)
    * @param radians The angle to rotate the image in radians
    */
   public static void drawImage(Graphics g, Image image, double x, double y,
-                               double scale, double radians) {
-    double imageWidth  = image.getWidth(null);
+      double scale, double radians) {
+    double imageWidth = image.getWidth(null);
     double imageHeight = image.getHeight(null);
     Dimension2D newSize = getImageSize(image, scale, radians);
     AffineTransform transform = new AffineTransform();
-    transform.translate(x+newSize.getWidth()/2,y+newSize.getHeight()/2); // last (not first!)
+    transform.translate(x + newSize.getWidth() / 2, y + newSize.getHeight() / 2); // last (not first!)
     transform.rotate(radians);
-    transform.scale(scale,scale);
-    transform.translate(-imageWidth/2, -imageHeight/2);  // first
-    ((Graphics2D)g).drawImage(image,transform,null);
+    transform.scale(scale, scale);
+    transform.translate(-imageWidth / 2, -imageHeight / 2); // first
+    ((Graphics2D) g).drawImage(image, transform, null);
   }
 
   /**
    * Draw the given image scaled with a top-left at x,y
    *
-   * @param g The graphics context to draw on
+   * @param g     The graphics context to draw on
    * @param image The image to draw
-   * @param x The x coordinate of the top-left corner
-   * @param y The y coordinate of the top-left corner
+   * @param x     The x coordinate of the top-left corner
+   * @param y     The y coordinate of the top-left corner
    * @param scale The scale factor (1.0 is 100%)
    */
   public static void drawImage(Graphics g, Image image, double x, double y,
-                               double scale) {
+      double scale) {
     Inf101Graphics.drawImage(g, image, x, y, scale, 0);
   }
 
   /**
    * Draw the given image rotated and scaled with a center at x,y
    *
-   * @param g The graphics context to draw on
-   * @param image The image to draw
-   * @param cx The x coordinate of the center
-   * @param cy The y coordinate of the center
-   * @param scale The scale factor (1.0 is 100%)
+   * @param g       The graphics context to draw on
+   * @param image   The image to draw
+   * @param cx      The x coordinate of the center
+   * @param cy      The y coordinate of the center
+   * @param scale   The scale factor (1.0 is 100%)
    * @param radians The angle to rotate the image in radians
    */
   public static void drawCenteredImage(Graphics g, Image image, double cx, double cy,
-                                       double scale, double radians) {
+      double scale, double radians) {
     Dimension2D newSize = getImageSize(image, scale, radians);
-    drawImage(g, image, cx - (newSize.getWidth())/2,
-        cy - (newSize.getHeight())/2, scale, radians);
+    drawImage(g, image, cx - (newSize.getWidth()) / 2,
+        cy - (newSize.getHeight()) / 2, scale, radians);
   }
 
   /**
    * Draw the given image scaled with a center at x,y
    *
-   * @param g The graphics context to draw on
+   * @param g     The graphics context to draw on
    * @param image The image to draw
-   * @param cx The x coordinate of the center
-   * @param cy The y coordinate of the center
+   * @param cx    The x coordinate of the center
+   * @param cy    The y coordinate of the center
    * @param scale The scale factor (1.0 is 100%)
    */
   public static void drawCenteredImage(Graphics g, Image image, double cx, double cy,
-                                       double scale) {
+      double scale) {
     Inf101Graphics.drawCenteredImage(g, image, cx, cy, scale, 0);
   }
 
@@ -162,36 +162,35 @@ public class Inf101Graphics {
    * Get the size of the (bounding box of the) image after it has been
    * scaled and rotated
    *
-   * @param image The image
-   * @param scale The scale factor (1.0 is 100%)
+   * @param image   The image
+   * @param scale   The scale factor (1.0 is 100%)
    * @param radians The angle to rotate the image in radians
    * @return The size of the (bounding box of) the image after it has been
-   *          scaled and rotated
+   *         scaled and rotated
    */
   public static Dimension2D getImageSize(Image image, double scale, double radians) {
-    double imageWidth  = image.getWidth(null);
+    double imageWidth = image.getWidth(null);
     double imageHeight = image.getHeight(null);
     AffineTransform transform = new AffineTransform();
     transform.rotate(radians);
-    transform.scale(scale,scale);
-    transform.translate(-imageWidth/2, -imageHeight/2);  // first
-    double[] x = { 0, imageWidth, imageWidth ,     0       };
-    double[] y = { 0,     0     , imageHeight, imageHeight };
-    double minx=0, maxx=0, miny=0, maxy=0;
+    transform.scale(scale, scale);
+    transform.translate(-imageWidth / 2, -imageHeight / 2); // first
+    double[] x = { 0, imageWidth, imageWidth, 0 };
+    double[] y = { 0, 0, imageHeight, imageHeight };
+    double minx = 0, maxx = 0, miny = 0, maxy = 0;
     Point2D.Double src = new Point2D.Double();
     Point2D.Double dst = new Point2D.Double();
-    for (int i=0; i<4; i++) {
-      src.setLocation(x[i],y[i]);
-      transform.transform(src,dst);
+    for (int i = 0; i < 4; i++) {
+      src.setLocation(x[i], y[i]);
+      transform.transform(src, dst);
       if (i == 0) {
         minx = maxx = dst.getX();
         miny = maxy = dst.getY();
-      }
-      else {
-        minx = Math.min(dst.getX(),minx);
-        miny = Math.min(dst.getY(),miny);
-        maxx = Math.max(dst.getX(),maxx);
-        maxy = Math.max(dst.getY(),maxy);
+      } else {
+        minx = Math.min(dst.getX(), minx);
+        miny = Math.min(dst.getY(), miny);
+        maxx = Math.max(dst.getX(), maxx);
+        maxy = Math.max(dst.getY(), maxy);
       }
     }
     final double width = maxx - minx;

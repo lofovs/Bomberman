@@ -1,10 +1,10 @@
-package no.uib.inf101.sem2;
-
-import no.uib.inf101.sem2.view.SampleView;
+package no.uib.inf101.sem2.bomberman;
 
 import javax.swing.JFrame;
 
-public class Main {
+import no.uib.inf101.sem2.bomberman.view.SampleView;
+
+public class BombermanMain {
   public static void main(String[] args) {
     SampleView view = new SampleView();
 

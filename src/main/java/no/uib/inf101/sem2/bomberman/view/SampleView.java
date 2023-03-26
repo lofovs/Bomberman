@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.view;
+package no.uib.inf101.sem2.bomberman.view;
 
 // Denne klassen er bare et eksempel, og bør slettes når du begynner å
 // komme i gang med ditt eget program.
@@ -20,10 +20,10 @@ import javax.swing.JPanel;
  * A sample view to get you inspired for your own project.
  */
 public class SampleView extends JPanel {
-  
+
   private boolean mouseIsInTheRectangle = false;
   private boolean mouseIsPressed = false;
-  
+
   /** Construct a new SampleView */
   public SampleView() {
     this.setPreferredSize(new Dimension(400, 150));
@@ -35,17 +35,17 @@ public class SampleView extends JPanel {
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     Graphics2D g2 = (Graphics2D) g;
-    
+
     // Draw a centered rectangle with text
     Rectangle2D rect = this.getRectangle();
     Color color = mouseIsInTheRectangle ? (mouseIsPressed ? Color.RED : Color.BLUE) : Color.BLACK;
     g2.setColor(color);
     g2.draw(rect);
     Inf101Graphics.drawCenteredString(g2, "Semesteroppgave 2", rect);
-    
+
     // Draw the INF101 logo in the left side of the rectangle
     BufferedImage logo = Inf101Graphics.loadImageFromResources("/inf101.png");
-    double scale = (rect.getHeight() - 1)/logo.getHeight();
+    double scale = (rect.getHeight() - 1) / logo.getHeight();
     Inf101Graphics.drawImage(g2, logo, rect.getX() + 1, rect.getY() + 1, scale);
   }
 
@@ -80,7 +80,7 @@ public class SampleView extends JPanel {
         mouseIsPressed = true;
         repaint();
       }
-  
+
       @Override
       public void mouseReleased(MouseEvent e) {
         mouseIsPressed = false;
