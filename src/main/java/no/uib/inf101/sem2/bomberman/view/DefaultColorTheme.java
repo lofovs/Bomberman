@@ -20,8 +20,9 @@ public class DefaultColorTheme implements ColorTheme {
             case 'm' -> Color.MAGENTA;
             case 'c' -> Color.CYAN;
             case 'o' -> Color.ORANGE;
+            case 'G' -> Color.GRAY;
 
-            case '-' -> Color.BLACK;
+            case '-' -> Color.GREEN.darker();
 
             default -> throw new IllegalArgumentException(
                     "No available color for '" + value + "'");
@@ -31,7 +32,7 @@ public class DefaultColorTheme implements ColorTheme {
 
     @Override
     public Color getFrameColor() {
-        return Color.GRAY;
+        return Color.BLACK;
     }
 
 }

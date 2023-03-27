@@ -16,7 +16,7 @@ import no.uib.inf101.sem2.grid.GridDimension;
 
 public class BombermanView extends JPanel {
 
-    private static final double OUTERMARGIN = 30;
+    private static final double OUTERMARGIN = 0;
     private static final double INNERMARGIN = 2;
     private static final double SQUARESIZE = 30;
     private ViewableBombermanModel model;

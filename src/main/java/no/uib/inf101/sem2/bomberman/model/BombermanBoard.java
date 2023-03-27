@@ -49,4 +49,22 @@ public class BombermanBoard extends Grid<Character> {
     public void clear() {
         super.fillGrid(this.row, this.col, this.defaultValue);
     }
+
+    /**
+     * Gets the number of rows in the board
+     * 
+     * @return the number of rows in the board
+     */
+    public int getRows() {
+        return this.row;
+    }
+
+    /**
+     * Gets the number of cols in the board
+     * 
+     * @return the number of cols in the board
+     */
+    public int getCols() {
+        return this.col;
+    }
 }
