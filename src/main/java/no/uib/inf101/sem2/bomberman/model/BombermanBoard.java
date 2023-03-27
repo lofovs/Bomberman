@@ -1,5 +1,6 @@
 package no.uib.inf101.sem2.bomberman.model;
 
+import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.Grid;
 
 public class BombermanBoard extends Grid<Character> {
@@ -20,6 +21,26 @@ public class BombermanBoard extends Grid<Character> {
         this.defaultValue = '-';
         this.clear();
 
+    }
+
+    /**
+     * Gets the grid in string format
+     * 
+     * @return a string representation of the grid
+     */
+    public String prettyString() {
+        String stringBoard = "";
+        for (int i = 0; i < this.row; i++) {
+            if (stringBoard != "") {
+                stringBoard += "\n";
+            }
+            for (int j = 0; j < this.col; j++) {
+                CellPosition pos = new CellPosition(i, j);
+                Character value = get(pos);
+                stringBoard += value;
+            }
+        }
+        return stringBoard;
     }
 
     /**
