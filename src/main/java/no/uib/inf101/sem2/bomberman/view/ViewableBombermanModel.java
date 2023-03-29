@@ -1,6 +1,7 @@
 package no.uib.inf101.sem2.bomberman.view;
 
 import no.uib.inf101.sem2.bomberman.controller.BombermanController;
+import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.Grid;
 import no.uib.inf101.sem2.grid.GridCell;
@@ -36,5 +37,19 @@ public interface ViewableBombermanModel {
      * @return the player
      */
     Player getPlayer();
+
+    /**
+     * Get a bomb
+     * 
+     * @return a bomb
+     */
+    Bomb getBomb();
+
+    /**
+     * Get the bomb tile
+     * 
+     * @return an iterable of grid cells
+     */
+    Iterable<GridCell<Character>> getBombTile();
 
 }

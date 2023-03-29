@@ -1,7 +1,8 @@
 package no.uib.inf101.sem2.bomberman.controller;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.Timer;
+import javax.swing.Timer;
 
 import no.uib.inf101.sem2.bomberman.midi.BombermanSong;
 import no.uib.inf101.sem2.bomberman.view.BombermanView;
@@ -17,12 +18,10 @@ public class BombermanController implements java.awt.event.KeyListener {
         this.model = model;
         this.view = view;
         this.view.addKeyListener(this);
-        // TODO: implement this
-        // this.timer = new Timer(model.getTimerInterval(), this::clockTick);
-        // this.timer.start();
+        this.timer = new Timer(model.getTimerInterval(), this::clockTick);
+        this.timer.start();
         this.song = new BombermanSong();
-        this.song.run();
-
+        this.song.run(); // Uncomment to play music
     }
 
     @Override
@@ -47,6 +46,23 @@ public class BombermanController implements java.awt.event.KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+    }
+
+    /**
+     * Event that is called when the timer ticks.
+     */
+    public void clockTick(ActionEvent ae) {
+        this.model.clockTick();
+        setTimerDelay();
+        this.view.repaint();
+    }
+
+    /**
+     * Sets the timer delay to the value in the model
+     */
+    public void setTimerDelay() {
+        this.timer.setInitialDelay(this.model.getTimerInterval());
+        this.timer.setDelay(this.model.getTimerInterval());
     }
 
 }

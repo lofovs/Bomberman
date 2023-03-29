@@ -1,5 +1,6 @@
 package no.uib.inf101.sem2.bomberman.model;
 
+import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.Grid;
@@ -70,9 +71,19 @@ public class BombermanBoard extends Grid<Character> {
         return this.col;
     }
 
-    public boolean isLegalMove(Player player) {
-
+    public boolean canPlace(Player player) {
         CellPosition pos = player.getPos();
+        if (pos.row() < 0 || pos.row() >= this.row || pos.col() < 0 || pos.col() >= this.col) {
+            return false;
+        } else if (get(pos) != '-') {
+            System.out.println("FALSE!");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean canPlace(Bomb bomb) {
+        CellPosition pos = bomb.getPos();
         if (pos.row() < 0 || pos.row() >= this.row || pos.col() < 0 || pos.col() >= this.col) {
             return false;
         } else if (get(pos) != '-') {

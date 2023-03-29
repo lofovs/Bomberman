@@ -22,6 +22,9 @@ public class DefaultColorTheme implements ColorTheme {
             case 'o' -> Color.ORANGE;
             case 'G' -> Color.GRAY;
 
+            // color for the bombs
+            case 'B' -> Color.BLACK;
+
             case '-' -> Color.GREEN.darker();
 
             default -> throw new IllegalArgumentException(

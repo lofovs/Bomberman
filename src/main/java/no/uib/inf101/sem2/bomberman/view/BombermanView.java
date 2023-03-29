@@ -65,6 +65,7 @@ public class BombermanView extends JPanel {
         BufferedImage image = Inf101Graphics.loadImageFromResources("bomberman.png");
         Iterable<GridCell<Character>> grid = model.getTilesOnBoard();
         Iterable<GridCell<Character>> playerModel = model.getPlayerTile();
+        Iterable<GridCell<Character>> bombModel = model.getBombTile();
         CellPositionToPixelConverter cellPositionToPixelConverter = new CellPositionToPixelConverter(tileRectangle, gd,
                 INNERMARGIN);
 
@@ -72,6 +73,8 @@ public class BombermanView extends JPanel {
         drawCells(g2, grid, cellPositionToPixelConverter, theme);
         // draws the player
         drawCells(g2, playerModel, cellPositionToPixelConverter, theme);
+        // draws the bombs
+        drawCells(g2, bombModel, cellPositionToPixelConverter, theme);
 
         // TODO: draws the player image
 
