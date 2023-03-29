@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
@@ -61,14 +62,32 @@ public class BombermanView extends JPanel {
 
         GridDimension gd = model.getDimension();
 
+        BufferedImage image = Inf101Graphics.loadImageFromResources("bomberman.png");
         Iterable<GridCell<Character>> grid = model.getTilesOnBoard();
-        Iterable<GridCell<Character>> player = model.getPlayerTile();
+        Iterable<GridCell<Character>> playerModel = model.getPlayerTile();
         CellPositionToPixelConverter cellPositionToPixelConverter = new CellPositionToPixelConverter(tileRectangle, gd,
                 INNERMARGIN);
 
         // draws the grid
         drawCells(g2, grid, cellPositionToPixelConverter, theme);
-        drawCells(g2, player, cellPositionToPixelConverter, theme);
+        // draws the player
+        drawCells(g2, playerModel, cellPositionToPixelConverter, theme);
+
+        // TODO: draws the player image
+
+        // Player player = model.getPlayer();
+        // double playerX =
+        // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().x;
+        // double playerY =
+        // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().y;
+
+        // double playerWidth =
+        // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().width;
+        // double playerHeight =
+        // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().height;
+        // double playerScale = 0.05 * (playerWidth / playerHeight);
+
+        // Inf101Graphics.drawImage(g2, image, playerX, playerY, playerScale);
     }
 
     private void drawCells(Graphics2D g2, Iterable<GridCell<Character>> cells,

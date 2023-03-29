@@ -50,4 +50,8 @@ public class BombermanModel implements ViewableBombermanModel, ControllableBombe
         return this.player;
     }
 
+    @Override
+    public Player getPlayer() {
+        return this.player;
+    }
 }

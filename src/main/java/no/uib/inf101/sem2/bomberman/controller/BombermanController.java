@@ -17,9 +17,12 @@ public class BombermanController implements java.awt.event.KeyListener {
         this.model = model;
         this.view = view;
         this.view.addKeyListener(this);
-
-        this.timer = new Timer();
+        // TODO: implement this
+        // this.timer = new Timer(model.getTimerInterval(), this::clockTick);
+        // this.timer.start();
         this.song = new BombermanSong();
+        this.song.run();
+
     }
 
     @Override
