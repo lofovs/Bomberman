@@ -1,7 +1,9 @@
 package no.uib.inf101.sem2.bomberman.model;
 
+import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.Grid;
+import no.uib.inf101.sem2.grid.GridDimension;
 
 public class BombermanBoard extends Grid<Character> {
 
@@ -67,4 +69,26 @@ public class BombermanBoard extends Grid<Character> {
     public int getCols() {
         return this.col;
     }
+
+    public boolean isLegalMove(CellPosition pos) {
+        if (pos.row() < 0 || pos.row() >= this.row || pos.col() < 0 || pos.col() >= this.col) {
+            return false;
+        } else if (get(pos) != '-') {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Spawns the player at the start of the game in the lower left corner of the
+     * map
+     * 
+     * @param gd the grid dimension of the board
+     * @return the player
+     */
+    public Player spawn(GridDimension gd) {
+        CellPosition pos = new CellPosition(this.rows() - 1, 1);
+        return new Player(pos);
+    }
+
 }

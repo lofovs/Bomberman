@@ -13,9 +13,7 @@ public class BombermanMain {
 
     BombermanBoard board = new BombermanBoard(13, 11);
 
-    // test case
     // fill the outer walls with 'G'
-
     for (int i = 0; i < board.getRows(); i++) {
       for (int j = 0; j < board.getCols(); j++) {
         if (i == 0 || i == board.getRows() - 1 || j == 0 || j == board.getCols() - 1) {
