@@ -70,7 +70,9 @@ public class BombermanBoard extends Grid<Character> {
         return this.col;
     }
 
-    public boolean isLegalMove(CellPosition pos) {
+    public boolean isLegalMove(Player player) {
+
+        CellPosition pos = player.getPos();
         if (pos.row() < 0 || pos.row() >= this.row || pos.col() < 0 || pos.col() >= this.col) {
             return false;
         } else if (get(pos) != '-') {
@@ -87,7 +89,7 @@ public class BombermanBoard extends Grid<Character> {
      * @return the player
      */
     public Player spawn(GridDimension gd) {
-        CellPosition pos = new CellPosition(this.rows() - 1, 1);
+        CellPosition pos = new CellPosition(this.rows() - 2, 1);
         return new Player(pos);
     }
 

@@ -22,4 +22,11 @@ public interface ViewableBombermanModel {
      */
     Iterable<GridCell<Character>> getTilesOnBoard();
 
+    /**
+     * Get the player tile
+     * 
+     * @return an iterable of grid cells
+     */
+    Iterable<GridCell<Character>> getPlayerTile();
+
 }

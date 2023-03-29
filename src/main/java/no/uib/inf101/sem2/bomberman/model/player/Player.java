@@ -1,6 +1,6 @@
 package no.uib.inf101.sem2.bomberman.model.player;
 
-import java.awt.List;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -9,7 +9,7 @@ import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
 
-public class Player {
+public class Player implements Iterable<GridCell<Character>> {
 
     private int lives;
     private int speed;
@@ -22,7 +22,7 @@ public class Player {
     public Player(CellPosition pos) {
         this.lives = 3;
         this.pos = pos;
-        this.symbol = 'g';
+        this.symbol = 'y';
 
     }
 
@@ -92,4 +92,18 @@ public class Player {
         return new Player(newPos);
     }
 
+    public BombermanBoard getBoard() {
+        return board;
+    }
+
+    public Character getSymbol() {
+        return symbol;
+    }
+
+    @Override
+    public Iterator<GridCell<Character>> iterator() {
+        List<GridCell<Character>> list = new ArrayList<>();
+        list.add(new GridCell<>(this.pos, this.symbol));
+        return list.iterator();
+    }
 }

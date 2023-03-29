@@ -33,7 +33,6 @@ public class BombermanView extends JPanel {
         this.setPreferredSize(new Dimension((int) width, (int) height));
         this.theme = new DefaultColorTheme();
         this.setBackground(getBackground());
-
     }
 
     @Override
@@ -62,12 +61,14 @@ public class BombermanView extends JPanel {
 
         GridDimension gd = model.getDimension();
 
-        Iterable<GridCell<Character>> cells = model.getTilesOnBoard();
+        Iterable<GridCell<Character>> grid = model.getTilesOnBoard();
+        Iterable<GridCell<Character>> player = model.getPlayerTile();
         CellPositionToPixelConverter cellPositionToPixelConverter = new CellPositionToPixelConverter(tileRectangle, gd,
                 INNERMARGIN);
 
         // draws the grid
-        drawCells(g2, cells, cellPositionToPixelConverter, theme);
+        drawCells(g2, grid, cellPositionToPixelConverter, theme);
+        drawCells(g2, player, cellPositionToPixelConverter, theme);
     }
 
     private void drawCells(Graphics2D g2, Iterable<GridCell<Character>> cells,

@@ -36,8 +36,18 @@ public class BombermanModel implements ViewableBombermanModel, ControllableBombe
 
     @Override
     public boolean movePlayer(int deltaRow, int deltaCol) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'movePlayer'");
+        Player newPlayer = this.player.shiftedBy(deltaRow, deltaCol);
+        if (this.board.isLegalMove(newPlayer)) {
+            this.player = newPlayer;
+            return true;
+        }
+        return false;
+
+    }
+
+    @Override
+    public Iterable<GridCell<Character>> getPlayerTile() {
+        return this.player;
     }
 
 }
