@@ -1,10 +1,10 @@
 package no.uib.inf101.sem2.bomberman.model.bomb;
 
 import java.util.List;
+import java.util.Timer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 
@@ -12,11 +12,12 @@ public class Bomb implements Iterable<GridCell<Character>> {
 
     private CellPosition pos;
     private Character symbol;
-    private static Player player;
+    private Timer timer;
 
     public Bomb(CellPosition pos) {
         this.pos = pos;
         this.symbol = 'B';
+        this.timer = new Timer(model.getTimerInterval(), this::clockTick);
     }
 
     @Override
@@ -54,16 +55,30 @@ public class Bomb implements Iterable<GridCell<Character>> {
         return this.pos;
     }
 
+    public void setPos(CellPosition pos) {
+        this.pos = pos;
+    }
+
     /**
      * Moves the player to a new position
      * 
      * @param deltaRow the row to move by (can be negative)
      * @param deltaCol the column to move by (can be negative)
-     * @return a new Player object with the new position
+     * @return a new Bomb object with the new position
      */
     public Bomb shiftedBy(int deltaRow, int deltaCol) {
         CellPosition newPos = new CellPosition(this.pos.row() + deltaRow, this.pos.col() + deltaCol);
         return new Bomb(newPos);
+    }
+
+    /**
+     * Moves the bomb to the given position
+     * 
+     * @param pos
+     * @return a new Bomb object with the new position
+     */
+    public Bomb shiftedToPosition(CellPosition pos) {
+        return new Bomb(pos);
     }
 
     public Character getSymbol() {
@@ -77,7 +92,17 @@ public class Bomb implements Iterable<GridCell<Character>> {
         return list.iterator();
     }
 
+    /**
+     * Creates a new bomb with a position outside the board
+     * 
+     * @return a new bomb
+     */
     static Bomb newBomb() {
-        return new Bomb(player.getPos());
+        CellPosition pos = new CellPosition(-1, -1);
+        return new Bomb(pos);
+    }
+
+    public int getTimer() {
+        return 0;
     }
 }

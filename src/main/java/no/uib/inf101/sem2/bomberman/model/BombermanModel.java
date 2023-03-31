@@ -16,12 +16,12 @@ public class BombermanModel implements ViewableBombermanModel, ControllableBombe
     private Bomb bomb;
     private BombFactory bombFactory;
 
-    public BombermanModel(BombermanBoard board) {
+    public BombermanModel(BombermanBoard board, BombFactory bombFactory) {
         this.board = board;
         this.player = new Player(new CellPosition(0, 0));
         this.player = board.spawn(board);
-        this.bomb = new Bomb(new CellPosition(board.rows() + 1, board.cols() + 1));
-        this.bombFactory = new BombFactory();
+        this.bombFactory = bombFactory;
+        this.bomb = bombFactory.createBomb();
     }
 
     @Override
@@ -36,12 +36,23 @@ public class BombermanModel implements ViewableBombermanModel, ControllableBombe
 
     @Override
     public boolean placeBomb() {
-        Bomb newBomb = bombFactory.createBomb();
+        Bomb bomb = this.bombFactory.createBomb();
+        Bomb newBomb = bomb.shiftedToPosition(player.getPos());
         if (this.board.canPlace(newBomb)) {
             this.bomb = newBomb;
+            addBombToBoard();
             return true;
         }
         return false;
+    }
+
+    public void addBombToBoard() {
+        for (GridCell<Character> gridCell : this.bomb) {
+            this.board.set(gridCell.pos(), gridCell.value());
+        }
+
+        this.bomb = bombFactory.createBomb();
+
     }
 
     @Override
@@ -52,7 +63,6 @@ public class BombermanModel implements ViewableBombermanModel, ControllableBombe
             return true;
         }
         return false;
-
     }
 
     @Override
@@ -77,7 +87,10 @@ public class BombermanModel implements ViewableBombermanModel, ControllableBombe
 
     @Override
     public void clockTick() {
-
+        // explode bomb after 3 seconds
+        if (this.bomb.getTimer() == 3) {
+            this.bomb.explode();
+        }
     }
 
     @Override

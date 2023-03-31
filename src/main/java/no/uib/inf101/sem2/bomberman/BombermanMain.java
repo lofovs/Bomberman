@@ -3,10 +3,10 @@ package no.uib.inf101.sem2.bomberman;
 import javax.swing.JFrame;
 
 import no.uib.inf101.sem2.bomberman.controller.BombermanController;
+import no.uib.inf101.sem2.bomberman.model.bomb.BombFactory;
 import no.uib.inf101.sem2.bomberman.model.BombermanBoard;
 import no.uib.inf101.sem2.bomberman.model.BombermanModel;
 import no.uib.inf101.sem2.bomberman.view.BombermanView;
-import no.uib.inf101.sem2.bomberman.view.ViewableBombermanModel;
 import no.uib.inf101.sem2.grid.CellPosition;
 
 public class BombermanMain {
@@ -31,8 +31,8 @@ public class BombermanMain {
         }
       }
     }
-
-    BombermanModel model = new BombermanModel(board);
+    BombFactory bombFactory = new BombFactory();
+    BombermanModel model = new BombermanModel(board, bombFactory);
     BombermanView view = new BombermanView(model);
     new BombermanController(model, view);
 
