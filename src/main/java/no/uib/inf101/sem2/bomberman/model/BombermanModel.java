@@ -1,9 +1,11 @@
 package no.uib.inf101.sem2.bomberman.model;
 
+import java.util.Random;
 import no.uib.inf101.sem2.bomberman.controller.ControllableBombermanModel;
 import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
 import no.uib.inf101.sem2.bomberman.model.bomb.BombFactory;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
+import no.uib.inf101.sem2.bomberman.model.player.PlayerAI;
 import no.uib.inf101.sem2.bomberman.view.ViewableBombermanModel;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
@@ -13,20 +15,39 @@ public class BombermanModel
   implements ViewableBombermanModel, ControllableBombermanModel {
 
   private BombermanBoard board;
+
   private Player player;
+  private PlayerAI playerAI;
+  private PlayerAI playerAI2;
+  private PlayerAI playerAI3;
+
   private Bomb bomb;
+  private Bomb bomb2;
+  private Bomb bomb3;
+  private Bomb bomb4;
   private Bomb explodedBomb;
   private BombFactory bombFactory;
   private GameState gameState;
   private int explosionTimer;
   private int bombCount;
+  private Random random;
 
   public BombermanModel(BombermanBoard board, BombFactory bombFactory) {
     this.board = board;
-    this.player = new Player(new CellPosition(0, 0));
-    this.player = board.spawn(board);
+
+    this.player = new Player(new CellPosition(board.rows() - 2, 1));
+    this.playerAI = new PlayerAI(new CellPosition(1, 1), 'b');
+    this.playerAI2 =
+      new PlayerAI(new CellPosition(board.rows() - 2, board.cols() - 2), 'r');
+    this.playerAI3 = new PlayerAI(new CellPosition(1, board.cols() - 2), 'p');
+
     this.bombFactory = bombFactory;
+
     this.bomb = bombFactory.createNewBomb();
+    this.bomb2 = bombFactory.createNewBomb();
+    this.bomb3 = bombFactory.createNewBomb();
+    this.bomb4 = bombFactory.createNewBomb();
+
     this.gameState = GameState.ACTIVE_GAME;
     this.explosionTimer = 0;
     this.bombCount = 0;
@@ -43,10 +64,10 @@ public class BombermanModel
   }
 
   @Override
-  public boolean placeBomb() {
-    Bomb newBomb = this.bomb.shiftedToPosition(player.getPos());
+  public boolean placeBomb(Bomb bomb) {
+    Bomb newBomb = bomb.shiftedToPosition(player.getPos());
 
-    if (this.board.canPlace(newBomb)) {
+    if (this.board.canPlace(newBomb.getPos())) {
       this.bomb = newBomb;
       this.bombCount += 1;
       return true;
@@ -90,14 +111,24 @@ public class BombermanModel
         );
     }
     this.explodedBomb = bomb;
-    this.bomb = bombFactory.createNewBomb();
+    bomb = bombFactory.createNewBomb();
   }
 
   @Override
   public boolean movePlayer(int deltaRow, int deltaCol) {
     Player newPlayer = this.player.shiftedBy(deltaRow, deltaCol);
-    if (this.board.canPlace(newPlayer)) {
+    if (this.board.canPlace(newPlayer.getPos())) {
       this.player = newPlayer;
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean moveAI(PlayerAI playerAI, int deltaRow, int deltaCol) {
+    PlayerAI newAI = playerAI.shiftedBy(deltaRow, deltaCol);
+    if (this.board.canPlace(newAI.getPos())) {
+      playerAI = newAI;
       return true;
     }
     return false;
@@ -106,6 +137,21 @@ public class BombermanModel
   @Override
   public Iterable<GridCell<Character>> getPlayerTile() {
     return this.player;
+  }
+
+  @Override
+  public Iterable<GridCell<Character>> getPlayer2Tile() {
+    return playerAI;
+  }
+
+  @Override
+  public Iterable<GridCell<Character>> getPlayer3Tile() {
+    return playerAI2;
+  }
+
+  @Override
+  public Iterable<GridCell<Character>> getPlayer4Tile() {
+    return playerAI3;
   }
 
   @Override
@@ -166,6 +212,21 @@ public class BombermanModel
   }
 
   @Override
+  public Iterable<GridCell<Character>> getBomb2Tile() {
+    return this.bomb2;
+  }
+
+  @Override
+  public Iterable<GridCell<Character>> getBomb3Tile() {
+    return this.bomb3;
+  }
+
+  @Override
+  public Iterable<GridCell<Character>> getBomb4Tile() {
+    return this.bomb4;
+  }
+
+  @Override
   public GameState getGameState() {
     return this.gameState;
   }
@@ -185,5 +246,45 @@ public class BombermanModel
   @Override
   public int getBombCount() {
     return this.bombCount;
+  }
+
+  @Override
+  public Player getPlayer() {
+    return this.player;
+  }
+
+  @Override
+  public PlayerAI getPlayerAI() {
+    return this.playerAI;
+  }
+
+  @Override
+  public PlayerAI getPlayerAI2() {
+    return this.playerAI2;
+  }
+
+  @Override
+  public PlayerAI getPlayerAI3() {
+    return this.playerAI3;
+  }
+
+  @Override
+  public Bomb getBomb() {
+    return this.bomb;
+  }
+
+  @Override
+  public Bomb getBomb2() {
+    return this.bomb2;
+  }
+
+  @Override
+  public Bomb getBomb3() {
+    return this.bomb3;
+  }
+
+  @Override
+  public Bomb getBomb4() {
+    return this.bomb4;
   }
 }

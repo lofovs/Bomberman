@@ -41,7 +41,7 @@ public class BombermanController implements java.awt.event.KeyListener {
     } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
       model.movePlayer(0, 1);
     } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-      if (this.model.getBombCount() == 0) model.placeBomb();
+      if (this.model.getBombCount() == 0) model.placeBomb(model.getBomb());
     } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
       System.exit(0);
     } else if (e.getKeyCode() == KeyEvent.VK_M) {

@@ -21,6 +21,7 @@ public class DefaultColorTheme implements ColorTheme {
         case 'c' -> Color.CYAN;
         case 'o' -> Color.ORANGE;
         case 'G' -> Color.GRAY;
+        case 'W' -> Color.WHITE;
         // color for the bombs
         case 'B' -> Color.BLACK;
         case 'E' -> Color.ORANGE;

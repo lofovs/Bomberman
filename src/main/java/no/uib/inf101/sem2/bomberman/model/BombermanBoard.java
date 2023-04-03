@@ -70,8 +70,7 @@ public class BombermanBoard extends Grid<Character> {
     return this.col;
   }
 
-  public boolean canPlace(Player player) {
-    CellPosition pos = player.getPos();
+  boolean canPlace(CellPosition pos) {
     if (
       pos.row() < 0 ||
       pos.row() >= this.row ||
@@ -84,32 +83,5 @@ public class BombermanBoard extends Grid<Character> {
       return false;
     }
     return true;
-  }
-
-  public boolean canPlace(Bomb bomb) {
-    CellPosition pos = bomb.getPos();
-    if (
-      pos.row() < 0 ||
-      pos.row() >= this.row ||
-      pos.col() < 0 ||
-      pos.col() >= this.col
-    ) {
-      return false;
-    } else if (get(pos) != '-') {
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * Spawns the player at the start of the game in the lower left corner of the
-   * map
-   *
-   * @param gd the grid dimension of the board
-   * @return the player
-   */
-  public Player spawn(GridDimension gd) {
-    CellPosition pos = new CellPosition(this.rows() - 2, 1);
-    return new Player(pos);
   }
 }
