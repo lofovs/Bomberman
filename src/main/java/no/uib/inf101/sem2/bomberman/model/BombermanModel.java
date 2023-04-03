@@ -15,6 +15,7 @@ public class BombermanModel
   private BombermanBoard board;
   private Player player;
   private Bomb bomb;
+  private Bomb explodedBomb;
   private BombFactory bombFactory;
   private GameState gameState;
   private int explosionTimer;
@@ -51,7 +52,8 @@ public class BombermanModel
   }
 
   /**
-   * Adds the bomb to the board and explodes it after 3 seconds.
+   * Adds the bomb to the board.
+   *@param bomb the bomb to add
    */
   private void addBombToBoard(Bomb bomb) {
     for (GridCell<Character> gridCell : bomb) {
@@ -61,6 +63,7 @@ public class BombermanModel
 
   /**
    * Replaces the bomb tile with an explosion also covering the 4 adjacent tiles.
+   * Also removes the bomb object from the board, after creating the explosion
    * @param bomb the bomb to explode
    */
   private void explodeBomb(Bomb bomb) {
@@ -83,6 +86,8 @@ public class BombermanModel
           'E'
         );
     }
+    this.explodedBomb = bomb;
+    this.bomb = bombFactory.createNewBomb();
   }
 
   @Override
@@ -109,7 +114,7 @@ public class BombermanModel
   public void clockTick() {
     // checks if the bomb has exploded and if it has it will remove the explosion tiles, create a new bomb and reset the explosion timer
     if (explosionTimer == 1) {
-      removeExplodedTiles(this.bomb);
+      removeExplodedTiles(explodedBomb);
       this.bomb = bombFactory.createNewBomb();
       explosionTimer = 0;
     }

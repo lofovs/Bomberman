@@ -47,10 +47,6 @@ public class Bomb implements Iterable<GridCell<Character>> {
     return this.pos;
   }
 
-  public void setPos(CellPosition pos) {
-    this.pos = pos;
-  }
-
   /**
    * Moves the player to a new position
    *
@@ -74,10 +70,6 @@ public class Bomb implements Iterable<GridCell<Character>> {
    */
   public Bomb shiftedToPosition(CellPosition pos) {
     return new Bomb(pos);
-  }
-
-  public Character getSymbol() {
-    return symbol;
   }
 
   @Override
