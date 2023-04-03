@@ -47,4 +47,11 @@ public interface ControllableBombermanModel {
    * Resume the game.
    */
   void playGame();
+
+  /**
+   * Get the number of bombs currently on the board.
+   *
+   * @return the number of bombs currently on the board
+   */
+  int getBombCount();
 }

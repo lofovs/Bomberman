@@ -19,6 +19,7 @@ public class BombermanModel
   private BombFactory bombFactory;
   private GameState gameState;
   private int explosionTimer;
+  private int bombCount;
 
   public BombermanModel(BombermanBoard board, BombFactory bombFactory) {
     this.board = board;
@@ -28,6 +29,7 @@ public class BombermanModel
     this.bomb = bombFactory.createNewBomb();
     this.gameState = GameState.ACTIVE_GAME;
     this.explosionTimer = 0;
+    this.bombCount = 0;
   }
 
   @Override
@@ -46,6 +48,7 @@ public class BombermanModel
 
     if (this.board.canPlace(newBomb)) {
       this.bomb = newBomb;
+      this.bombCount += 1;
       return true;
     }
     return false;
@@ -117,6 +120,7 @@ public class BombermanModel
       removeExplodedTiles(explodedBomb);
       this.bomb = bombFactory.createNewBomb();
       explosionTimer = 0;
+      bombCount = 0;
     }
     // checks if the bomb's timer has reached 3 seconds, and if it has it will explode
     if (this.bomb.getClock() == 3) {
@@ -176,5 +180,10 @@ public class BombermanModel
   @Override
   public void playGame() {
     this.gameState = GameState.ACTIVE_GAME;
+  }
+
+  @Override
+  public int getBombCount() {
+    return this.bombCount;
   }
 }
