@@ -45,14 +45,37 @@ public class PlayerAI implements Iterable<GridCell<Character>>, IPlayer {
   }
 
   @Override
-  public int getBombCount() {
-    return this.bombCount;
-  }
-
-  @Override
   public Iterator<GridCell<Character>> iterator() {
     List<GridCell<Character>> list = new ArrayList<>();
     list.add(new GridCell<>(this.pos, this.symbol));
     return list.iterator();
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((pos == null) ? 0 : pos.hashCode());
+    result = prime * result + ((symbol == null) ? 0 : symbol.hashCode());
+    result = prime * result + lives;
+    result = prime * result + bombCount;
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    PlayerAI other = (PlayerAI) obj;
+    if (pos == null) {
+      if (other.pos != null) return false;
+    } else if (!pos.equals(other.pos)) return false;
+    if (symbol == null) {
+      if (other.symbol != null) return false;
+    } else if (!symbol.equals(other.symbol)) return false;
+    if (lives != other.lives) return false;
+    if (bombCount != other.bombCount) return false;
+    return true;
   }
 }

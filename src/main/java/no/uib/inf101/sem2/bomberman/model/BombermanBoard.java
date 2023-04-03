@@ -1,10 +1,7 @@
 package no.uib.inf101.sem2.bomberman.model;
 
-import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
-import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.Grid;
-import no.uib.inf101.sem2.grid.GridDimension;
 
 public class BombermanBoard extends Grid<Character> {
 
@@ -78,10 +75,17 @@ public class BombermanBoard extends Grid<Character> {
       pos.col() >= this.col
     ) {
       return false;
-    } else if (get(pos) != '-') {
+    } else if (get(pos) != '-' && get(pos) != 'E') {
       System.out.println("FALSE!");
       return false;
     }
     return true;
+  }
+
+  boolean isDestructible(CellPosition pos) {
+    if (get(pos) == 'X' || get(pos) == 'E' || get(pos) == '-') {
+      return true;
+    }
+    return false;
   }
 }

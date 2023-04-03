@@ -2,6 +2,7 @@ package no.uib.inf101.sem2.bomberman.controller;
 
 import no.uib.inf101.sem2.bomberman.model.GameState;
 import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
+import no.uib.inf101.sem2.bomberman.model.player.IPlayer;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.bomberman.model.player.PlayerAI;
 
@@ -11,7 +12,7 @@ public interface ControllableBombermanModel {
    *
    * @return true if a bomb was placed, false otherwise
    */
-  boolean placeBomb(Bomb bomb);
+  boolean placeBomb(IPlayer player, Bomb bomb);
 
   /**
    * Move the player.
@@ -21,16 +22,6 @@ public interface ControllableBombermanModel {
    * @return true if the player was moved, false otherwise
    */
   boolean movePlayer(int deltaRow, int deltaCol);
-
-  /**
-   * Move the AI.
-   *
-   * @param playerAI the AI to move
-   * @param deltaRow the row delta
-   * @param deltaCol the column delta
-   * @return true if the AI was moved, false otherwise
-   */
-  boolean moveAI(PlayerAI playerAI, int deltaRow, int deltaCol);
 
   /**
    * Get the interval between clock ticks in milliseconds.
@@ -60,13 +51,6 @@ public interface ControllableBombermanModel {
    * Resume the game.
    */
   void playGame();
-
-  /**
-   * Get the number of bombs currently on the board.
-   *
-   * @return the number of bombs currently on the board
-   */
-  int getBombCount();
 
   /**
    * Get the player.

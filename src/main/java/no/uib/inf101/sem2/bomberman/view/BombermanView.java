@@ -77,6 +77,10 @@ public class BombermanView extends JPanel {
     Iterable<GridCell<Character>> player4Model = model.getPlayer4Tile();
 
     Iterable<GridCell<Character>> bombModel = model.getBombTile();
+    Iterable<GridCell<Character>> bomb2Model = model.getBomb2Tile();
+    Iterable<GridCell<Character>> bomb3Model = model.getBomb3Tile();
+    Iterable<GridCell<Character>> bomb4Model = model.getBomb4Tile();
+
     CellPositionToPixelConverter cellPositionToPixelConverter = new CellPositionToPixelConverter(
       tileRectangle,
       gd,
@@ -94,6 +98,9 @@ public class BombermanView extends JPanel {
 
     // draws the bombs
     drawCells(g2, bombModel, cellPositionToPixelConverter, theme);
+    drawCells(g2, bomb2Model, cellPositionToPixelConverter, theme);
+    drawCells(g2, bomb3Model, cellPositionToPixelConverter, theme);
+    drawCells(g2, bomb4Model, cellPositionToPixelConverter, theme);
     // TODO: draws the player image
 
     // Player player = model.getPlayer();

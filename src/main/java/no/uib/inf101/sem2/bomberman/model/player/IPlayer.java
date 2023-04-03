@@ -14,10 +14,4 @@ public interface IPlayer {
    * @return the position of the player
    */
   CellPosition getPos();
-
-  /**
-   * Get the number of bombs the player has placed.
-   * @return the number of bombs the player has placed
-   */
-  int getBombCount();
 }

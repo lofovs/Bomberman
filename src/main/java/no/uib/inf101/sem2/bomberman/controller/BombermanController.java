@@ -41,7 +41,7 @@ public class BombermanController implements java.awt.event.KeyListener {
     } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
       model.movePlayer(0, 1);
     } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-      if (this.model.getBombCount() == 0) model.placeBomb(model.getBomb());
+      model.placeBomb(model.getPlayer(), model.getBomb());
     } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
       System.exit(0);
     } else if (e.getKeyCode() == KeyEvent.VK_M) {
@@ -68,7 +68,7 @@ public class BombermanController implements java.awt.event.KeyListener {
   /**
    * Event that is called when the timer ticks.
    */
-  public void clockTick(ActionEvent ae) {
+  private void clockTick(ActionEvent ae) {
     this.model.clockTick();
     setTimerDelay();
     this.view.repaint();
@@ -77,7 +77,7 @@ public class BombermanController implements java.awt.event.KeyListener {
   /**
    * Sets the timer delay to the value in the model
    */
-  public void setTimerDelay() {
+  private void setTimerDelay() {
     this.timer.setInitialDelay(this.model.getTimerInterval());
     this.timer.setDelay(this.model.getTimerInterval());
   }

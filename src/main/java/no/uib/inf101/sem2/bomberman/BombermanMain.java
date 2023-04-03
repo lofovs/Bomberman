@@ -35,6 +35,18 @@ public class BombermanMain {
         }
       }
     }
+
+    // create random placements of 'X' within the outer walls
+    for (int i = 0; i < board.getRows(); i++) {
+      for (int j = 0; j < board.getCols(); j++) {
+        if (board.get(new CellPosition(i, j)) == '-') {
+          if (Math.random() < 0.2) {
+            board.set(new CellPosition(i, j), 'X');
+          }
+        }
+      }
+    }
+
     BombFactory bombFactory = new BombFactory();
     BombermanModel model = new BombermanModel(board, bombFactory);
     BombermanView view = new BombermanView(model);
