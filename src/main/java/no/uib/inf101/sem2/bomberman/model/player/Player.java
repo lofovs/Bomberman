@@ -14,15 +14,11 @@ public class Player implements Iterable<GridCell<Character>>, IPlayer {
   private int bombCount;
 
   public Player(CellPosition pos) {
-    this.lives = 3;
     this.pos = pos;
     this.symbol = 'W';
   }
 
-  public int getLives() {
-    return this.lives;
-  }
-
+  @Override
   public CellPosition getPos() {
     return this.pos;
   }
@@ -34,12 +30,7 @@ public class Player implements Iterable<GridCell<Character>>, IPlayer {
     return list.iterator();
   }
 
-  /**
-   * Move the player in the given direction.
-   * @param deltaRow
-   * @param deltaCol
-   * @return a new Player with the new position
-   */
+  @Override
   public Player shiftedBy(int deltaRow, int deltaCol) {
     CellPosition newPos = new CellPosition(
       this.pos.row() + deltaRow,
@@ -74,5 +65,10 @@ public class Player implements Iterable<GridCell<Character>>, IPlayer {
     } else if (!symbol.equals(other.symbol)) return false;
     if (bombCount != other.bombCount) return false;
     return true;
+  }
+
+  @Override
+  public Player shiftedToPosition(CellPosition pos) {
+    return new Player(pos);
   }
 }

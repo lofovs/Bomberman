@@ -14,29 +14,18 @@ public class PlayerAI implements Iterable<GridCell<Character>>, IPlayer {
   private int bombCount;
 
   public PlayerAI(CellPosition pos, Character symbol) {
-    this.lives = 3;
     this.pos = pos;
     this.symbol = symbol;
     this.bombCount = 0;
   }
 
-  /**
-   * Move the AI in the given direction.
-   * @param deltaRow
-   * @param deltaCol
-   * @return a new AI with the new position
-   */
+  @Override
   public PlayerAI shiftedBy(int deltaRow, int deltaCol) {
     CellPosition newPos = new CellPosition(
       this.pos.row() + deltaRow,
       this.pos.col() + deltaCol
     );
     return new PlayerAI(newPos, this.symbol);
-  }
-
-  @Override
-  public int getLives() {
-    return this.lives;
   }
 
   @Override
@@ -77,5 +66,10 @@ public class PlayerAI implements Iterable<GridCell<Character>>, IPlayer {
     if (lives != other.lives) return false;
     if (bombCount != other.bombCount) return false;
     return true;
+  }
+
+  @Override
+  public PlayerAI shiftedToPosition(CellPosition pos) {
+    return new PlayerAI(pos, this.symbol);
   }
 }

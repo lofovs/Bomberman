@@ -47,6 +47,23 @@ public class BombermanMain {
       }
     }
 
+    // create empty tiles around the corners
+    board.set(new CellPosition(1, 1), '-');
+    board.set(new CellPosition(1, 2), '-');
+    board.set(new CellPosition(2, 1), '-');
+
+    board.set(new CellPosition(1, board.getCols() - 2), '-');
+    board.set(new CellPosition(1, board.getCols() - 3), '-');
+    board.set(new CellPosition(2, board.getCols() - 2), '-');
+
+    board.set(new CellPosition(board.getRows() - 2, 1), '-');
+    board.set(new CellPosition(board.getRows() - 3, 1), '-');
+    board.set(new CellPosition(board.getRows() - 2, 2), '-');
+
+    board.set(new CellPosition(board.getRows() - 2, board.getCols() - 2), '-');
+    board.set(new CellPosition(board.getRows() - 3, board.getCols() - 2), '-');
+    board.set(new CellPosition(board.getRows() - 2, board.getCols() - 3), '-');
+
     BombFactory bombFactory = new BombFactory();
     BombermanModel model = new BombermanModel(board, bombFactory);
     BombermanView view = new BombermanView(model);

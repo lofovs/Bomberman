@@ -59,21 +59,10 @@ public interface ControllableBombermanModel {
   Player getPlayer();
 
   /**
-   * Get the AI.
-   * @return the AI
+   * Get the player lives.
+   * @return the player lives
    */
-  PlayerAI getPlayerAI();
-
-  /**
-   * Get the second AI.
-   * @return the AI
-   */
-  PlayerAI getPlayerAI2();
-  /**
-   * Get the third AI.
-   * @return
-   */
-  PlayerAI getPlayerAI3();
+  int getPlayerLives();
 
   /**
    * Get the bomb.

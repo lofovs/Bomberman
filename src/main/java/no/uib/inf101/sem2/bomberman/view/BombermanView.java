@@ -2,12 +2,12 @@ package no.uib.inf101.sem2.bomberman.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
-import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
@@ -17,6 +17,8 @@ public class BombermanView extends JPanel {
   private static final double OUTERMARGIN = 0;
   private static final double INNERMARGIN = 2;
   private static final double SQUARESIZE = 30;
+  private static final double SCOREBOARDHEIGHT = 50;
+
   private ViewableBombermanModel model;
   private ColorTheme theme;
   private double width;
@@ -35,7 +37,8 @@ public class BombermanView extends JPanel {
       (SQUARESIZE + INNERMARGIN) *
       model.getDimension().rows() +
       INNERMARGIN +
-      OUTERMARGIN;
+      OUTERMARGIN +
+      SCOREBOARDHEIGHT;
     this.setPreferredSize(new Dimension((int) width, (int) height));
     this.theme = new DefaultColorTheme();
     this.setBackground(getBackground());
@@ -58,11 +61,55 @@ public class BombermanView extends JPanel {
     double x = OUTERMARGIN;
     double y = OUTERMARGIN;
     double width = this.getWidth() - (2 * OUTERMARGIN);
-    double height = this.getHeight() - (2 * OUTERMARGIN);
+    double height = this.getHeight() - (2 * OUTERMARGIN) - SCOREBOARDHEIGHT;
 
+    // draws the board
     Rectangle2D tileRectangle = new Rectangle2D.Double(x, y, width, height);
     g2.setColor(theme.getFrameColor());
     g2.fill(tileRectangle);
+
+    // draw the scoreboard above the game
+    Rectangle2D scoreboardRectangle = new Rectangle2D.Double(
+      x,
+      y + height,
+      width,
+      SCOREBOARDHEIGHT
+    );
+    g2.setColor(theme.getScoreBoardColor());
+    g2.fill(scoreboardRectangle);
+
+    // draw the player lives on the scoreboard
+    int playerLives = model.getPlayerLives();
+    int player2Lives = model.getPlayer2Lives();
+    int player3Lives = model.getPlayer3Lives();
+    int player4Lives = model.getPlayer4Lives();
+
+    //draw the text on the scoreboard equally spaced horizontally
+    double textWidth = width / 5;
+    double textHeight = SCOREBOARDHEIGHT / 2;
+    double textX = x;
+    double textY = y + height + textHeight;
+
+    g2.setFont(new Font("Arial", Font.BOLD, 20));
+    g2.setColor(theme.getScoreBoardTextColor());
+
+    //draw the player lives
+    g2.drawString("" + playerLives, (float) (textX + textWidth), (float) textY);
+    g2.drawString(
+      "" + player2Lives,
+      (float) (textX + 2 * textWidth),
+      (float) textY
+    );
+    g2.drawString(
+      "" + player3Lives,
+      (float) (textX + 3 * textWidth),
+      (float) textY
+    );
+    g2.drawString(
+      "" + player4Lives,
+      (float) (textX + 4 * textWidth),
+      (float) textY
+    );
 
     GridDimension gd = model.getDimension();
 
@@ -90,7 +137,7 @@ public class BombermanView extends JPanel {
     // draws the grid
     drawCells(g2, grid, cellPositionToPixelConverter, theme);
 
-    // draws the players
+    // draws the players if they are alive
     drawCells(g2, playerModel, cellPositionToPixelConverter, theme);
     drawCells(g2, player2Model, cellPositionToPixelConverter, theme);
     drawCells(g2, player3Model, cellPositionToPixelConverter, theme);

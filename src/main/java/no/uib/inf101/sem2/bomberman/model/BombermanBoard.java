@@ -67,6 +67,11 @@ public class BombermanBoard extends Grid<Character> {
     return this.col;
   }
 
+  /**
+   * Checks if the cell at the specified position is placeable
+   * @param pos the position of the cell
+   * @return true if the cell is placeable, false otherwise
+   */
   boolean canPlace(CellPosition pos) {
     if (
       pos.row() < 0 ||
@@ -76,16 +81,29 @@ public class BombermanBoard extends Grid<Character> {
     ) {
       return false;
     } else if (get(pos) != '-' && get(pos) != 'E') {
-      System.out.println("FALSE!");
       return false;
     }
     return true;
   }
 
+  /**
+   * Checks if the cell at the specified position is destructible
+   * @param pos the position of the cell
+   * @return true if the cell is destructible, false otherwise
+   */
   boolean isDestructible(CellPosition pos) {
     if (get(pos) == 'X' || get(pos) == 'E' || get(pos) == '-') {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Checks if the cell at the specified position is an explosion
+   * @param pos the position of the cell
+   * @return true if the cell is an explosion, false otherwise
+   */
+  boolean isExplosion(CellPosition pos) {
+    return get(pos) == 'E';
   }
 }

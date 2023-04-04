@@ -41,4 +41,14 @@ public class DefaultColorTheme implements ColorTheme {
   public Color getFrameColor() {
     return Color.BLACK;
   }
+
+  @Override
+  public Color getScoreBoardColor() {
+    return Color.ORANGE;
+  }
+
+  @Override
+  public Color getScoreBoardTextColor() {
+    return Color.BLACK;
+  }
 }

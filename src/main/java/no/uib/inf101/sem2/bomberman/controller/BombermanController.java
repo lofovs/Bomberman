@@ -32,17 +32,20 @@ public class BombermanController implements java.awt.event.KeyListener {
 
   @Override
   public void keyPressed(KeyEvent e) {
-    if (e.getKeyCode() == KeyEvent.VK_UP) {
-      model.movePlayer(-1, 0);
-    } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-      model.movePlayer(1, 0);
-    } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-      model.movePlayer(0, -1);
-    } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-      model.movePlayer(0, 1);
-    } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-      model.placeBomb(model.getPlayer(), model.getBomb());
-    } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+    if (this.model.getPlayerLives() > 0) {
+      if (e.getKeyCode() == KeyEvent.VK_UP) {
+        model.movePlayer(-1, 0);
+      } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+        model.movePlayer(1, 0);
+      } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+        model.movePlayer(0, -1);
+      } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+        model.movePlayer(0, 1);
+      } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        model.placeBomb(model.getPlayer(), model.getBomb());
+      }
+    }
+    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
       System.exit(0);
     } else if (e.getKeyCode() == KeyEvent.VK_M) {
       if (this.song.isRunning()) {

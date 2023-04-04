@@ -18,9 +18,14 @@ public class BombermanModel
   private BombermanBoard board;
 
   private Player player;
-  private PlayerAI playerAI;
-  private PlayerAI playerAI2;
-  private PlayerAI playerAI3;
+  private PlayerAI player2;
+  private PlayerAI player3;
+  private PlayerAI player4;
+
+  private int playerLives;
+  private int player2Lives;
+  private int player3Lives;
+  private int player4Lives;
 
   private Bomb bomb;
   private Bomb bomb2;
@@ -43,16 +48,23 @@ public class BombermanModel
   private int player3BombCount;
   private int player4BombCount;
 
+  private static final CellPosition PLAYER_DEAD_POS = new CellPosition(-2, -2);
+
   private Random random;
 
   public BombermanModel(BombermanBoard board, BombFactory bombFactory) {
     this.board = board;
 
     this.player = new Player(new CellPosition(board.rows() - 2, 1));
-    this.playerAI = new PlayerAI(new CellPosition(1, 1), 'b');
-    this.playerAI2 =
+    this.player2 = new PlayerAI(new CellPosition(1, 1), 'b');
+    this.player3 =
       new PlayerAI(new CellPosition(board.rows() - 2, board.cols() - 2), 'r');
-    this.playerAI3 = new PlayerAI(new CellPosition(1, board.cols() - 2), 'p');
+    this.player4 = new PlayerAI(new CellPosition(1, board.cols() - 2), 'p');
+
+    this.playerLives = 3;
+    this.player2Lives = 3;
+    this.player3Lives = 3;
+    this.player4Lives = 3;
 
     this.bombFactory = bombFactory;
 
@@ -91,17 +103,17 @@ public class BombermanModel
         addBombToBoard(newBomb);
         playerBombCount++;
         return true;
-      } else if (player == this.playerAI && player2BombCount < 1) {
+      } else if (player == this.player2 && player2BombCount < 1) {
         this.bomb2 = newBomb;
         addBombToBoard(newBomb);
         player2BombCount++;
         return true;
-      } else if (player == this.playerAI2 && player3BombCount < 1) {
+      } else if (player == this.player3 && player3BombCount < 1) {
         this.bomb3 = newBomb;
         addBombToBoard(newBomb);
         player3BombCount++;
         return true;
-      } else if (player == this.playerAI3 && player4BombCount < 1) {
+      } else if (player == this.player4 && player4BombCount < 1) {
         this.bomb4 = newBomb;
         addBombToBoard(newBomb);
         player4BombCount++;
@@ -213,12 +225,12 @@ public class BombermanModel
 
     PlayerAI newAI = playerAI.shiftedBy(deltaRow, deltaCol);
     if (this.board.canPlace(newAI.getPos())) {
-      if (playerAI == this.playerAI) {
-        this.playerAI = newAI;
-      } else if (playerAI == this.playerAI2) {
-        this.playerAI2 = newAI;
-      } else if (playerAI == this.playerAI3) {
-        this.playerAI3 = newAI;
+      if (playerAI == this.player2) {
+        this.player2 = newAI;
+      } else if (playerAI == this.player3) {
+        this.player3 = newAI;
+      } else if (playerAI == this.player4) {
+        this.player4 = newAI;
       }
       return;
     }
@@ -248,17 +260,17 @@ public class BombermanModel
 
   @Override
   public Iterable<GridCell<Character>> getPlayer2Tile() {
-    return playerAI;
+    return player2;
   }
 
   @Override
   public Iterable<GridCell<Character>> getPlayer3Tile() {
-    return playerAI2;
+    return player3;
   }
 
   @Override
   public Iterable<GridCell<Character>> getPlayer4Tile() {
-    return playerAI3;
+    return player4;
   }
 
   @Override
@@ -272,21 +284,6 @@ public class BombermanModel
     player2ClockTick();
     player3ClockTick();
     player4ClockTick();
-
-    moveAI(playerAI);
-    moveAI(playerAI2);
-    moveAI(playerAI3);
-
-    // make the AI place bombs randomly
-    if (this.random.nextInt(100) < 33) {
-      placeBomb(playerAI, bomb2);
-    }
-    if (this.random.nextInt(100) < 33) {
-      placeBomb(playerAI2, bomb3);
-    }
-    if (this.random.nextInt(100) < 33) {
-      placeBomb(playerAI3, bomb4);
-    }
   }
 
   private void player4ClockTick() {
@@ -306,6 +303,19 @@ public class BombermanModel
     if (board.positionIsOnGrid(this.bomb4.getPos())) {
       this.bomb4.tick();
     }
+    // checks if the player should take damage and reduces the player's lives if they should
+    damagePlayer(player4);
+
+    // checks if the player is alive and if true it will move and place bombs
+    if (isAlive(player4)) {
+      moveAI(player4);
+      if (this.random.nextInt(100) < 33) {
+        placeBomb(player4, bomb4);
+      }
+    }
+
+    // checks if the player is dead and if true it will remove the player from the board
+    removeDeadPlayerFromBoard(this.player4);
   }
 
   private void player3ClockTick() {
@@ -325,6 +335,19 @@ public class BombermanModel
     if (board.positionIsOnGrid(this.bomb3.getPos())) {
       this.bomb3.tick();
     }
+    // checks if the player should take damage and reduces the player's lives if they should
+    damagePlayer(this.player3);
+
+    // checks if the player is alive and true it will move and place bombs
+    if (isAlive(player3)) {
+      moveAI(player3);
+      if (this.random.nextInt(100) < 33) {
+        placeBomb(player3, bomb3);
+      }
+    }
+
+    // checks if the player is dead and if true it will remove the player from the board
+    removeDeadPlayerFromBoard(this.player3);
   }
 
   private void player2ClockTick() {
@@ -344,6 +367,19 @@ public class BombermanModel
     if (board.positionIsOnGrid(this.bomb2.getPos())) {
       this.bomb2.tick();
     }
+    // checks if the player should take damage and reduces the player's lives if they should
+    damagePlayer(this.player2);
+
+    // checks if the player is alive, and if true it will move and place bombs
+    if (isAlive(player2)) {
+      moveAI(player2);
+      if (this.random.nextInt(100) < 33) {
+        placeBomb(player2, bomb2);
+      }
+    }
+
+    // checks if the player is dead and if true it will remove the player from the board
+    removeDeadPlayerFromBoard(this.player2);
   }
 
   private void player1ClockTick() {
@@ -363,6 +399,54 @@ public class BombermanModel
     if (board.positionIsOnGrid(this.bomb.getPos())) {
       this.bomb.tick();
     }
+    // checks if the player should take damage and reduces the player's lives if they should
+    damagePlayer(this.player);
+
+    // checks if the player is dead and if true it will remove the player from the board
+    removeDeadPlayerFromBoard(this.player);
+  }
+
+  private void damagePlayer(Iterable<GridCell<Character>> player) {
+    for (GridCell<Character> gridCell : player) {
+      if (player == this.player && isAlive(this.player)) {
+        if (this.board.isExplosion(gridCell.pos())) {
+          this.playerLives--;
+        }
+      }
+      if (player == this.player2 && isAlive(this.player2)) {
+        if (this.board.isExplosion(gridCell.pos())) {
+          this.player2Lives--;
+        }
+      }
+      if (player == this.player3 && isAlive(this.player3)) {
+        if (this.board.isExplosion(gridCell.pos())) {
+          this.player3Lives--;
+        }
+      }
+      if (player == this.player4 && isAlive(this.player4)) {
+        if (this.board.isExplosion(gridCell.pos())) {
+          this.player4Lives--;
+        }
+      }
+    }
+  }
+
+  /**
+   * Checks if the given player is alive
+   * @param player the player to check
+   * @return true if the player is alive, false otherwise
+   */
+  public boolean isAlive(IPlayer player) {
+    if (player == this.player) {
+      return this.playerLives > 0;
+    } else if (player == this.player2) {
+      return this.player2Lives > 0;
+    } else if (player == this.player3) {
+      return this.player3Lives > 0;
+    } else if (player == this.player4) {
+      return this.player4Lives > 0;
+    }
+    return false;
   }
 
   /**
@@ -415,6 +499,25 @@ public class BombermanModel
     }
   }
 
+  /**
+   * Moves the dead player out of the board
+   * @param player the dead player
+   * @return the dead player
+   */
+  private void removeDeadPlayerFromBoard(IPlayer player) {
+    if (!isAlive(player)) {
+      if (player == this.player) {
+        this.player = this.player.shiftedToPosition(PLAYER_DEAD_POS);
+      } else if (player == this.player2) {
+        this.player2 = this.player2.shiftedToPosition(PLAYER_DEAD_POS);
+      } else if (player == this.player3) {
+        this.player3 = this.player3.shiftedToPosition(PLAYER_DEAD_POS);
+      } else if (player == this.player4) {
+        this.player4 = this.player4.shiftedToPosition(PLAYER_DEAD_POS);
+      }
+    }
+  }
+
   @Override
   public Iterable<GridCell<Character>> getBombTile() {
     return this.bomb;
@@ -458,21 +561,6 @@ public class BombermanModel
   }
 
   @Override
-  public PlayerAI getPlayerAI() {
-    return this.playerAI;
-  }
-
-  @Override
-  public PlayerAI getPlayerAI2() {
-    return this.playerAI2;
-  }
-
-  @Override
-  public PlayerAI getPlayerAI3() {
-    return this.playerAI3;
-  }
-
-  @Override
   public Bomb getBomb() {
     return this.bomb;
   }
@@ -490,5 +578,25 @@ public class BombermanModel
   @Override
   public Bomb getBomb4() {
     return this.bomb4;
+  }
+
+  @Override
+  public int getPlayerLives() {
+    return this.playerLives;
+  }
+
+  @Override
+  public int getPlayer2Lives() {
+    return this.player2Lives;
+  }
+
+  @Override
+  public int getPlayer3Lives() {
+    return this.player3Lives;
+  }
+
+  @Override
+  public int getPlayer4Lives() {
+    return this.player4Lives;
   }
 }
