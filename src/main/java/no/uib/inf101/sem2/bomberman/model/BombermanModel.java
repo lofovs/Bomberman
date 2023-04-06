@@ -286,6 +286,9 @@ public class BombermanModel
     player4ClockTick();
   }
 
+  /**
+   * The events that happen for player 4 when the clock ticks
+   */
   private void player4ClockTick() {
     // checks if the bomb has exploded and if it has it will remove the explosion tiles, create a new bomb and reset the explosion timer
     if (explosionTimer4 == 1) {
@@ -318,6 +321,9 @@ public class BombermanModel
     removeDeadPlayerFromBoard(this.player4);
   }
 
+  /**
+   * The events that happen for player 3 when the clock ticks
+   */
   private void player3ClockTick() {
     // checks if the bomb has exploded and if it has it will remove the explosion tiles, create a new bomb and reset the explosion timer
     if (explosionTimer3 == 1) {
@@ -350,6 +356,9 @@ public class BombermanModel
     removeDeadPlayerFromBoard(this.player3);
   }
 
+  /**
+   * The events that happen for player 2 when the clock ticks
+   */
   private void player2ClockTick() {
     // checks if the bomb has exploded and if it has it will remove the explosion tiles, create a new bomb and reset the explosion timer
     if (explosionTimer2 == 1) {
@@ -382,6 +391,9 @@ public class BombermanModel
     removeDeadPlayerFromBoard(this.player2);
   }
 
+  /**
+   * The events that happen for player 1 when the clock ticks
+   */
   private void player1ClockTick() {
     // checks if the bomb has exploded and if it has it will remove the explosion tiles, create a new bomb and reset the explosion timer
     if (explosionTimer == 1) {
@@ -406,6 +418,10 @@ public class BombermanModel
     removeDeadPlayerFromBoard(this.player);
   }
 
+  /**
+   * Checks if the player should take damage and reduces the player's lives if true
+   * @param player
+   */
   private void damagePlayer(Iterable<GridCell<Character>> player) {
     for (GridCell<Character> gridCell : player) {
       if (player == this.player && isAlive(this.player)) {
@@ -436,7 +452,7 @@ public class BombermanModel
    * @param player the player to check
    * @return true if the player is alive, false otherwise
    */
-  public boolean isAlive(IPlayer player) {
+  private boolean isAlive(IPlayer player) {
     if (player == this.player) {
       return this.playerLives > 0;
     } else if (player == this.player2) {
@@ -500,7 +516,7 @@ public class BombermanModel
   }
 
   /**
-   * Moves the dead player out of the board
+   * Checks if the player is dead, and if true it will remove the player from the board
    * @param player the dead player
    * @return the dead player
    */
