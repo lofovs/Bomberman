@@ -23,8 +23,8 @@ public class BombermanController implements java.awt.event.KeyListener {
     this.view.addKeyListener(this);
     this.timer = new Timer(model.getTimerInterval(), this::clockTick);
     this.timer.start();
-    this.song = new BombermanSong();
-    // this.song.run();
+    this.song = new BombermanSong("battle.mid");
+    this.song.run();
   }
 
   @Override
@@ -56,6 +56,13 @@ public class BombermanController implements java.awt.event.KeyListener {
         }
       }
     }
+
+    if (this.model.getGameState() == GameState.NEW_GAME) {
+      if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+        this.model.playGame();
+      }
+    }
+
     if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
       System.exit(0);
     } else if (e.getKeyCode() == KeyEvent.VK_M) {
@@ -65,7 +72,7 @@ public class BombermanController implements java.awt.event.KeyListener {
         this.song.doUnpauseMidiSounds();
       }
     }
-    view.repaint();
+    this.view.repaint();
   }
 
   @Override

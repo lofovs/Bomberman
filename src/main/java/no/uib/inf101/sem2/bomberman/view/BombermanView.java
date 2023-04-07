@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
@@ -115,7 +114,7 @@ public class BombermanView extends JPanel {
       INNERMARGIN
     );
 
-    if (model.getGameState() == GameState.NEW_GAME) {
+    if (this.model.getGameState() == GameState.NEW_GAME) {
       // draws a black background
       g2.setColor(Color.BLACK);
       g2.fill(windowRectangle);
@@ -142,7 +141,11 @@ public class BombermanView extends JPanel {
       );
     }
 
-    if (model.getGameState() == GameState.ACTIVE_GAME) {
+    if (this.model.getGameState() == GameState.ACTIVE_GAME) {
+      // draws the board
+      g2.setColor(theme.getFrameColor());
+      g2.fill(tileRectangle);
+
       // draws the grid
       drawCells(g2, grid, cellPositionToPixelConverter, theme);
 
@@ -157,10 +160,6 @@ public class BombermanView extends JPanel {
       drawCells(g2, bomb2Model, cellPositionToPixelConverter, theme);
       drawCells(g2, bomb3Model, cellPositionToPixelConverter, theme);
       drawCells(g2, bomb4Model, cellPositionToPixelConverter, theme);
-
-      // draws the board
-      g2.setColor(theme.getFrameColor());
-      g2.fill(tileRectangle);
 
       // draw the scoreboard under the game
       Rectangle2D scoreboardRectangle = new Rectangle2D.Double(

@@ -27,6 +27,8 @@ public class BombermanModel
   private int player3Lives;
   private int player4Lives;
 
+  private int player1MoveCount;
+
   private Bomb bomb;
   private Bomb bomb2;
   private Bomb bomb3;
@@ -65,6 +67,8 @@ public class BombermanModel
     this.player2Lives = 3;
     this.player3Lives = 3;
     this.player4Lives = 3;
+
+    this.player1MoveCount = 0;
 
     this.bombFactory = bombFactory;
 
@@ -199,10 +203,13 @@ public class BombermanModel
 
   @Override
   public boolean movePlayer(int deltaRow, int deltaCol) {
-    Player newPlayer = this.player.shiftedBy(deltaRow, deltaCol);
-    if (this.board.canPlace(newPlayer.getPos())) {
-      this.player = newPlayer;
-      return true;
+    if (player1MoveCount < 1) {
+      Player newPlayer = this.player.shiftedBy(deltaRow, deltaCol);
+      if (this.board.canPlace(newPlayer.getPos())) {
+        this.player = newPlayer;
+        this.player1MoveCount++;
+        return true;
+      }
     }
     return false;
   }
@@ -278,7 +285,7 @@ public class BombermanModel
 
   @Override
   public int getTimerInterval() {
-    return 1000;
+    return 500;
   }
 
   @Override
@@ -302,7 +309,7 @@ public class BombermanModel
       explosionTimer4 = 0;
       player4BombCount--;
     }
-    // checks if the bomb's timer has reached 3 seconds, and if it has it will explode
+    // checks if the bomb's timer has reached 3 ticks, and if it has it will explode
     if (this.bomb4.getClock() == 3) {
       explodeBomb(this.bomb4);
       explosionTimer4++;
@@ -337,7 +344,7 @@ public class BombermanModel
       explosionTimer3 = 0;
       player3BombCount--;
     }
-    // checks if the bomb's timer has reached 3 seconds, and if it has it will explode
+    // checks if the bomb's timer has reached 3 ticks, and if it has it will explode
     if (this.bomb3.getClock() == 3) {
       explodeBomb(this.bomb3);
       explosionTimer3++;
@@ -372,7 +379,7 @@ public class BombermanModel
       explosionTimer2 = 0;
       player2BombCount--;
     }
-    // checks if the bomb's timer has reached 3 seconds, and if it has it will explode
+    // checks if the bomb's timer has reached 3 ticks, and if it has it will explode
     if (this.bomb2.getClock() == 3) {
       explodeBomb(this.bomb2);
       explosionTimer2++;
@@ -407,7 +414,7 @@ public class BombermanModel
       explosionTimer = 0;
       playerBombCount--;
     }
-    // checks if the bomb's timer has reached 3 seconds, and if it has it will explode
+    // checks if the bomb's timer has reached 3 ticks, and if it has it will explode
     if (this.bomb.getClock() == 3) {
       explodeBomb(this.bomb);
       explosionTimer++;
@@ -421,6 +428,9 @@ public class BombermanModel
 
     // checks if the player is dead and if true it will remove the player from the board
     removeDeadPlayerFromBoard(this.player);
+
+    // resets the player's movement count
+    this.player1MoveCount = 0;
   }
 
   /**
@@ -573,7 +583,7 @@ public class BombermanModel
 
   @Override
   public void playGame() {
-    this.gameState = GameState.ACTIVE_GAME;
+    gameState = GameState.ACTIVE_GAME;
   }
 
   @Override
