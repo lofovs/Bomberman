@@ -31,4 +31,16 @@ public interface ColorTheme {
    * @return the color of the text in the score board
    */
   Color getScoreBoardTextColor();
+
+  /**
+   * Get the color of the new game screen
+   * @return the color of the new game screen
+   */
+  Color getNewGameColor();
+
+  /**
+   * Get the color of the new game text
+   * @return the color of the new game text
+   */
+  Color getNewGameTextColor();
 }

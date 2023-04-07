@@ -32,7 +32,10 @@ public class BombermanController implements java.awt.event.KeyListener {
 
   @Override
   public void keyPressed(KeyEvent e) {
-    if (this.model.getPlayerLives() > 0) {
+    if (
+      this.model.getPlayerLives() > 0 &&
+      this.model.getGameState() == GameState.ACTIVE_GAME
+    ) {
       if (e.getKeyCode() == KeyEvent.VK_UP) {
         model.movePlayer(-1, 0);
       } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -43,6 +46,14 @@ public class BombermanController implements java.awt.event.KeyListener {
         model.movePlayer(0, 1);
       } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
         model.placeBomb(model.getPlayer(), model.getBomb());
+      } else if (e.getKeyCode() == KeyEvent.VK_P) {
+        if (this.model.getGameState() == GameState.ACTIVE_GAME) {
+          this.model.pauseGame();
+          this.song.pause();
+        } else if (this.model.getGameState() == GameState.PAUSED_GAME) {
+          this.model.playGame();
+          this.song.doUnpauseMidiSounds();
+        }
       }
     }
     if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -51,14 +62,6 @@ public class BombermanController implements java.awt.event.KeyListener {
       if (this.song.isRunning()) {
         this.song.pause();
       } else {
-        this.song.doUnpauseMidiSounds();
-      }
-    } else if (e.getKeyCode() == KeyEvent.VK_P) {
-      if (this.model.getGameState() == GameState.ACTIVE_GAME) {
-        this.model.pauseGame();
-        this.song.pause();
-      } else if (this.model.getGameState() == GameState.PAUSED_GAME) {
-        this.model.playGame();
         this.song.doUnpauseMidiSounds();
       }
     }

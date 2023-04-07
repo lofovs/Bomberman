@@ -73,7 +73,7 @@ public class BombermanModel
     this.bomb3 = bombFactory.createNewBomb();
     this.bomb4 = bombFactory.createNewBomb();
 
-    this.gameState = GameState.ACTIVE_GAME;
+    this.gameState = GameState.NEW_GAME;
     this.explosionTimer = 0;
     this.random = new Random();
 
@@ -183,15 +183,18 @@ public class BombermanModel
       }
     }
     if (bomb == this.bomb) {
+      this.bomb = bombFactory.createNewBomb();
       this.explodedBomb = bomb;
     } else if (bomb == this.bomb2) {
+      this.bomb2 = bombFactory.createNewBomb();
       this.explodedBomb2 = bomb;
     } else if (bomb == this.bomb3) {
+      this.bomb3 = bombFactory.createNewBomb();
       this.explodedBomb3 = bomb;
     } else if (bomb == this.bomb4) {
+      this.bomb4 = bombFactory.createNewBomb();
       this.explodedBomb4 = bomb;
     }
-    bomb = bombFactory.createNewBomb();
   }
 
   @Override
@@ -280,10 +283,12 @@ public class BombermanModel
 
   @Override
   public void clockTick() {
-    player1ClockTick();
-    player2ClockTick();
-    player3ClockTick();
-    player4ClockTick();
+    if (this.gameState == GameState.ACTIVE_GAME) {
+      player1ClockTick();
+      player2ClockTick();
+      player3ClockTick();
+      player4ClockTick();
+    }
   }
 
   /**
@@ -469,8 +474,8 @@ public class BombermanModel
    * Replaces the explosion tiles with empty tiles, if the tiles are destructible
    * @param bomb the bomb that has exploded
    */
-  private void removeExplodedTiles(Bomb bomb) {
-    for (GridCell<Character> gridCell : bomb) {
+  private void removeExplodedTiles(Bomb explodedBomb) {
+    for (GridCell<Character> gridCell : explodedBomb) {
       this.board.set(gridCell.pos(), '-');
       if (
         this.board.isDestructible(

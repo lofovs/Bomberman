@@ -5,9 +5,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
+import no.uib.inf101.sem2.bomberman.model.GameState;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
@@ -23,6 +25,7 @@ public class BombermanView extends JPanel {
   private ColorTheme theme;
   private double width;
   private double height;
+  private BufferedImage bombermanLogo;
 
   /** Construct a new BombermanView */
   public BombermanView(ViewableBombermanModel model) {
@@ -42,6 +45,9 @@ public class BombermanView extends JPanel {
     this.setPreferredSize(new Dimension((int) width, (int) height));
     this.theme = new DefaultColorTheme();
     this.setBackground(getBackground());
+
+    this.bombermanLogo =
+      Inf101Graphics.loadImageFromResources("bombermanLogo.png");
   }
 
   @Override
@@ -60,62 +66,23 @@ public class BombermanView extends JPanel {
     // variables for the board
     double x = OUTERMARGIN;
     double y = OUTERMARGIN;
-    double width = this.getWidth() - (2 * OUTERMARGIN);
-    double height = this.getHeight() - (2 * OUTERMARGIN) - SCOREBOARDHEIGHT;
+    double gameWidth = this.getWidth() - (2 * OUTERMARGIN);
+    double gameHeight = this.getHeight() - (2 * OUTERMARGIN) - SCOREBOARDHEIGHT;
+    double windowWidth = this.getWidth();
+    double windowHeight = this.getHeight();
 
-    // draws the board
-    Rectangle2D tileRectangle = new Rectangle2D.Double(x, y, width, height);
-    g2.setColor(theme.getFrameColor());
-    g2.fill(tileRectangle);
-
-    // draw the scoreboard above the game
-    Rectangle2D scoreboardRectangle = new Rectangle2D.Double(
-      x,
-      y + height,
-      width,
-      SCOREBOARDHEIGHT
-    );
-    g2.setColor(theme.getScoreBoardColor());
-    g2.fill(scoreboardRectangle);
-
-    // draw the player lives on the scoreboard
+    // variables for the scoreboard
     int playerLives = model.getPlayerLives();
     int player2Lives = model.getPlayer2Lives();
     int player3Lives = model.getPlayer3Lives();
     int player4Lives = model.getPlayer4Lives();
-
-    //draw the text on the scoreboard equally spaced horizontally
-    double textWidth = width / 5;
+    double textWidth = gameWidth / 5;
     double textHeight = SCOREBOARDHEIGHT / 2;
     double textX = x;
-    double textY = y + height + textHeight;
-
-    g2.setFont(new Font("Arial", Font.BOLD, 20));
-    g2.setColor(theme.getScoreBoardTextColor());
-
-    //draw the player lives
-    g2.drawString("" + playerLives, (float) (textX + textWidth), (float) textY);
-    g2.drawString(
-      "" + player2Lives,
-      (float) (textX + 2 * textWidth),
-      (float) textY
-    );
-    g2.drawString(
-      "" + player3Lives,
-      (float) (textX + 3 * textWidth),
-      (float) textY
-    );
-    g2.drawString(
-      "" + player4Lives,
-      (float) (textX + 4 * textWidth),
-      (float) textY
-    );
+    double textY = y + gameHeight + textHeight;
 
     GridDimension gd = model.getDimension();
 
-    BufferedImage image = Inf101Graphics.loadImageFromResources(
-      "bomberman.png"
-    );
     Iterable<GridCell<Character>> grid = model.getTilesOnBoard();
 
     Iterable<GridCell<Character>> playerModel = model.getPlayerTile();
@@ -128,41 +95,122 @@ public class BombermanView extends JPanel {
     Iterable<GridCell<Character>> bomb3Model = model.getBomb3Tile();
     Iterable<GridCell<Character>> bomb4Model = model.getBomb4Tile();
 
+    Rectangle2D windowRectangle = new Rectangle2D.Double(
+      0,
+      0,
+      windowWidth,
+      windowHeight
+    );
+
+    Rectangle2D tileRectangle = new Rectangle2D.Double(
+      x,
+      y,
+      gameWidth,
+      gameHeight
+    );
+
     CellPositionToPixelConverter cellPositionToPixelConverter = new CellPositionToPixelConverter(
       tileRectangle,
       gd,
       INNERMARGIN
     );
 
-    // draws the grid
-    drawCells(g2, grid, cellPositionToPixelConverter, theme);
+    if (model.getGameState() == GameState.NEW_GAME) {
+      // draws a black background
+      g2.setColor(Color.BLACK);
+      g2.fill(windowRectangle);
 
-    // draws the players if they are alive
-    drawCells(g2, playerModel, cellPositionToPixelConverter, theme);
-    drawCells(g2, player2Model, cellPositionToPixelConverter, theme);
-    drawCells(g2, player3Model, cellPositionToPixelConverter, theme);
-    drawCells(g2, player4Model, cellPositionToPixelConverter, theme);
+      // draws the bomberman logo in the upper middle of the screen
+      Inf101Graphics.drawCenteredImage(
+        g2,
+        bombermanLogo,
+        (x + windowWidth / 2),
+        (y + windowHeight / 3),
+        1.5
+      );
 
-    // draws the bombs
-    drawCells(g2, bombModel, cellPositionToPixelConverter, theme);
-    drawCells(g2, bomb2Model, cellPositionToPixelConverter, theme);
-    drawCells(g2, bomb3Model, cellPositionToPixelConverter, theme);
-    drawCells(g2, bomb4Model, cellPositionToPixelConverter, theme);
-    // TODO: draws the player image
+      // draws the new game text
+      g2.setColor(theme.getNewGameTextColor());
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "PRESS ENTER TO PLAY",
+        tileRectangle.getX(),
+        tileRectangle.getY(),
+        gameWidth,
+        gameHeight * 1.5
+      );
+    }
 
-    // Player player = model.getPlayer();
-    // double playerX =
-    // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().x;
-    // double playerY =
-    // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().y;
+    if (model.getGameState() == GameState.ACTIVE_GAME) {
+      // draws the grid
+      drawCells(g2, grid, cellPositionToPixelConverter, theme);
 
-    // double playerWidth =
-    // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().width;
-    // double playerHeight =
-    // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().height;
-    // double playerScale = 0.05 * (playerWidth / playerHeight);
+      // draws the players
+      drawCells(g2, playerModel, cellPositionToPixelConverter, theme);
+      drawCells(g2, player2Model, cellPositionToPixelConverter, theme);
+      drawCells(g2, player3Model, cellPositionToPixelConverter, theme);
+      drawCells(g2, player4Model, cellPositionToPixelConverter, theme);
 
-    // Inf101Graphics.drawImage(g2, image, playerX, playerY, playerScale);
+      // draws the bombs
+      drawCells(g2, bombModel, cellPositionToPixelConverter, theme);
+      drawCells(g2, bomb2Model, cellPositionToPixelConverter, theme);
+      drawCells(g2, bomb3Model, cellPositionToPixelConverter, theme);
+      drawCells(g2, bomb4Model, cellPositionToPixelConverter, theme);
+
+      // draws the board
+      g2.setColor(theme.getFrameColor());
+      g2.fill(tileRectangle);
+
+      // draw the scoreboard under the game
+      Rectangle2D scoreboardRectangle = new Rectangle2D.Double(
+        x,
+        y + gameHeight,
+        gameWidth,
+        SCOREBOARDHEIGHT
+      );
+      g2.setColor(theme.getScoreBoardColor());
+      g2.fill(scoreboardRectangle);
+
+      g2.setFont(new Font("Arial", Font.BOLD, 20));
+      g2.setColor(theme.getScoreBoardTextColor());
+
+      //draw the player lives
+      g2.drawString(
+        "" + playerLives,
+        (float) (textX + textWidth),
+        (float) textY
+      );
+      g2.drawString(
+        "" + player2Lives,
+        (float) (textX + 2 * textWidth),
+        (float) textY
+      );
+      g2.drawString(
+        "" + player3Lives,
+        (float) (textX + 3 * textWidth),
+        (float) textY
+      );
+      g2.drawString(
+        "" + player4Lives,
+        (float) (textX + 4 * textWidth),
+        (float) textY
+      );
+      // TODO: draws the player image
+      // Player player = model.getPlayer();
+      // double playerX =
+      // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().x;
+      // double playerY =
+      // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().y;
+
+      // double playerWidth =
+      // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().width;
+      // double playerHeight =
+      // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().height;
+      // double playerScale = 0.05 * (playerWidth / playerHeight);
+
+      // Inf101Graphics.drawImage(g2, image, playerX, playerY, playerScale);
+    }
   }
 
   private void drawCells(

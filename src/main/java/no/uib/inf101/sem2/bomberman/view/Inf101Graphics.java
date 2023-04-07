@@ -1,5 +1,17 @@
 package no.uib.inf101.sem2.bomberman.view;
 
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Dimension2D;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 // University of Bergen INF101 helper methods for graphics with Swing.
 // Methods for drawing images are adapted with permission from
 // https://kosbie.net/cmu/spring-08/15-100/handouts/DrawImageFromFile.java
@@ -7,18 +19,6 @@ package no.uib.inf101.sem2.bomberman.view;
 // You may use this code freely. It is provided as-is, without any warranty.
 
 import javax.imageio.ImageIO;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Shape;
-import java.awt.geom.Dimension2D;
-import java.awt.image.BufferedImage;
-import java.awt.geom.Point2D;
-import java.awt.geom.AffineTransform;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.File;
 
 public class Inf101Graphics {
 
@@ -34,7 +34,12 @@ public class Inf101Graphics {
    * @param x The x coordinate
    * @param y The y coordinate
    */
-  public static void drawCenteredString(Graphics g, String s, double x, double y) {
+  public static void drawCenteredString(
+    Graphics g,
+    String s,
+    double x,
+    double y
+  ) {
     FontMetrics metrics = g.getFontMetrics();
     double txtX = x - ((double) metrics.stringWidth(s)) / 2;
     double txtY = y - ((double) metrics.getHeight()) / 2 + metrics.getAscent();
@@ -66,8 +71,14 @@ public class Inf101Graphics {
    * @param width  The width of the rectangle
    * @param height The height of the rectangle
    */
-  public static void drawCenteredString(Graphics g, String s, double x, double y,
-      double width, double height) {
+  public static void drawCenteredString(
+    Graphics g,
+    String s,
+    double x,
+    double y,
+    double width,
+    double height
+  ) {
     drawCenteredString(g, s, x + width / 2, y + height / 2);
   }
 
@@ -82,8 +93,12 @@ public class Inf101Graphics {
    * @param shape in whose bounding box the string will be centered
    */
   public static void drawCenteredString(Graphics g, String s, Shape shape) {
-    Inf101Graphics.drawCenteredString(g, s, shape.getBounds2D().getCenterX(),
-        shape.getBounds2D().getCenterY());
+    Inf101Graphics.drawCenteredString(
+      g,
+      s,
+      shape.getBounds2D().getCenterX(),
+      shape.getBounds2D().getCenterY()
+    );
   }
 
   //////////////////////////////////////
@@ -100,13 +115,22 @@ public class Inf101Graphics {
    * @param scale   The scale factor (1.0 is 100%)
    * @param radians The angle to rotate the image in radians
    */
-  public static void drawImage(Graphics g, Image image, double x, double y,
-      double scale, double radians) {
+  public static void drawImage(
+    Graphics g,
+    Image image,
+    double x,
+    double y,
+    double scale,
+    double radians
+  ) {
     double imageWidth = image.getWidth(null);
     double imageHeight = image.getHeight(null);
     Dimension2D newSize = getImageSize(image, scale, radians);
     AffineTransform transform = new AffineTransform();
-    transform.translate(x + newSize.getWidth() / 2, y + newSize.getHeight() / 2); // last (not first!)
+    transform.translate(
+      x + newSize.getWidth() / 2,
+      y + newSize.getHeight() / 2
+    ); // last (not first!)
     transform.rotate(radians);
     transform.scale(scale, scale);
     transform.translate(-imageWidth / 2, -imageHeight / 2); // first
@@ -122,8 +146,13 @@ public class Inf101Graphics {
    * @param y     The y coordinate of the top-left corner
    * @param scale The scale factor (1.0 is 100%)
    */
-  public static void drawImage(Graphics g, Image image, double x, double y,
-      double scale) {
+  public static void drawImage(
+    Graphics g,
+    Image image,
+    double x,
+    double y,
+    double scale
+  ) {
     Inf101Graphics.drawImage(g, image, x, y, scale, 0);
   }
 
@@ -137,11 +166,23 @@ public class Inf101Graphics {
    * @param scale   The scale factor (1.0 is 100%)
    * @param radians The angle to rotate the image in radians
    */
-  public static void drawCenteredImage(Graphics g, Image image, double cx, double cy,
-      double scale, double radians) {
+  public static void drawCenteredImage(
+    Graphics g,
+    Image image,
+    double cx,
+    double cy,
+    double scale,
+    double radians
+  ) {
     Dimension2D newSize = getImageSize(image, scale, radians);
-    drawImage(g, image, cx - (newSize.getWidth()) / 2,
-        cy - (newSize.getHeight()) / 2, scale, radians);
+    drawImage(
+      g,
+      image,
+      cx - (newSize.getWidth()) / 2,
+      cy - (newSize.getHeight()) / 2,
+      scale,
+      radians
+    );
   }
 
   /**
@@ -153,8 +194,13 @@ public class Inf101Graphics {
    * @param cy    The y coordinate of the center
    * @param scale The scale factor (1.0 is 100%)
    */
-  public static void drawCenteredImage(Graphics g, Image image, double cx, double cy,
-      double scale) {
+  public static void drawCenteredImage(
+    Graphics g,
+    Image image,
+    double cx,
+    double cy,
+    double scale
+  ) {
     Inf101Graphics.drawCenteredImage(g, image, cx, cy, scale, 0);
   }
 
@@ -168,7 +214,11 @@ public class Inf101Graphics {
    * @return The size of the (bounding box of) the image after it has been
    *         scaled and rotated
    */
-  public static Dimension2D getImageSize(Image image, double scale, double radians) {
+  public static Dimension2D getImageSize(
+    Image image,
+    double scale,
+    double radians
+  ) {
     double imageWidth = image.getWidth(null);
     double imageHeight = image.getHeight(null);
     AffineTransform transform = new AffineTransform();
@@ -228,7 +278,9 @@ public class Inf101Graphics {
     }
     InputStream is = Inf101Graphics.class.getResourceAsStream(filename);
     if (is == null) {
-      throw new RuntimeException("Could not find image file in resources: " + filename);
+      throw new RuntimeException(
+        "Could not find image file in resources: " + filename
+      );
     }
     try {
       return ImageIO.read(is);

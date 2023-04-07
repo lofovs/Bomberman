@@ -51,4 +51,14 @@ public class DefaultColorTheme implements ColorTheme {
   public Color getScoreBoardTextColor() {
     return Color.BLACK;
   }
+
+  @Override
+  public Color getNewGameColor() {
+    return Color.BLACK;
+  }
+
+  @Override
+  public Color getNewGameTextColor() {
+    return Color.WHITE;
+  }
 }

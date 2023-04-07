@@ -1,5 +1,6 @@
 package no.uib.inf101.sem2.bomberman.view;
 
+import no.uib.inf101.sem2.bomberman.model.GameState;
 import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
 
@@ -97,4 +98,10 @@ public interface ViewableBombermanModel {
    * @return the AI 3 lives
    */
   int getPlayer4Lives();
+
+  /**
+   * Get the game state
+   * @return the game state
+   */
+  GameState getGameState();
 }
