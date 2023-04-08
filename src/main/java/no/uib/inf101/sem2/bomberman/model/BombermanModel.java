@@ -50,32 +50,17 @@ public class BombermanModel
   private int player3BombCount;
   private int player4BombCount;
 
+  private double time = 2.00;
+
   private static final CellPosition PLAYER_DEAD_POS = new CellPosition(-2, -2);
 
   private Random random;
 
   public BombermanModel(BombermanBoard board, BombFactory bombFactory) {
     this.board = board;
-
-    this.player = new Player(new CellPosition(board.rows() - 2, 1));
-    this.player2 = new PlayerAI(new CellPosition(1, 1), 'b');
-    this.player3 =
-      new PlayerAI(new CellPosition(board.rows() - 2, board.cols() - 2), 'r');
-    this.player4 = new PlayerAI(new CellPosition(1, board.cols() - 2), 'p');
-
-    this.playerLives = 3;
-    this.player2Lives = 3;
-    this.player3Lives = 3;
-    this.player4Lives = 3;
-
     this.player1MoveCount = 0;
 
     this.bombFactory = bombFactory;
-
-    this.bomb = bombFactory.createNewBomb();
-    this.bomb2 = bombFactory.createNewBomb();
-    this.bomb3 = bombFactory.createNewBomb();
-    this.bomb4 = bombFactory.createNewBomb();
 
     this.gameState = GameState.NEW_GAME;
     this.explosionTimer = 0;
@@ -85,6 +70,8 @@ public class BombermanModel
     this.player2BombCount = 0;
     this.player3BombCount = 0;
     this.player4BombCount = 0;
+
+    newGame();
   }
 
   @Override
@@ -625,6 +612,90 @@ public class BombermanModel
   }
 
   @Override
+  public void newGame() {
+    if (
+      this.gameState == GameState.PLAYER1_WON ||
+      this.gameState == GameState.PLAYER2_WON ||
+      this.gameState == GameState.PLAYER3_WON ||
+      this.gameState == GameState.PLAYER4_WON ||
+      this.gameState == GameState.DRAW
+    ) {
+      this.gameState = GameState.ACTIVE_GAME;
+    } else {
+      this.gameState = GameState.NEW_GAME;
+    }
+
+    this.playerLives = 3;
+    this.player2Lives = 3;
+    this.player3Lives = 3;
+    this.player4Lives = 3;
+
+    this.player = new Player(new CellPosition(board.rows() - 2, 1));
+    this.player2 = new PlayerAI(new CellPosition(1, 1), 'b');
+    this.player3 =
+      new PlayerAI(new CellPosition(board.rows() - 2, board.cols() - 2), 'r');
+    this.player4 = new PlayerAI(new CellPosition(1, board.cols() - 2), 'p');
+
+    this.bomb = bombFactory.createNewBomb();
+    this.bomb2 = bombFactory.createNewBomb();
+    this.bomb3 = bombFactory.createNewBomb();
+    this.bomb4 = bombFactory.createNewBomb();
+
+    this.board.clear();
+
+    // fill the outer walls with 'G'
+    for (int i = 0; i < board.getRows(); i++) {
+      for (int j = 0; j < board.getCols(); j++) {
+        if (
+          i == 0 ||
+          i == board.getRows() - 1 ||
+          j == 0 ||
+          j == board.getCols() - 1
+        ) {
+          board.set(new CellPosition(i, j), 'G');
+        }
+      }
+    }
+
+    // create a maze of walls
+    for (int i = 0; i < board.getRows(); i++) {
+      for (int j = 0; j < board.getCols(); j++) {
+        if (i % 2 == 0 && j % 2 == 0) {
+          board.set(new CellPosition(i, j), 'G');
+        }
+      }
+    }
+
+    // create random placements of 'X' within the outer walls
+    for (int i = 0; i < board.getRows(); i++) {
+      for (int j = 0; j < board.getCols(); j++) {
+        if (board.get(new CellPosition(i, j)) == '-') {
+          if (Math.random() < 0.2) {
+            board.set(new CellPosition(i, j), 'X');
+          }
+        }
+      }
+    }
+
+    // create empty tiles around the corners
+    board.set(new CellPosition(1, 1), '-');
+    board.set(new CellPosition(1, 2), '-');
+    board.set(new CellPosition(2, 1), '-');
+
+    board.set(new CellPosition(1, board.getCols() - 2), '-');
+    board.set(new CellPosition(1, board.getCols() - 3), '-');
+    board.set(new CellPosition(2, board.getCols() - 2), '-');
+
+    board.set(new CellPosition(board.getRows() - 2, 1), '-');
+    board.set(new CellPosition(board.getRows() - 3, 1), '-');
+    board.set(new CellPosition(board.getRows() - 2, 2), '-');
+
+    board.set(new CellPosition(board.getRows() - 2, board.getCols() - 2), '-');
+    board.set(new CellPosition(board.getRows() - 3, board.getCols() - 2), '-');
+    board.set(new CellPosition(board.getRows() - 2, board.getCols() - 3), '-');
+  }
+
+  @Override
   public Player getPlayer() {
     return this.player;
   }
@@ -667,5 +738,11 @@ public class BombermanModel
   @Override
   public int getPlayer4Lives() {
     return this.player4Lives;
+  }
+
+  @Override
+  public String getTime() {
+    String timeString = "" + this.time;
+    return timeString;
   }
 }

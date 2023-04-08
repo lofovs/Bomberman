@@ -6,63 +6,11 @@ import no.uib.inf101.sem2.bomberman.model.BombermanBoard;
 import no.uib.inf101.sem2.bomberman.model.BombermanModel;
 import no.uib.inf101.sem2.bomberman.model.bomb.BombFactory;
 import no.uib.inf101.sem2.bomberman.view.BombermanView;
-import no.uib.inf101.sem2.grid.CellPosition;
 
 public class BombermanMain {
 
   public static void main(String[] args) {
     BombermanBoard board = new BombermanBoard(13, 11);
-
-    // fill the outer walls with 'G'
-    for (int i = 0; i < board.getRows(); i++) {
-      for (int j = 0; j < board.getCols(); j++) {
-        if (
-          i == 0 ||
-          i == board.getRows() - 1 ||
-          j == 0 ||
-          j == board.getCols() - 1
-        ) {
-          board.set(new CellPosition(i, j), 'G');
-        }
-      }
-    }
-
-    // create a maze of walls
-    for (int i = 0; i < board.getRows(); i++) {
-      for (int j = 0; j < board.getCols(); j++) {
-        if (i % 2 == 0 && j % 2 == 0) {
-          board.set(new CellPosition(i, j), 'G');
-        }
-      }
-    }
-
-    // create random placements of 'X' within the outer walls
-    for (int i = 0; i < board.getRows(); i++) {
-      for (int j = 0; j < board.getCols(); j++) {
-        if (board.get(new CellPosition(i, j)) == '-') {
-          if (Math.random() < 0.2) {
-            board.set(new CellPosition(i, j), 'X');
-          }
-        }
-      }
-    }
-
-    // create empty tiles around the corners
-    board.set(new CellPosition(1, 1), '-');
-    board.set(new CellPosition(1, 2), '-');
-    board.set(new CellPosition(2, 1), '-');
-
-    board.set(new CellPosition(1, board.getCols() - 2), '-');
-    board.set(new CellPosition(1, board.getCols() - 3), '-');
-    board.set(new CellPosition(2, board.getCols() - 2), '-');
-
-    board.set(new CellPosition(board.getRows() - 2, 1), '-');
-    board.set(new CellPosition(board.getRows() - 3, 1), '-');
-    board.set(new CellPosition(board.getRows() - 2, 2), '-');
-
-    board.set(new CellPosition(board.getRows() - 2, board.getCols() - 2), '-');
-    board.set(new CellPosition(board.getRows() - 3, board.getCols() - 2), '-');
-    board.set(new CellPosition(board.getRows() - 2, board.getCols() - 3), '-');
 
     BombFactory bombFactory = new BombFactory();
     BombermanModel model = new BombermanModel(board, bombFactory);
@@ -75,5 +23,6 @@ public class BombermanMain {
     frame.setContentPane(view);
     frame.pack();
     frame.setVisible(true);
+    frame.setResizable(false);
   }
 }

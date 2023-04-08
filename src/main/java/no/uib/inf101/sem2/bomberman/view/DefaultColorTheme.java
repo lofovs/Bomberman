@@ -76,4 +76,9 @@ public class DefaultColorTheme implements ColorTheme {
   public Color getGameWonTextColor() {
     return Color.WHITE;
   }
+
+  @Override
+  public Color getClockColor() {
+    return Color.WHITE;
+  }
 }

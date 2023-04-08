@@ -62,4 +62,10 @@ public interface ColorTheme {
    * @return the color of the game won text
    */
   Color getGameWonTextColor();
+
+  /**
+   * Get the color of the clock
+   * @return the color of the clock
+   */
+  Color getClockColor();
 }

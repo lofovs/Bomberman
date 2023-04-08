@@ -104,4 +104,10 @@ public interface ViewableBombermanModel {
    * @return the game state
    */
   GameState getGameState();
+
+  /**
+   * Get the time
+   * @return the time
+   */
+  String getTime();
 }

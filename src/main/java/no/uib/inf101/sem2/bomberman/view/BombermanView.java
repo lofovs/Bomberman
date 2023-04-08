@@ -32,21 +32,25 @@ public class BombermanView extends JPanel {
   private BufferedImage floorImage;
   private BufferedImage explosionImage;
 
+  private BufferedImage player1IconImage;
   private BufferedImage player1FrontImage;
   private BufferedImage player1BackImage;
   private BufferedImage player1LeftImage;
   private BufferedImage player1RightImage;
 
+  private BufferedImage player2IconImage;
   private BufferedImage player2FrontImage;
   private BufferedImage player2BackImage;
   private BufferedImage player2LeftImage;
   private BufferedImage player2RightImage;
 
+  private BufferedImage player3IconImage;
   private BufferedImage player3FrontImage;
   private BufferedImage player3BackImage;
   private BufferedImage player3LeftImage;
   private BufferedImage player3RightImage;
 
+  private BufferedImage player4IconImage;
   private BufferedImage player4FrontImage;
   private BufferedImage player4BackImage;
   private BufferedImage player4LeftImage;
@@ -82,15 +86,23 @@ public class BombermanView extends JPanel {
     this.explosionImage =
       Inf101Graphics.loadImageFromResources("explosion.png");
 
+    this.player1IconImage =
+      Inf101Graphics.loadImageFromResources("player1Icon.png");
     this.player1FrontImage =
       Inf101Graphics.loadImageFromResources("player1Front.png");
 
+    this.player2IconImage =
+      Inf101Graphics.loadImageFromResources("player2Icon.png");
     this.player2FrontImage =
       Inf101Graphics.loadImageFromResources("player2Front.png");
 
+    this.player3IconImage =
+      Inf101Graphics.loadImageFromResources("player3Icon.png");
     this.player3FrontImage =
       Inf101Graphics.loadImageFromResources("player3Front.png");
 
+    this.player4IconImage =
+      Inf101Graphics.loadImageFromResources("player4Icon.png");
     this.player4FrontImage =
       Inf101Graphics.loadImageFromResources("player4Front.png");
   }
@@ -121,9 +133,9 @@ public class BombermanView extends JPanel {
     int player2Lives = model.getPlayer2Lives();
     int player3Lives = model.getPlayer3Lives();
     int player4Lives = model.getPlayer4Lives();
-    double textWidth = gameWidth / 5;
+    double textWidth = gameWidth / 4 - 2 * INNERMARGIN;
     double textHeight = SCOREBOARDHEIGHT / 2;
-    double textX = x;
+    double textX = x + INNERMARGIN;
     double textY = y + gameHeight + textHeight;
 
     GridDimension gd = model.getDimension();
@@ -154,6 +166,13 @@ public class BombermanView extends JPanel {
       gameHeight
     );
 
+    Rectangle2D scoreboardRectangle = new Rectangle2D.Double(
+      x,
+      y + gameHeight,
+      gameWidth,
+      SCOREBOARDHEIGHT
+    );
+
     CellPositionToPixelConverter cellPositionToPixelConverter = new CellPositionToPixelConverter(
       tileRectangle,
       gd,
@@ -171,6 +190,36 @@ public class BombermanView extends JPanel {
         bombermanLogo,
         (x + windowWidth / 2),
         (y + windowHeight / 3),
+        1.5
+      );
+
+      // draws the player sprites in the lower middle of the screen
+      Inf101Graphics.drawCenteredImage(
+        g2,
+        player1FrontImage,
+        (x + windowWidth / 2) - 150,
+        (y + windowHeight / 3) + 100,
+        1.5
+      );
+      Inf101Graphics.drawCenteredImage(
+        g2,
+        player2FrontImage,
+        (x + windowWidth / 2) - 50,
+        (y + windowHeight / 3) + 100,
+        1.5
+      );
+      Inf101Graphics.drawCenteredImage(
+        g2,
+        player3FrontImage,
+        (x + windowWidth / 2) + 50,
+        (y + windowHeight / 3) + 100,
+        1.5
+      );
+      Inf101Graphics.drawCenteredImage(
+        g2,
+        player4FrontImage,
+        (x + windowWidth / 2) + 150,
+        (y + windowHeight / 3) + 100,
         1.5
       );
 
@@ -229,38 +278,106 @@ public class BombermanView extends JPanel {
       drawCells(g2, bomb4Model, cellPositionToPixelConverter, bombImage);
 
       // draw the scoreboard under the game
-      Rectangle2D scoreboardRectangle = new Rectangle2D.Double(
-        x,
-        y + gameHeight,
-        gameWidth,
-        SCOREBOARDHEIGHT
-      );
       g2.setColor(theme.getScoreBoardColor());
       g2.fill(scoreboardRectangle);
 
-      g2.setFont(new Font("Arial", Font.BOLD, 20));
-      g2.setColor(theme.getScoreBoardTextColor());
+      // draws a black rectangle behind the clock
+      Rectangle2D clockRectangle = new Rectangle2D.Double(
+        x + gameWidth / 2 - 50,
+        y + gameHeight + (scoreboardRectangle.getHeight() / 10),
+        100,
+        40
+      );
+      g2.setColor(Color.BLACK);
+      g2.fill(clockRectangle);
 
-      //draw the player lives
-      g2.drawString(
-        "" + playerLives,
-        (float) (textX + textWidth),
-        (float) textY
+      // draw a clock in the middle of the scoreboard
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+      g2.setColor(theme.getClockColor());
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "" + model.getTime(),
+        scoreboardRectangle.getX(),
+        scoreboardRectangle.getY(),
+        gameWidth,
+        SCOREBOARDHEIGHT
       );
-      g2.drawString(
-        "" + player2Lives,
-        (float) (textX + 2 * textWidth),
-        (float) textY
+
+      g2.setColor(theme.getScoreBoardTextColor());
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+
+      // draw the player 1 and 2 lives next to each other horizontally on the left side of the clock
+
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "" + model.getPlayerLives(),
+        scoreboardRectangle.getX(),
+        scoreboardRectangle.getY(),
+        gameWidth / 4,
+        SCOREBOARDHEIGHT
       );
-      g2.drawString(
-        "" + player3Lives,
-        (float) (textX + 3 * textWidth),
-        (float) textY
+
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "" + model.getPlayer2Lives(),
+        scoreboardRectangle.getX(),
+        scoreboardRectangle.getY(),
+        gameWidth / 2,
+        SCOREBOARDHEIGHT
       );
-      g2.drawString(
-        "" + player4Lives,
-        (float) (textX + 4 * textWidth),
-        (float) textY
+
+      // draw the player 3 and 4 lives next to each other horizontally on the right side of the clock
+
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "" + model.getPlayer3Lives(),
+        scoreboardRectangle.getX() + gameWidth / 2,
+        scoreboardRectangle.getY(),
+        gameWidth / 2,
+        SCOREBOARDHEIGHT
+      );
+
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "" + model.getPlayer4Lives(),
+        scoreboardRectangle.getX() + gameWidth / 2,
+        scoreboardRectangle.getY(),
+        gameWidth / 4 * 3,
+        SCOREBOARDHEIGHT
+      );
+
+      // draw the player 1 and player 2 icons to the left of their lives horizontally
+      Inf101Graphics.drawCenteredImage(
+        g2,
+        player1IconImage,
+        scoreboardRectangle.getX() + gameWidth / 8 - gameWidth / 16,
+        scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
+        0.75
+      );
+
+      Inf101Graphics.drawCenteredImage(
+        g2,
+        player2IconImage,
+        scoreboardRectangle.getX() + gameWidth / 4 + gameWidth / 16,
+        scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
+        0.75
+      );
+
+      // draw the player 3 and player 4 icons to the right of their lives horizontally
+      Inf101Graphics.drawCenteredImage(
+        g2,
+        player3IconImage,
+        scoreboardRectangle.getX() + gameWidth / 4 * 3 - gameWidth / 16,
+        scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
+        0.75
+      );
+
+      Inf101Graphics.drawCenteredImage(
+        g2,
+        player4IconImage,
+        scoreboardRectangle.getX() + gameWidth - gameWidth / 16,
+        scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
+        0.75
       );
     }
 

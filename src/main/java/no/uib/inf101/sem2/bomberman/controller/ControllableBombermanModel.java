@@ -53,6 +53,11 @@ public interface ControllableBombermanModel {
   void playGame();
 
   /**
+   * Start a new game.
+   */
+  void newGame();
+
+  /**
    * Get the player.
    * @return the player
    */

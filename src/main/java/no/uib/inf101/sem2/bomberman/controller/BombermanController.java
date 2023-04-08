@@ -63,6 +63,18 @@ public class BombermanController implements java.awt.event.KeyListener {
       }
     }
 
+    if (
+      this.model.getGameState() == GameState.PLAYER1_WON ||
+      this.model.getGameState() == GameState.PLAYER2_WON ||
+      this.model.getGameState() == GameState.PLAYER3_WON ||
+      this.model.getGameState() == GameState.PLAYER4_WON ||
+      this.model.getGameState() == GameState.DRAW
+    ) {
+      if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+        this.model.newGame();
+      }
+    }
+
     if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
       System.exit(0);
     } else if (e.getKeyCode() == KeyEvent.VK_M) {
