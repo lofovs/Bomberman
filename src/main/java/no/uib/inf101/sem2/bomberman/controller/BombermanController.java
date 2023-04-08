@@ -24,7 +24,7 @@ public class BombermanController implements java.awt.event.KeyListener {
     this.timer = new Timer(model.getTimerInterval(), this::clockTick);
     this.timer.start();
     this.song = new BombermanSong("battle.mid");
-    this.song.run();
+    // this.song.run();
   }
 
   @Override

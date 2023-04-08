@@ -12,6 +12,13 @@ public interface ColorTheme {
   Color getCellColor(Character value);
 
   /**
+   * Get the color of the floor
+   *
+   * @return the color of the floor
+   */
+  Color getFloorColor();
+
+  /**
    * Get the color of the frame
    *
    * @return the color of the frame
@@ -43,4 +50,16 @@ public interface ColorTheme {
    * @return the color of the new game text
    */
   Color getNewGameTextColor();
+
+  /**
+   * Get the color of the game won screen
+   * @return the color of the game won screen
+   */
+  Color getWonGameColor();
+
+  /**
+   * Get the color of the game won text
+   * @return the color of the game won text
+   */
+  Color getGameWonTextColor();
 }

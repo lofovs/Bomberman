@@ -27,14 +27,19 @@ public class DefaultColorTheme implements ColorTheme {
         // color for the player
         case 'W' -> Color.WHITE;
         // color for the bombs
-        case 'B' -> Color.BLACK;
-        case 'E' -> Color.ORANGE;
-        case '-' -> Color.GREEN.darker();
+        case 'B' -> getFloorColor();
+        case 'E' -> getFloorColor();
+        case '-' -> getFloorColor();
         default -> throw new IllegalArgumentException(
           "No available color for '" + value + "'"
         );
       };
     return color;
+  }
+
+  @Override
+  public Color getFloorColor() {
+    return Color.GREEN.darker();
   }
 
   @Override
@@ -59,6 +64,16 @@ public class DefaultColorTheme implements ColorTheme {
 
   @Override
   public Color getNewGameTextColor() {
+    return Color.WHITE;
+  }
+
+  @Override
+  public Color getWonGameColor() {
+    return new Color(0, 0, 0, 128);
+  }
+
+  @Override
+  public Color getGameWonTextColor() {
     return Color.WHITE;
   }
 }

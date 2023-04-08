@@ -24,7 +24,33 @@ public class BombermanView extends JPanel {
   private ColorTheme theme;
   private double width;
   private double height;
+
   private BufferedImage bombermanLogo;
+  private BufferedImage bombImage;
+  private BufferedImage wallImage;
+  private BufferedImage brokenWallImage;
+  private BufferedImage floorImage;
+  private BufferedImage explosionImage;
+
+  private BufferedImage player1FrontImage;
+  private BufferedImage player1BackImage;
+  private BufferedImage player1LeftImage;
+  private BufferedImage player1RightImage;
+
+  private BufferedImage player2FrontImage;
+  private BufferedImage player2BackImage;
+  private BufferedImage player2LeftImage;
+  private BufferedImage player2RightImage;
+
+  private BufferedImage player3FrontImage;
+  private BufferedImage player3BackImage;
+  private BufferedImage player3LeftImage;
+  private BufferedImage player3RightImage;
+
+  private BufferedImage player4FrontImage;
+  private BufferedImage player4BackImage;
+  private BufferedImage player4LeftImage;
+  private BufferedImage player4RightImage;
 
   /** Construct a new BombermanView */
   public BombermanView(ViewableBombermanModel model) {
@@ -47,6 +73,26 @@ public class BombermanView extends JPanel {
 
     this.bombermanLogo =
       Inf101Graphics.loadImageFromResources("bombermanLogo.png");
+    this.bombImage = Inf101Graphics.loadImageFromResources("bomb.png");
+
+    this.wallImage = Inf101Graphics.loadImageFromResources("wall.png");
+    this.brokenWallImage =
+      Inf101Graphics.loadImageFromResources("wallBroken.png");
+    this.floorImage = Inf101Graphics.loadImageFromResources("floor.png");
+    this.explosionImage =
+      Inf101Graphics.loadImageFromResources("explosion.png");
+
+    this.player1FrontImage =
+      Inf101Graphics.loadImageFromResources("player1Front.png");
+
+    this.player2FrontImage =
+      Inf101Graphics.loadImageFromResources("player2Front.png");
+
+    this.player3FrontImage =
+      Inf101Graphics.loadImageFromResources("player3Front.png");
+
+    this.player4FrontImage =
+      Inf101Graphics.loadImageFromResources("player4Front.png");
   }
 
   @Override
@@ -89,7 +135,7 @@ public class BombermanView extends JPanel {
     Iterable<GridCell<Character>> player3Model = model.getPlayer3Tile();
     Iterable<GridCell<Character>> player4Model = model.getPlayer4Tile();
 
-    Iterable<GridCell<Character>> bombModel = model.getBombTile();
+    Iterable<GridCell<Character>> bomb1Model = model.getBombTile();
     Iterable<GridCell<Character>> bomb2Model = model.getBomb2Tile();
     Iterable<GridCell<Character>> bomb3Model = model.getBomb3Tile();
     Iterable<GridCell<Character>> bomb4Model = model.getBomb4Tile();
@@ -147,19 +193,40 @@ public class BombermanView extends JPanel {
       g2.fill(tileRectangle);
 
       // draws the grid
-      drawCells(g2, grid, cellPositionToPixelConverter, theme);
+      drawImageCells(g2, grid, cellPositionToPixelConverter, theme);
+      // drawCells(g2, grid, cellPositionToPixelConverter, theme);
 
       // draws the players
-      drawCells(g2, playerModel, cellPositionToPixelConverter, theme);
-      drawCells(g2, player2Model, cellPositionToPixelConverter, theme);
-      drawCells(g2, player3Model, cellPositionToPixelConverter, theme);
-      drawCells(g2, player4Model, cellPositionToPixelConverter, theme);
+      drawCells(
+        g2,
+        playerModel,
+        cellPositionToPixelConverter,
+        player1FrontImage
+      );
+      drawCells(
+        g2,
+        player2Model,
+        cellPositionToPixelConverter,
+        player2FrontImage
+      );
+      drawCells(
+        g2,
+        player3Model,
+        cellPositionToPixelConverter,
+        player3FrontImage
+      );
+      drawCells(
+        g2,
+        player4Model,
+        cellPositionToPixelConverter,
+        player4FrontImage
+      );
 
       // draws the bombs
-      drawCells(g2, bombModel, cellPositionToPixelConverter, theme);
-      drawCells(g2, bomb2Model, cellPositionToPixelConverter, theme);
-      drawCells(g2, bomb3Model, cellPositionToPixelConverter, theme);
-      drawCells(g2, bomb4Model, cellPositionToPixelConverter, theme);
+      drawCells(g2, bomb1Model, cellPositionToPixelConverter, bombImage);
+      drawCells(g2, bomb2Model, cellPositionToPixelConverter, bombImage);
+      drawCells(g2, bomb3Model, cellPositionToPixelConverter, bombImage);
+      drawCells(g2, bomb4Model, cellPositionToPixelConverter, bombImage);
 
       // draw the scoreboard under the game
       Rectangle2D scoreboardRectangle = new Rectangle2D.Double(
@@ -195,20 +262,126 @@ public class BombermanView extends JPanel {
         (float) (textX + 4 * textWidth),
         (float) textY
       );
-      // TODO: draws the player image
-      // Player player = model.getPlayer();
-      // double playerX =
-      // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().x;
-      // double playerY =
-      // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().y;
+    }
 
-      // double playerWidth =
-      // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().width;
-      // double playerHeight =
-      // cellPositionToPixelConverter.getBoundsForCell(player.getPos()).getBounds().height;
-      // double playerScale = 0.05 * (playerWidth / playerHeight);
+    if (this.model.getGameState() == GameState.PLAYER1_WON) {
+      // draws a black background
+      g2.setColor(Color.BLACK);
+      g2.fill(windowRectangle);
 
-      // Inf101Graphics.drawImage(g2, image, playerX, playerY, playerScale);
+      // draws the player 1 won text
+      g2.setColor(theme.getGameWonTextColor());
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "PLAYER 1 WON",
+        tileRectangle.getX(),
+        tileRectangle.getY(),
+        gameWidth,
+        gameHeight
+      );
+
+      // draws the new game text
+      g2.setColor(theme.getNewGameTextColor());
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "PRESS ENTER TO PLAY AGAIN",
+        tileRectangle.getX(),
+        tileRectangle.getY(),
+        gameWidth,
+        gameHeight * 1.5
+      );
+    }
+
+    if (this.model.getGameState() == GameState.PLAYER2_WON) {
+      // draws a black background
+      g2.setColor(Color.BLACK);
+      g2.fill(windowRectangle);
+
+      // draws the player 2 won text
+      g2.setColor(theme.getGameWonTextColor());
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "PLAYER 2 WON",
+        tileRectangle.getX(),
+        tileRectangle.getY(),
+        gameWidth,
+        gameHeight
+      );
+
+      // draws the new game text
+      g2.setColor(theme.getNewGameTextColor());
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "PRESS ENTER TO PLAY AGAIN",
+        tileRectangle.getX(),
+        tileRectangle.getY(),
+        gameWidth,
+        gameHeight * 1.5
+      );
+    }
+
+    if (this.model.getGameState() == GameState.PLAYER3_WON) {
+      // draws a black background
+      g2.setColor(Color.BLACK);
+      g2.fill(windowRectangle);
+
+      // draws the player 3 won text
+      g2.setColor(theme.getGameWonTextColor());
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "PLAYER 3 WON",
+        tileRectangle.getX(),
+        tileRectangle.getY(),
+        gameWidth,
+        gameHeight
+      );
+
+      // draws the new game text
+      g2.setColor(theme.getNewGameTextColor());
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "PRESS ENTER TO PLAY AGAIN",
+        tileRectangle.getX(),
+        tileRectangle.getY(),
+        gameWidth,
+        gameHeight * 1.5
+      );
+    }
+
+    if (this.model.getGameState() == GameState.PLAYER4_WON) {
+      // draws a black background
+      g2.setColor(Color.BLACK);
+      g2.fill(windowRectangle);
+
+      // draws the player 4 won text
+      g2.setColor(theme.getGameWonTextColor());
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "PLAYER 4 WON",
+        tileRectangle.getX(),
+        tileRectangle.getY(),
+        gameWidth,
+        gameHeight
+      );
+
+      // draws the new game text
+      g2.setColor(theme.getNewGameTextColor());
+      g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+      Inf101Graphics.drawCenteredString(
+        g2,
+        "PRESS ENTER TO PLAY AGAIN",
+        tileRectangle.getX(),
+        tileRectangle.getY(),
+        gameWidth,
+        gameHeight * 1.5
+      );
     }
   }
 
@@ -216,7 +389,7 @@ public class BombermanView extends JPanel {
     Graphics2D g2,
     Iterable<GridCell<Character>> cells,
     CellPositionToPixelConverter cellPositionToPixelConverter,
-    ColorTheme theme2
+    ColorTheme theme
   ) {
     for (GridCell<Character> cell : cells) {
       Character value = cell.value();
@@ -226,6 +399,62 @@ public class BombermanView extends JPanel {
 
       g2.setColor(color);
       g2.fill(r);
+    }
+  }
+
+  private void drawCells(
+    Graphics2D g2,
+    Iterable<GridCell<Character>> cells,
+    CellPositionToPixelConverter cellPositionToPixelConverter,
+    BufferedImage image
+  ) {
+    for (GridCell<Character> cell : cells) {
+      CellPosition pos = cell.pos();
+      Rectangle2D r = cellPositionToPixelConverter.getBoundsForCell(pos);
+      double imageX = r.getX() + r.getWidth() / 2;
+      double imageY = r.getY() + r.getHeight() / 2;
+
+      Inf101Graphics.drawCenteredImage(g2, image, imageX, imageY, 1.0);
+    }
+  }
+
+  private void drawImageCells(
+    Graphics2D g2,
+    Iterable<GridCell<Character>> cells,
+    CellPositionToPixelConverter cellPositionToPixelConverter,
+    ColorTheme theme
+  ) {
+    for (GridCell<Character> cell : cells) {
+      Character value = cell.value();
+      CellPosition pos = cell.pos();
+      Rectangle2D r = cellPositionToPixelConverter.getBoundsForCell(pos);
+      if (value == 'G') {
+        BufferedImage image = this.wallImage;
+        double imageX = r.getX() + r.getWidth() / 2;
+        double imageY = r.getY() + r.getHeight() / 2;
+        Inf101Graphics.drawCenteredImage(g2, image, imageX, imageY, 1.0);
+        continue;
+      } else if (value == 'X') {
+        BufferedImage image = this.brokenWallImage;
+        double imageX = r.getX() + r.getWidth() / 2;
+        double imageY = r.getY() + r.getHeight() / 2;
+        Inf101Graphics.drawCenteredImage(g2, image, imageX, imageY, 1.0);
+        continue;
+      } else if (value == 'E') {
+        BufferedImage image = this.explosionImage;
+        double imageX = r.getX() + r.getWidth() / 2;
+        double imageY = r.getY() + r.getHeight() / 2;
+
+        Inf101Graphics.drawCenteredImage(g2, image, imageX, imageY, 1.0);
+        continue;
+      } else {
+        BufferedImage image = this.floorImage;
+
+        double imageX = r.getX() + r.getWidth() / 2;
+        double imageY = r.getY() + r.getHeight() / 2;
+
+        Inf101Graphics.drawCenteredImage(g2, image, imageX, imageY, 1.0);
+      }
     }
   }
 }

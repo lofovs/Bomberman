@@ -295,6 +295,7 @@ public class BombermanModel
       player2ClockTick();
       player3ClockTick();
       player4ClockTick();
+      checkWin();
     }
   }
 
@@ -423,14 +424,51 @@ public class BombermanModel
     if (board.positionIsOnGrid(this.bomb.getPos())) {
       this.bomb.tick();
     }
-    // checks if the player should take damage and reduces the player's lives if they should
     damagePlayer(this.player);
 
-    // checks if the player is dead and if true it will remove the player from the board
     removeDeadPlayerFromBoard(this.player);
 
     // resets the player's movement count
     this.player1MoveCount = 0;
+  }
+
+  private void checkWin() {
+    if (
+      this.playerLives > 0 &&
+      this.player2Lives == 0 &&
+      this.player3Lives == 0 &&
+      this.player4Lives == 0
+    ) {
+      this.gameState = GameState.PLAYER1_WON;
+    } else if (
+      this.playerLives == 0 &&
+      this.player2Lives > 0 &&
+      this.player3Lives == 0 &&
+      this.player4Lives == 0
+    ) {
+      this.gameState = GameState.PLAYER2_WON;
+    } else if (
+      this.playerLives == 0 &&
+      this.player2Lives == 0 &&
+      this.player3Lives > 0 &&
+      this.player4Lives == 0
+    ) {
+      this.gameState = GameState.PLAYER3_WON;
+    } else if (
+      this.playerLives == 0 &&
+      this.player2Lives == 0 &&
+      this.player3Lives == 0 &&
+      this.player4Lives > 0
+    ) {
+      this.gameState = GameState.PLAYER4_WON;
+    } else if (
+      this.playerLives == 0 &&
+      this.player2Lives == 0 &&
+      this.player3Lives == 0 &&
+      this.player4Lives == 0
+    ) {
+      this.gameState = GameState.DRAW;
+    }
   }
 
   /**
