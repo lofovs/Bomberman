@@ -69,16 +69,15 @@ public class BombermanBoard extends Grid<Character> {
 
   /**
    * Checks if the cell at the specified position is placeable
+   * 
    * @param pos the position of the cell
    * @return true if the cell is placeable, false otherwise
    */
   boolean canPlace(CellPosition pos) {
-    if (
-      pos.row() < 0 ||
-      pos.row() >= this.row ||
-      pos.col() < 0 ||
-      pos.col() >= this.col
-    ) {
+    if (pos.row() < 0 ||
+        pos.row() >= this.row ||
+        pos.col() < 0 ||
+        pos.col() >= this.col) {
       return false;
     } else if (get(pos) != '-' && get(pos) != 'E') {
       return false;
@@ -88,6 +87,7 @@ public class BombermanBoard extends Grid<Character> {
 
   /**
    * Checks if the cell at the specified position is destructible
+   * 
    * @param pos the position of the cell
    * @return true if the cell is destructible, false otherwise
    */
@@ -100,10 +100,48 @@ public class BombermanBoard extends Grid<Character> {
 
   /**
    * Checks if the cell at the specified position is an explosion
+   * 
    * @param pos the position of the cell
    * @return true if the cell is an explosion, false otherwise
    */
   boolean isExplosion(CellPosition pos) {
     return get(pos) == 'E';
+  }
+
+  private boolean isBomb(CellPosition pos) {
+    if (positionIsOnGrid(pos)) {
+      return get(pos) == 'B';
+    }
+    return false;
+  }
+
+  /**
+   * Checks if the cell at the specified position will become an explosion
+   * 
+   * @param pos
+   * @return
+   */
+  boolean isPotentialExplosion(CellPosition pos) {
+    if (isBomb(pos)) {
+      return true;
+    }
+    // check if the immeditate neighbours are bombs
+    else if (isBomb(new CellPosition(pos.row() + 1, pos.col())) ||
+        isBomb(new CellPosition(pos.row() - 1, pos.col())) ||
+        isBomb(new CellPosition(pos.row(), pos.col() + 1)) ||
+        isBomb(new CellPosition(pos.row(), pos.col() - 1))) {
+      return true;
+    }
+    return false;
+  }
+
+  boolean isNextToBomb(CellPosition pos) {
+    if (isBomb(new CellPosition(pos.row() + 1, pos.col())) ||
+        isBomb(new CellPosition(pos.row() - 1, pos.col())) ||
+        isBomb(new CellPosition(pos.row(), pos.col() + 1)) ||
+        isBomb(new CellPosition(pos.row(), pos.col() - 1))) {
+      return true;
+    }
+    return false;
   }
 }

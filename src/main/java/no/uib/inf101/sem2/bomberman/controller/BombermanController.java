@@ -15,27 +15,25 @@ public class BombermanController implements java.awt.event.KeyListener {
   private BombermanSong song;
 
   public BombermanController(
-    ControllableBombermanModel model,
-    BombermanView view
-  ) {
+      ControllableBombermanModel model,
+      BombermanView view) {
     this.model = model;
     this.view = view;
     this.view.addKeyListener(this);
     this.timer = new Timer(model.getTimerInterval(), this::clockTick);
     this.timer.start();
     this.song = new BombermanSong("battle.mid");
-    // this.song.run();
+    this.song.run();
   }
 
   @Override
-  public void keyTyped(KeyEvent e) {}
+  public void keyTyped(KeyEvent e) {
+  }
 
   @Override
   public void keyPressed(KeyEvent e) {
-    if (
-      this.model.getPlayerLives() > 0 &&
-      this.model.getGameState() == GameState.ACTIVE_GAME
-    ) {
+    if (this.model.getPlayerLives() > 0 &&
+        this.model.getGameState() == GameState.ACTIVE_GAME) {
       if (e.getKeyCode() == KeyEvent.VK_UP) {
         model.movePlayer(-1, 0);
       } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -63,13 +61,11 @@ public class BombermanController implements java.awt.event.KeyListener {
       }
     }
 
-    if (
-      this.model.getGameState() == GameState.PLAYER1_WON ||
-      this.model.getGameState() == GameState.PLAYER2_WON ||
-      this.model.getGameState() == GameState.PLAYER3_WON ||
-      this.model.getGameState() == GameState.PLAYER4_WON ||
-      this.model.getGameState() == GameState.DRAW
-    ) {
+    if (this.model.getGameState() == GameState.PLAYER1_WON ||
+        this.model.getGameState() == GameState.PLAYER2_WON ||
+        this.model.getGameState() == GameState.PLAYER3_WON ||
+        this.model.getGameState() == GameState.PLAYER4_WON ||
+        this.model.getGameState() == GameState.DRAW) {
       if (e.getKeyCode() == KeyEvent.VK_ENTER) {
         this.model.newGame();
       }
@@ -88,7 +84,8 @@ public class BombermanController implements java.awt.event.KeyListener {
   }
 
   @Override
-  public void keyReleased(KeyEvent e) {}
+  public void keyReleased(KeyEvent e) {
+  }
 
   /**
    * Event that is called when the timer ticks.

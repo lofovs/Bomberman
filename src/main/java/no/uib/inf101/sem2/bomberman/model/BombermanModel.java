@@ -13,7 +13,7 @@ import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
 
 public class BombermanModel
-  implements ViewableBombermanModel, ControllableBombermanModel {
+    implements ViewableBombermanModel, ControllableBombermanModel {
 
   private BombermanBoard board;
 
@@ -50,7 +50,8 @@ public class BombermanModel
   private int player3BombCount;
   private int player4BombCount;
 
-  private double time = 2.00;
+  private Clock clock;
+  private int clockTick;
 
   private static final CellPosition PLAYER_DEAD_POS = new CellPosition(-2, -2);
 
@@ -116,7 +117,8 @@ public class BombermanModel
 
   /**
    * Adds the bomb to the board.
-   *@param bomb the bomb to add
+   * 
+   * @param bomb the bomb to add
    */
   private void addBombToBoard(Bomb bomb) {
     for (GridCell<Character> gridCell : bomb) {
@@ -125,52 +127,38 @@ public class BombermanModel
   }
 
   /**
-   * Replaces the bomb tile with an explosion also covering the 4 adjacent tiles, if the tiles are destructible.
+   * Replaces the bomb tile with an explosion also covering the 4 adjacent tiles,
+   * if the tiles are destructible.
    * Also removes the bomb object from the board, after creating the explosion
+   * 
    * @param bomb the bomb to explode
    */
   private void explodeBomb(Bomb bomb) {
     for (GridCell<Character> gridCell : bomb) {
       this.board.set(gridCell.pos(), 'E');
-      if (
-        this.board.isDestructible(
-            new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col())
-          )
-      ) {
+      if (this.board.isDestructible(
+          new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col()))) {
         this.board.set(
             new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col()),
-            'E'
-          );
+            'E');
       }
-      if (
-        this.board.isDestructible(
-            new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col())
-          )
-      ) {
+      if (this.board.isDestructible(
+          new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col()))) {
         this.board.set(
             new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col()),
-            'E'
-          );
+            'E');
       }
-      if (
-        this.board.isDestructible(
-            new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1)
-          )
-      ) {
+      if (this.board.isDestructible(
+          new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1))) {
         this.board.set(
             new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1),
-            'E'
-          );
+            'E');
       }
-      if (
-        this.board.isDestructible(
-            new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1)
-          )
-      ) {
+      if (this.board.isDestructible(
+          new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1))) {
         this.board.set(
             new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1),
-            'E'
-          );
+            'E');
       }
     }
     if (bomb == this.bomb) {
@@ -203,6 +191,7 @@ public class BombermanModel
 
   /**
    * Moves the AI in a random direction
+   * 
    * @return true if the AI moved, false if it didn't
    */
   private void moveAI(PlayerAI playerAI) {
@@ -220,6 +209,43 @@ public class BombermanModel
       deltaCol = 1;
     }
 
+    // The AI will check if the chosen position is in danger of being an explosion,
+    // and if true it will not move.
+    // If the AI's position is currently on a bomb or in the vicinity of an
+    // explosion, it will ignore this precondition
+    // and move anyway
+    if (this.board.isPotentialExplosion(new CellPosition(playerAI.getPos().row() + deltaRow,
+        playerAI.getPos().col() + deltaCol))
+        && !playerAI.getPos().equals(this.bomb.getPos())
+        && !playerAI.getPos().equals(this.bomb2.getPos())
+        && !playerAI.getPos().equals(this.bomb3.getPos())
+        && !playerAI.getPos().equals(this.bomb4.getPos())
+        && !this.board.isNextToBomb(playerAI.getPos())) {
+      return;
+    }
+
+    // If the AI is right next to a bomb, it will move to the first safe tile
+    // around it
+    if (this.board.isNextToBomb(playerAI.getPos())) {
+      if (this.board.canPlace(new CellPosition(playerAI.getPos().row() - 1,
+          playerAI.getPos().col()))) {
+        deltaRow = -1;
+        deltaCol = 0;
+      } else if (this.board.canPlace(new CellPosition(playerAI.getPos().row() + 1,
+          playerAI.getPos().col()))) {
+        deltaRow = 1;
+        deltaCol = 0;
+      } else if (this.board.canPlace(new CellPosition(playerAI.getPos().row(),
+          playerAI.getPos().col() - 1))) {
+        deltaRow = 0;
+        deltaCol = -1;
+      } else if (this.board.canPlace(new CellPosition(playerAI.getPos().row(),
+          playerAI.getPos().col() + 1))) {
+        deltaRow = 0;
+        deltaCol = 1;
+      }
+    }
+
     PlayerAI newAI = playerAI.shiftedBy(deltaRow, deltaCol);
     if (this.board.canPlace(newAI.getPos())) {
       if (playerAI == this.player2) {
@@ -232,7 +258,8 @@ public class BombermanModel
       return;
     }
 
-    // if the AI fails to move, it will try to move again. If it fails 3 times, it will stop trying
+    // if the AI fails to move, it will try to move again. If it fails 3 times, it
+    // will stop trying
     int tries = 0;
     while (!this.board.canPlace(newAI.getPos()) && tries < 4) {
       direction = this.random.nextInt(4);
@@ -277,20 +304,35 @@ public class BombermanModel
 
   @Override
   public void clockTick() {
+
     if (this.gameState == GameState.ACTIVE_GAME) {
       player1ClockTick();
       player2ClockTick();
       player3ClockTick();
       player4ClockTick();
       checkWin();
+      clockTick++;
+      if (oneSecondRealTimeHasPassed()) {
+        this.clock.tick();
+      }
     }
+  }
+
+  /**
+   * Checks if one second has passed in real time
+   * 
+   * @return true if one second has passed, false if it hasn't
+   */
+  private boolean oneSecondRealTimeHasPassed() {
+    return clockTick % 2 == 0;
   }
 
   /**
    * The events that happen for player 4 when the clock ticks
    */
   private void player4ClockTick() {
-    // checks if the bomb has exploded and if it has it will remove the explosion tiles, create a new bomb and reset the explosion timer
+    // checks if the bomb has exploded and if it has it will remove the explosion
+    // tiles, create a new bomb and reset the explosion timer
     if (explosionTimer4 == 1) {
       removeExplodedTiles(explodedBomb4);
       this.bomb4 = bombFactory.createNewBomb();
@@ -302,11 +344,13 @@ public class BombermanModel
       explodeBomb(this.bomb4);
       explosionTimer4++;
     }
-    // checks if the bomb is on the grid and not outside, if it is it will tick and get added to the board
+    // checks if the bomb is on the grid and not outside, if it is it will tick and
+    // get added to the board
     if (board.positionIsOnGrid(this.bomb4.getPos())) {
       this.bomb4.tick();
     }
-    // checks if the player should take damage and reduces the player's lives if they should
+    // checks if the player should take damage and reduces the player's lives if
+    // they should
     damagePlayer(player4);
 
     // checks if the player is alive and if true it will move and place bombs
@@ -317,7 +361,8 @@ public class BombermanModel
       }
     }
 
-    // checks if the player is dead and if true it will remove the player from the board
+    // checks if the player is dead and if true it will remove the player from the
+    // board
     removeDeadPlayerFromBoard(this.player4);
   }
 
@@ -325,7 +370,8 @@ public class BombermanModel
    * The events that happen for player 3 when the clock ticks
    */
   private void player3ClockTick() {
-    // checks if the bomb has exploded and if it has it will remove the explosion tiles, create a new bomb and reset the explosion timer
+    // checks if the bomb has exploded and if it has it will remove the explosion
+    // tiles, create a new bomb and reset the explosion timer
     if (explosionTimer3 == 1) {
       removeExplodedTiles(explodedBomb3);
       this.bomb3 = bombFactory.createNewBomb();
@@ -337,11 +383,13 @@ public class BombermanModel
       explodeBomb(this.bomb3);
       explosionTimer3++;
     }
-    // checks if the bomb is on the grid and not outside, if it is it will tick and get added to the board
+    // checks if the bomb is on the grid and not outside, if it is it will tick and
+    // get added to the board
     if (board.positionIsOnGrid(this.bomb3.getPos())) {
       this.bomb3.tick();
     }
-    // checks if the player should take damage and reduces the player's lives if they should
+    // checks if the player should take damage and reduces the player's lives if
+    // they should
     damagePlayer(this.player3);
 
     // checks if the player is alive and true it will move and place bombs
@@ -352,7 +400,8 @@ public class BombermanModel
       }
     }
 
-    // checks if the player is dead and if true it will remove the player from the board
+    // checks if the player is dead and if true it will remove the player from the
+    // board
     removeDeadPlayerFromBoard(this.player3);
   }
 
@@ -360,7 +409,8 @@ public class BombermanModel
    * The events that happen for player 2 when the clock ticks
    */
   private void player2ClockTick() {
-    // checks if the bomb has exploded and if it has it will remove the explosion tiles, create a new bomb and reset the explosion timer
+    // checks if the bomb has exploded and if it has it will remove the explosion
+    // tiles, create a new bomb and reset the explosion timer
     if (explosionTimer2 == 1) {
       removeExplodedTiles(explodedBomb2);
       this.bomb2 = bombFactory.createNewBomb();
@@ -372,11 +422,13 @@ public class BombermanModel
       explodeBomb(this.bomb2);
       explosionTimer2++;
     }
-    // checks if the bomb is on the grid and not outside, if it is it will tick and get added to the board
+    // checks if the bomb is on the grid and not outside, if it is it will tick and
+    // get added to the board
     if (board.positionIsOnGrid(this.bomb2.getPos())) {
       this.bomb2.tick();
     }
-    // checks if the player should take damage and reduces the player's lives if they should
+    // checks if the player should take damage and reduces the player's lives if
+    // they should
     damagePlayer(this.player2);
 
     // checks if the player is alive, and if true it will move and place bombs
@@ -387,7 +439,8 @@ public class BombermanModel
       }
     }
 
-    // checks if the player is dead and if true it will remove the player from the board
+    // checks if the player is dead and if true it will remove the player from the
+    // board
     removeDeadPlayerFromBoard(this.player2);
   }
 
@@ -395,7 +448,8 @@ public class BombermanModel
    * The events that happen for player 1 when the clock ticks
    */
   private void player1ClockTick() {
-    // checks if the bomb has exploded and if it has it will remove the explosion tiles, create a new bomb and reset the explosion timer
+    // checks if the bomb has exploded and if it has it will remove the explosion
+    // tiles, create a new bomb and reset the explosion timer
     if (explosionTimer == 1) {
       removeExplodedTiles(explodedBomb);
       this.bomb = bombFactory.createNewBomb();
@@ -407,7 +461,8 @@ public class BombermanModel
       explodeBomb(this.bomb);
       explosionTimer++;
     }
-    // checks if the bomb is on the grid and not outside, if it is it will tick and get added to the board
+    // checks if the bomb is on the grid and not outside, if it is it will tick and
+    // get added to the board
     if (board.positionIsOnGrid(this.bomb.getPos())) {
       this.bomb.tick();
     }
@@ -420,46 +475,39 @@ public class BombermanModel
   }
 
   private void checkWin() {
-    if (
-      this.playerLives > 0 &&
-      this.player2Lives == 0 &&
-      this.player3Lives == 0 &&
-      this.player4Lives == 0
-    ) {
+    if (this.playerLives > 0 &&
+        this.player2Lives == 0 &&
+        this.player3Lives == 0 &&
+        this.player4Lives == 0) {
       this.gameState = GameState.PLAYER1_WON;
-    } else if (
-      this.playerLives == 0 &&
-      this.player2Lives > 0 &&
-      this.player3Lives == 0 &&
-      this.player4Lives == 0
-    ) {
+    } else if (this.playerLives == 0 &&
+        this.player2Lives > 0 &&
+        this.player3Lives == 0 &&
+        this.player4Lives == 0) {
       this.gameState = GameState.PLAYER2_WON;
-    } else if (
-      this.playerLives == 0 &&
-      this.player2Lives == 0 &&
-      this.player3Lives > 0 &&
-      this.player4Lives == 0
-    ) {
+    } else if (this.playerLives == 0 &&
+        this.player2Lives == 0 &&
+        this.player3Lives > 0 &&
+        this.player4Lives == 0) {
       this.gameState = GameState.PLAYER3_WON;
-    } else if (
-      this.playerLives == 0 &&
-      this.player2Lives == 0 &&
-      this.player3Lives == 0 &&
-      this.player4Lives > 0
-    ) {
+    } else if (this.playerLives == 0 &&
+        this.player2Lives == 0 &&
+        this.player3Lives == 0 &&
+        this.player4Lives > 0) {
       this.gameState = GameState.PLAYER4_WON;
-    } else if (
-      this.playerLives == 0 &&
-      this.player2Lives == 0 &&
-      this.player3Lives == 0 &&
-      this.player4Lives == 0
-    ) {
+    } else if (this.playerLives == 0 &&
+        this.player2Lives == 0 &&
+        this.player3Lives == 0 &&
+        this.player4Lives == 0 ||
+        this.clock.getTime() == 0) {
       this.gameState = GameState.DRAW;
     }
   }
 
   /**
-   * Checks if the player should take damage and reduces the player's lives if true
+   * Checks if the player should take damage and reduces the player's lives if
+   * true
+   * 
    * @param player
    */
   private void damagePlayer(Iterable<GridCell<Character>> player) {
@@ -489,6 +537,7 @@ public class BombermanModel
 
   /**
    * Checks if the given player is alive
+   * 
    * @param player the player to check
    * @return true if the player is alive, false otherwise
    */
@@ -507,56 +556,43 @@ public class BombermanModel
 
   /**
    * Replaces the explosion tiles with empty tiles, if the tiles are destructible
+   * 
    * @param bomb the bomb that has exploded
    */
   private void removeExplodedTiles(Bomb explodedBomb) {
     for (GridCell<Character> gridCell : explodedBomb) {
       this.board.set(gridCell.pos(), '-');
-      if (
-        this.board.isDestructible(
-            new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col())
-          )
-      ) {
+      if (this.board.isDestructible(
+          new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col()))) {
         this.board.set(
             new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col()),
-            '-'
-          );
+            '-');
       }
-      if (
-        this.board.isDestructible(
-            new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col())
-          )
-      ) {
+      if (this.board.isDestructible(
+          new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col()))) {
         this.board.set(
             new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col()),
-            '-'
-          );
+            '-');
       }
-      if (
-        this.board.isDestructible(
-            new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1)
-          )
-      ) {
+      if (this.board.isDestructible(
+          new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1))) {
         this.board.set(
             new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1),
-            '-'
-          );
+            '-');
       }
-      if (
-        this.board.isDestructible(
-            new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1)
-          )
-      ) {
+      if (this.board.isDestructible(
+          new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1))) {
         this.board.set(
             new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1),
-            '-'
-          );
+            '-');
       }
     }
   }
 
   /**
-   * Checks if the player is dead, and if true it will remove the player from the board
+   * Checks if the player is dead, and if true it will remove the player from the
+   * board
+   * 
    * @param player the dead player
    * @return the dead player
    */
@@ -613,13 +649,11 @@ public class BombermanModel
 
   @Override
   public void newGame() {
-    if (
-      this.gameState == GameState.PLAYER1_WON ||
-      this.gameState == GameState.PLAYER2_WON ||
-      this.gameState == GameState.PLAYER3_WON ||
-      this.gameState == GameState.PLAYER4_WON ||
-      this.gameState == GameState.DRAW
-    ) {
+    if (this.gameState == GameState.PLAYER1_WON ||
+        this.gameState == GameState.PLAYER2_WON ||
+        this.gameState == GameState.PLAYER3_WON ||
+        this.gameState == GameState.PLAYER4_WON ||
+        this.gameState == GameState.DRAW) {
       this.gameState = GameState.ACTIVE_GAME;
     } else {
       this.gameState = GameState.NEW_GAME;
@@ -632,8 +666,7 @@ public class BombermanModel
 
     this.player = new Player(new CellPosition(board.rows() - 2, 1));
     this.player2 = new PlayerAI(new CellPosition(1, 1), 'b');
-    this.player3 =
-      new PlayerAI(new CellPosition(board.rows() - 2, board.cols() - 2), 'r');
+    this.player3 = new PlayerAI(new CellPosition(board.rows() - 2, board.cols() - 2), 'r');
     this.player4 = new PlayerAI(new CellPosition(1, board.cols() - 2), 'p');
 
     this.bomb = bombFactory.createNewBomb();
@@ -641,17 +674,17 @@ public class BombermanModel
     this.bomb3 = bombFactory.createNewBomb();
     this.bomb4 = bombFactory.createNewBomb();
 
+    this.clock = new Clock();
+
     this.board.clear();
 
     // fill the outer walls with 'G'
     for (int i = 0; i < board.getRows(); i++) {
       for (int j = 0; j < board.getCols(); j++) {
-        if (
-          i == 0 ||
-          i == board.getRows() - 1 ||
-          j == 0 ||
-          j == board.getCols() - 1
-        ) {
+        if (i == 0 ||
+            i == board.getRows() - 1 ||
+            j == 0 ||
+            j == board.getCols() - 1) {
           board.set(new CellPosition(i, j), 'G');
         }
       }
@@ -742,7 +775,7 @@ public class BombermanModel
 
   @Override
   public String getTime() {
-    String timeString = "" + this.time;
+    String timeString = "" + this.clock.getTime();
     return timeString;
   }
 }
