@@ -83,15 +83,21 @@ public class BombermanView extends JPanel {
 
                 this.player1IconImage = Inf101Graphics.loadImageFromResources("player1Icon.png");
                 this.player1FrontImage = Inf101Graphics.loadImageFromResources("player1Front.png");
+                this.player1BackImage = Inf101Graphics.loadImageFromResources("player1Back.png");
+                this.player1LeftImage = Inf101Graphics.loadImageFromResources("player1Left.png");
+                this.player1RightImage = Inf101Graphics.loadImageFromResources("player1Right.png");
 
                 this.player2IconImage = Inf101Graphics.loadImageFromResources("player2Icon.png");
                 this.player2FrontImage = Inf101Graphics.loadImageFromResources("player2Front.png");
+                this.player2BackImage = Inf101Graphics.loadImageFromResources("player2Back.png");
 
                 this.player3IconImage = Inf101Graphics.loadImageFromResources("player3Icon.png");
                 this.player3FrontImage = Inf101Graphics.loadImageFromResources("player3Front.png");
+                this.player3BackImage = Inf101Graphics.loadImageFromResources("player3Back.png");
 
                 this.player4IconImage = Inf101Graphics.loadImageFromResources("player4Icon.png");
                 this.player4FrontImage = Inf101Graphics.loadImageFromResources("player4Front.png");
+                this.player4BackImage = Inf101Graphics.loadImageFromResources("player4Back.png");
         }
 
         @Override
@@ -116,10 +122,6 @@ public class BombermanView extends JPanel {
                 double windowHeight = this.getHeight();
 
                 // variables for the scoreboard
-                int playerLives = model.getPlayerLives();
-                int player2Lives = model.getPlayer2Lives();
-                int player3Lives = model.getPlayer3Lives();
-                int player4Lives = model.getPlayer4Lives();
                 double textWidth = gameWidth / 4 - 2 * INNERMARGIN;
                 double textHeight = SCOREBOARDHEIGHT / 2;
                 double textX = x + INNERMARGIN;
@@ -222,27 +224,141 @@ public class BombermanView extends JPanel {
                         drawImageCells(g2, grid, cellPositionToPixelConverter, theme);
                         // drawCells(g2, grid, cellPositionToPixelConverter, theme);
 
-                        // draws the players
-                        drawCells(
-                                        g2,
-                                        playerModel,
-                                        cellPositionToPixelConverter,
-                                        player1FrontImage);
-                        drawCells(
-                                        g2,
-                                        player2Model,
-                                        cellPositionToPixelConverter,
-                                        player2FrontImage);
-                        drawCells(
-                                        g2,
-                                        player3Model,
-                                        cellPositionToPixelConverter,
-                                        player3FrontImage);
-                        drawCells(
-                                        g2,
-                                        player4Model,
-                                        cellPositionToPixelConverter,
-                                        player4FrontImage);
+                        // draws the players depending on their direction
+                        if (this.model.getPlayer1Sprite() == 0) {
+
+                                drawCells(
+                                                g2,
+                                                playerModel,
+                                                cellPositionToPixelConverter,
+                                                player1FrontImage);
+                        }
+                        if (this.model.getPlayer1Sprite() == 1) {
+
+                                drawCells(
+                                                g2,
+                                                playerModel,
+                                                cellPositionToPixelConverter,
+                                                player1BackImage);
+                        }
+                        if (this.model.getPlayer1Sprite() == 2) {
+
+                                drawCells(
+                                                g2,
+                                                playerModel,
+                                                cellPositionToPixelConverter,
+                                                player1LeftImage);
+                        }
+                        if (this.model.getPlayer1Sprite() == 3) {
+
+                                drawCells(
+                                                g2,
+                                                playerModel,
+                                                cellPositionToPixelConverter,
+                                                player1RightImage);
+                        }
+
+                        if (this.model.getPlayer2Sprite() == 0) {
+
+                                drawCells(
+                                                g2,
+                                                player2Model,
+                                                cellPositionToPixelConverter,
+                                                player2FrontImage);
+                        }
+                        if (this.model.getPlayer2Sprite() == 1) {
+
+                                drawCells(
+                                                g2,
+                                                player2Model,
+                                                cellPositionToPixelConverter,
+                                                player2BackImage);
+                        }
+                        // if (this.model.getPlayer2Sprite() == 2) {
+
+                        // drawCells(
+                        // g2,
+                        // player2Model,
+                        // cellPositionToPixelConverter,
+                        // player2LeftImage);
+                        // }
+
+                        // if (this.model.getPlayer2Sprite() == 3) {
+
+                        // drawCells(
+                        // g2,
+                        // player2Model,
+                        // cellPositionToPixelConverter,
+                        // player2RightImage);
+                        // }
+
+                        if (this.model.getPlayer3Sprite() == 0) {
+
+                                drawCells(
+                                                g2,
+                                                player3Model,
+                                                cellPositionToPixelConverter,
+                                                player3FrontImage);
+                        }
+                        if (this.model.getPlayer3Sprite() == 1) {
+
+                                drawCells(
+                                                g2,
+                                                player3Model,
+                                                cellPositionToPixelConverter,
+                                                player3BackImage);
+                        }
+                        // if (this.model.getPlayer3Sprite() == 2) {
+
+                        // drawCells(
+                        // g2,
+                        // player3Model,
+                        // cellPositionToPixelConverter,
+                        // player3LeftImage);
+                        // }
+
+                        // if (this.model.getPlayer3Sprite() == 3) {
+
+                        // drawCells(
+                        // g2,
+                        // player3Model,
+                        // cellPositionToPixelConverter,
+                        // player3RightImage);
+                        // }
+
+                        if (this.model.getPlayer4Sprite() == 0) {
+
+                                drawCells(
+                                                g2,
+                                                player4Model,
+                                                cellPositionToPixelConverter,
+                                                player4FrontImage);
+                        }
+                        if (this.model.getPlayer4Sprite() == 1) {
+
+                                drawCells(
+                                                g2,
+                                                player4Model,
+                                                cellPositionToPixelConverter,
+                                                player4BackImage);
+                        }
+                        // if (this.model.getPlayer4Sprite() == 2) {
+
+                        // drawCells(
+                        // g2,
+                        // player4Model,
+                        // cellPositionToPixelConverter,
+                        // player4LeftImage);
+                        // }
+
+                        // if (this.model.getPlayer4Sprite() == 3) {
+
+                        // drawCells(
+                        // g2,
+                        // player4Model,
+                        // cellPositionToPixelConverter,
+                        // player4RightImage);
+                        // }
 
                         // draws the bombs
                         drawCells(g2, bomb1Model, cellPositionToPixelConverter, bombImage);

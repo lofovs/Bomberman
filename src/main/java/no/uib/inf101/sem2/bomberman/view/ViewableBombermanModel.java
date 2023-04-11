@@ -77,37 +77,63 @@ public interface ViewableBombermanModel {
 
   /**
    * Get the player lives
+   * 
    * @return the player lives
    */
   int getPlayerLives();
 
   /**
    * Get the AI lives
+   * 
    * @return the AI lives
    */
   int getPlayer2Lives();
 
   /**
    * Get the AI 2 lives
+   * 
    * @return the AI 2 lives
    */
   int getPlayer3Lives();
 
   /**
    * Get the AI 3 lives
+   * 
    * @return the AI 3 lives
    */
   int getPlayer4Lives();
 
   /**
    * Get the game state
+   * 
    * @return the game state
    */
   GameState getGameState();
 
   /**
    * Get the time
+   * 
    * @return the time
    */
   String getTime();
+
+  /**
+   * Get the player 1 sprite
+   */
+  int getPlayer1Sprite();
+
+  /**
+   * Get the player 2 sprite
+   */
+  int getPlayer2Sprite();
+
+  /**
+   * Get the player 3 sprite
+   */
+  int getPlayer3Sprite();
+
+  /**
+   * Get the player 4 sprite
+   */
+  int getPlayer4Sprite();
 }

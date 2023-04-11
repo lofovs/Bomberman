@@ -50,6 +50,11 @@ public class BombermanModel
   private int player3BombCount;
   private int player4BombCount;
 
+  private int player1Sprite;
+  private int player2Sprite;
+  private int player3Sprite;
+  private int player4Sprite;
+
   private Clock clock;
   private int clockTick;
 
@@ -71,6 +76,11 @@ public class BombermanModel
     this.player2BombCount = 0;
     this.player3BombCount = 0;
     this.player4BombCount = 0;
+
+    this.player1Sprite = 0;
+    this.player2Sprite = 0;
+    this.player3Sprite = 0;
+    this.player4Sprite = 0;
 
     newGame();
   }
@@ -304,7 +314,6 @@ public class BombermanModel
 
   @Override
   public void clockTick() {
-
     if (this.gameState == GameState.ACTIVE_GAME) {
       player1ClockTick();
       player2ClockTick();
@@ -501,6 +510,54 @@ public class BombermanModel
         this.player4Lives == 0 ||
         this.clock.getTime() == 0) {
       this.gameState = GameState.DRAW;
+    }
+  }
+
+  @Override
+  public void changePlayerSprite(IPlayer player, int row, int col) {
+    if (player == this.player) {
+      if (row == 1) {
+        player1Sprite = 0;
+      } else if (row == -1) {
+        player1Sprite = 1;
+      } else if (col == 1) {
+        player1Sprite = 3;
+      } else if (col == -1) {
+        player1Sprite = 2;
+      }
+    }
+    if (player == this.player2) {
+      if (row == 1) {
+        player2Sprite = 0;
+      } else if (row == -1) {
+        player2Sprite = 1;
+      } else if (col == 1) {
+        player2Sprite = 3;
+      } else if (col == -1) {
+        player2Sprite = 2;
+      }
+    }
+    if (player == this.player3) {
+      if (row == 1) {
+        player3Sprite = 0;
+      } else if (row == -1) {
+        player3Sprite = 1;
+      } else if (col == 1) {
+        player3Sprite = 3;
+      } else if (col == -1) {
+        player3Sprite = 2;
+      }
+    }
+    if (player == this.player4) {
+      if (row == 1) {
+        player4Sprite = 0;
+      } else if (row == -1) {
+        player4Sprite = 1;
+      } else if (col == 1) {
+        player4Sprite = 3;
+      } else if (col == -1) {
+        player4Sprite = 2;
+      }
     }
   }
 
@@ -777,5 +834,25 @@ public class BombermanModel
   public String getTime() {
     String timeString = "" + this.clock.getTime();
     return timeString;
+  }
+
+  @Override
+  public int getPlayer1Sprite() {
+    return this.player1Sprite;
+  }
+
+  @Override
+  public int getPlayer2Sprite() {
+    return this.player2Sprite;
+  }
+
+  @Override
+  public int getPlayer3Sprite() {
+    return this.player3Sprite;
+  }
+
+  @Override
+  public int getPlayer4Sprite() {
+    return this.player4Sprite;
   }
 }
