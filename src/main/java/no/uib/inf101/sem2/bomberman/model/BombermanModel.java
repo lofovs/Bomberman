@@ -260,10 +260,13 @@ public class BombermanModel
     if (this.board.canPlace(newAI.getPos())) {
       if (playerAI == this.player2) {
         this.player2 = newAI;
+        changePlayerSprite(this.player2, deltaRow, deltaCol);
       } else if (playerAI == this.player3) {
         this.player3 = newAI;
+        changePlayerSprite(this.player3, deltaRow, deltaCol);
       } else if (playerAI == this.player4) {
         this.player4 = newAI;
+        changePlayerSprite(this.player4, deltaRow, deltaCol);
       }
       return;
     }

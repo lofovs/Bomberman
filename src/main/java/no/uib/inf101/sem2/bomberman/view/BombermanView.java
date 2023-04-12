@@ -90,14 +90,20 @@ public class BombermanView extends JPanel {
                 this.player2IconImage = Inf101Graphics.loadImageFromResources("player2Icon.png");
                 this.player2FrontImage = Inf101Graphics.loadImageFromResources("player2Front.png");
                 this.player2BackImage = Inf101Graphics.loadImageFromResources("player2Back.png");
+                this.player2LeftImage = Inf101Graphics.loadImageFromResources("player2Left.png");
+                this.player2RightImage = Inf101Graphics.loadImageFromResources("player2Right.png");
 
                 this.player3IconImage = Inf101Graphics.loadImageFromResources("player3Icon.png");
                 this.player3FrontImage = Inf101Graphics.loadImageFromResources("player3Front.png");
                 this.player3BackImage = Inf101Graphics.loadImageFromResources("player3Back.png");
+                this.player3LeftImage = Inf101Graphics.loadImageFromResources("player3Left.png");
+                this.player3RightImage = Inf101Graphics.loadImageFromResources("player3Right.png");
 
                 this.player4IconImage = Inf101Graphics.loadImageFromResources("player4Icon.png");
                 this.player4FrontImage = Inf101Graphics.loadImageFromResources("player4Front.png");
                 this.player4BackImage = Inf101Graphics.loadImageFromResources("player4Back.png");
+                this.player4LeftImage = Inf101Graphics.loadImageFromResources("player4Left.png");
+                this.player4RightImage = Inf101Graphics.loadImageFromResources("player4Right.png");
         }
 
         @Override
@@ -274,23 +280,23 @@ public class BombermanView extends JPanel {
                                                 cellPositionToPixelConverter,
                                                 player2BackImage);
                         }
-                        // if (this.model.getPlayer2Sprite() == 2) {
+                        if (this.model.getPlayer2Sprite() == 2) {
 
-                        // drawCells(
-                        // g2,
-                        // player2Model,
-                        // cellPositionToPixelConverter,
-                        // player2LeftImage);
-                        // }
+                                drawCells(
+                                                g2,
+                                                player2Model,
+                                                cellPositionToPixelConverter,
+                                                player2LeftImage);
+                        }
 
-                        // if (this.model.getPlayer2Sprite() == 3) {
+                        if (this.model.getPlayer2Sprite() == 3) {
 
-                        // drawCells(
-                        // g2,
-                        // player2Model,
-                        // cellPositionToPixelConverter,
-                        // player2RightImage);
-                        // }
+                                drawCells(
+                                                g2,
+                                                player2Model,
+                                                cellPositionToPixelConverter,
+                                                player2RightImage);
+                        }
 
                         if (this.model.getPlayer3Sprite() == 0) {
 
@@ -308,23 +314,23 @@ public class BombermanView extends JPanel {
                                                 cellPositionToPixelConverter,
                                                 player3BackImage);
                         }
-                        // if (this.model.getPlayer3Sprite() == 2) {
+                        if (this.model.getPlayer3Sprite() == 2) {
 
-                        // drawCells(
-                        // g2,
-                        // player3Model,
-                        // cellPositionToPixelConverter,
-                        // player3LeftImage);
-                        // }
+                                drawCells(
+                                                g2,
+                                                player3Model,
+                                                cellPositionToPixelConverter,
+                                                player3LeftImage);
+                        }
 
-                        // if (this.model.getPlayer3Sprite() == 3) {
+                        if (this.model.getPlayer3Sprite() == 3) {
 
-                        // drawCells(
-                        // g2,
-                        // player3Model,
-                        // cellPositionToPixelConverter,
-                        // player3RightImage);
-                        // }
+                                drawCells(
+                                                g2,
+                                                player3Model,
+                                                cellPositionToPixelConverter,
+                                                player3RightImage);
+                        }
 
                         if (this.model.getPlayer4Sprite() == 0) {
 
@@ -342,23 +348,23 @@ public class BombermanView extends JPanel {
                                                 cellPositionToPixelConverter,
                                                 player4BackImage);
                         }
-                        // if (this.model.getPlayer4Sprite() == 2) {
+                        if (this.model.getPlayer4Sprite() == 2) {
 
-                        // drawCells(
-                        // g2,
-                        // player4Model,
-                        // cellPositionToPixelConverter,
-                        // player4LeftImage);
-                        // }
+                                drawCells(
+                                                g2,
+                                                player4Model,
+                                                cellPositionToPixelConverter,
+                                                player4LeftImage);
+                        }
 
-                        // if (this.model.getPlayer4Sprite() == 3) {
+                        if (this.model.getPlayer4Sprite() == 3) {
 
-                        // drawCells(
-                        // g2,
-                        // player4Model,
-                        // cellPositionToPixelConverter,
-                        // player4RightImage);
-                        // }
+                                drawCells(
+                                                g2,
+                                                player4Model,
+                                                cellPositionToPixelConverter,
+                                                player4RightImage);
+                        }
 
                         // draws the bombs
                         drawCells(g2, bomb1Model, cellPositionToPixelConverter, bombImage);
