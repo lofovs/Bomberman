@@ -23,7 +23,7 @@ public class BombermanController implements java.awt.event.KeyListener {
     this.timer = new Timer(model.getTimerInterval(), this::clockTick);
     this.timer.start();
     this.song = new BombermanSong("battle.mid");
-    // this.song.run();
+    this.song.run();
   }
 
   @Override
@@ -48,14 +48,6 @@ public class BombermanController implements java.awt.event.KeyListener {
         model.changePlayerSprite(this.model.getPlayer(), 0, 1);
       } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
         model.placeBomb(model.getPlayer(), model.getBomb());
-      } else if (e.getKeyCode() == KeyEvent.VK_P) {
-        if (this.model.getGameState() == GameState.ACTIVE_GAME) {
-          this.model.pauseGame();
-          this.song.pause();
-        } else if (this.model.getGameState() == GameState.PAUSED_GAME) {
-          this.model.playGame();
-          this.song.doUnpauseMidiSounds();
-        }
       }
     }
 
@@ -72,6 +64,16 @@ public class BombermanController implements java.awt.event.KeyListener {
         this.model.getGameState() == GameState.DRAW) {
       if (e.getKeyCode() == KeyEvent.VK_ENTER) {
         this.model.newGame();
+      }
+    }
+
+    if (e.getKeyCode() == KeyEvent.VK_P) {
+      if (this.model.getGameState() == GameState.ACTIVE_GAME) {
+        this.model.pauseGame();
+        this.song.pause();
+      } else if (this.model.getGameState() == GameState.PAUSED_GAME) {
+        this.model.playGame();
+        this.song.doUnpauseMidiSounds();
       }
     }
 

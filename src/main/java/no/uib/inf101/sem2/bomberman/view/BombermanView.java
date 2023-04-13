@@ -221,7 +221,8 @@ public class BombermanView extends JPanel {
                                         gameHeight * 1.5);
                 }
 
-                if (this.model.getGameState() == GameState.ACTIVE_GAME) {
+                if (this.model.getGameState() != GameState.NEW_GAME) {
+
                         // draws the board
                         g2.setColor(theme.getFrameColor());
                         g2.fill(tileRectangle);
@@ -466,146 +467,109 @@ public class BombermanView extends JPanel {
                                         scoreboardRectangle.getX() + gameWidth - gameWidth / 16,
                                         scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
                                         0.75);
-                }
 
-                if (this.model.getGameState() == GameState.PLAYER1_WON) {
-                        // draws a black background
-                        g2.setColor(Color.BLACK);
-                        g2.fill(windowRectangle);
+                        if (this.model.getGameState() == GameState.PAUSED_GAME
+                                        || this.model.getGameState() == GameState.PLAYER1_WON
+                                        || this.model.getGameState() == GameState.PLAYER2_WON
+                                        || this.model.getGameState() == GameState.PLAYER3_WON
+                                        || this.model.getGameState() == GameState.PLAYER4_WON
+                                        || this.model.getGameState() == GameState.DRAW) {
 
-                        // draws the player 1 won text
-                        g2.setColor(theme.getGameWonTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "PLAYER 1 WON",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight);
+                                // draw a transparent layer over the game
+                                g2.setColor(theme.getTransparentScreenColor());
+                                g2.fill(windowRectangle);
 
-                        // draws the new game text
-                        g2.setColor(theme.getNewGameTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "PRESS ENTER TO PLAY AGAIN",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight * 1.5);
-                }
+                                if (this.model.getGameState() == GameState.DRAW) {
+                                        // draw the draw text
+                                        g2.setColor(theme.getDrawTextColor());
+                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
+                                        Inf101Graphics.drawCenteredString(
+                                                        g2,
+                                                        "DRAW",
+                                                        tileRectangle.getX(),
+                                                        tileRectangle.getY(),
+                                                        gameWidth,
+                                                        gameHeight);
+                                }
+                                if (this.model.getGameState() == GameState.PAUSED_GAME) {
+                                        // draw the paused text
+                                        g2.setColor(theme.getPausedTextColor());
+                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
+                                        Inf101Graphics.drawCenteredString(
+                                                        g2,
+                                                        "PAUSED",
+                                                        tileRectangle.getX(),
+                                                        tileRectangle.getY(),
+                                                        gameWidth,
+                                                        gameHeight);
 
-                if (this.model.getGameState() == GameState.PLAYER2_WON) {
-                        // draws a black background
-                        g2.setColor(Color.BLACK);
-                        g2.fill(windowRectangle);
+                                }
+                                if (this.model.getGameState() == GameState.PLAYER1_WON) {
+                                        // draw the player 1 won text
+                                        g2.setColor(theme.getGameWonTextColor());
+                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
+                                        Inf101Graphics.drawCenteredString(
+                                                        g2,
+                                                        "PLAYER 1 WON",
+                                                        tileRectangle.getX(),
+                                                        tileRectangle.getY(),
+                                                        gameWidth,
+                                                        gameHeight);
+                                }
+                                if (this.model.getGameState() == GameState.PLAYER2_WON) {
+                                        // draw the player 2 won text
+                                        g2.setColor(theme.getGameWonTextColor());
+                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
+                                        Inf101Graphics.drawCenteredString(
+                                                        g2,
+                                                        "PLAYER 2 WON",
+                                                        tileRectangle.getX(),
+                                                        tileRectangle.getY(),
+                                                        gameWidth,
+                                                        gameHeight);
+                                }
+                                if (this.model.getGameState() == GameState.PLAYER3_WON) {
+                                        // draw the player 3 won text
+                                        g2.setColor(theme.getGameWonTextColor());
+                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
+                                        Inf101Graphics.drawCenteredString(
+                                                        g2,
+                                                        "PLAYER 3 WON",
+                                                        tileRectangle.getX(),
+                                                        tileRectangle.getY(),
+                                                        gameWidth,
+                                                        gameHeight);
+                                }
+                                if (this.model.getGameState() == GameState.PLAYER4_WON) {
+                                        // draw the player 4 won text
+                                        g2.setColor(theme.getGameWonTextColor());
+                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
+                                        Inf101Graphics.drawCenteredString(
+                                                        g2,
+                                                        "PLAYER 4 WON",
+                                                        tileRectangle.getX(),
+                                                        tileRectangle.getY(),
+                                                        gameWidth,
+                                                        gameHeight);
+                                }
+                                if (this.model.getGameState() == GameState.DRAW
+                                                || this.model.getGameState() == GameState.PLAYER1_WON
+                                                || this.model.getGameState() == GameState.PLAYER2_WON
+                                                || this.model.getGameState() == GameState.PLAYER3_WON
+                                                || this.model.getGameState() == GameState.PLAYER4_WON) {
+                                        // draw the play again text
+                                        g2.setColor(theme.getPlayAgainTextColor());
+                                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
+                                        Inf101Graphics.drawCenteredString(
+                                                        g2,
+                                                        "Press ENTER to play again",
+                                                        tileRectangle.getX(),
+                                                        windowRectangle.getY() + windowRectangle.getHeight() / 4,
+                                                        gameWidth,
+                                                        gameHeight);
+                                }
+                        }
 
-                        // draws the player 2 won text
-                        g2.setColor(theme.getGameWonTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "PLAYER 2 WON",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight);
-
-                        // draws the new game text
-                        g2.setColor(theme.getNewGameTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "PRESS ENTER TO PLAY AGAIN",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight * 1.5);
-                }
-
-                if (this.model.getGameState() == GameState.PLAYER3_WON) {
-                        // draws a black background
-                        g2.setColor(Color.BLACK);
-                        g2.fill(windowRectangle);
-
-                        // draws the player 3 won text
-                        g2.setColor(theme.getGameWonTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "PLAYER 3 WON",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight);
-
-                        // draws the new game text
-                        g2.setColor(theme.getNewGameTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "PRESS ENTER TO PLAY AGAIN",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight * 1.5);
-                }
-
-                if (this.model.getGameState() == GameState.PLAYER4_WON) {
-                        // draws a black background
-                        g2.setColor(Color.BLACK);
-                        g2.fill(windowRectangle);
-
-                        // draws the player 4 won text
-                        g2.setColor(theme.getGameWonTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "PLAYER 4 WON",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight);
-
-                        // draws the new game text
-                        g2.setColor(theme.getNewGameTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "PRESS ENTER TO PLAY AGAIN",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight * 1.5);
-                }
-
-                if (this.model.getGameState() == GameState.DRAW) {
-                        // draws a black background
-                        g2.setColor(Color.BLACK);
-                        g2.fill(windowRectangle);
-
-                        // draws the draw text
-                        g2.setColor(theme.getGameWonTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "DRAW",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight);
-
-                        // draws the new game text
-                        g2.setColor(theme.getNewGameTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "PRESS ENTER TO PLAY AGAIN",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight * 1.5);
                 }
         }
 

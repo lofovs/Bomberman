@@ -697,14 +697,12 @@ public class BombermanModel
 
   @Override
   public void pauseGame() {
-    if (this.gameState == GameState.ACTIVE_GAME) {
-      this.gameState = GameState.PAUSED_GAME;
-    }
+    this.gameState = GameState.PAUSED_GAME;
   }
 
   @Override
   public void playGame() {
-    gameState = GameState.ACTIVE_GAME;
+    this.gameState = GameState.ACTIVE_GAME;
   }
 
   @Override
@@ -723,6 +721,11 @@ public class BombermanModel
     this.player2Lives = 3;
     this.player3Lives = 3;
     this.player4Lives = 3;
+
+    this.playerBombCount = 0;
+    this.player2BombCount = 0;
+    this.player3BombCount = 0;
+    this.player4BombCount = 0;
 
     this.player = new Player(new CellPosition(board.rows() - 2, 1));
     this.player2 = new PlayerAI(new CellPosition(1, 1), 'b');

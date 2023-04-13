@@ -9,31 +9,29 @@ public class DefaultColorTheme implements ColorTheme {
     if (value == '\0') {
       throw new IllegalArgumentException("Argument cannot be null");
     }
-    Color color =
-      switch (value) {
-        // colors for the grid cells
-        case 'r' -> Color.RED;
-        case 'b' -> Color.BLUE;
-        case 'y' -> Color.YELLOW;
-        case 'g' -> Color.GREEN;
-        case 'p' -> Color.PINK;
-        case 'm' -> Color.MAGENTA;
-        case 'c' -> Color.CYAN;
-        case 'o' -> Color.ORANGE;
-        // color for the indestructible walls
-        case 'G' -> Color.GRAY;
-        // color for the destructible walls
-        case 'X' -> Color.DARK_GRAY;
-        // color for the player
-        case 'W' -> Color.WHITE;
-        // color for the bombs
-        case 'B' -> getFloorColor();
-        case 'E' -> getFloorColor();
-        case '-' -> getFloorColor();
-        default -> throw new IllegalArgumentException(
-          "No available color for '" + value + "'"
-        );
-      };
+    Color color = switch (value) {
+      // colors for the grid cells
+      case 'r' -> Color.RED;
+      case 'b' -> Color.BLUE;
+      case 'y' -> Color.YELLOW;
+      case 'g' -> Color.GREEN;
+      case 'p' -> Color.PINK;
+      case 'm' -> Color.MAGENTA;
+      case 'c' -> Color.CYAN;
+      case 'o' -> Color.ORANGE;
+      // color for the indestructible walls
+      case 'G' -> Color.GRAY;
+      // color for the destructible walls
+      case 'X' -> Color.DARK_GRAY;
+      // color for the player
+      case 'W' -> Color.WHITE;
+      // color for the bombs
+      case 'B' -> getFloorColor();
+      case 'E' -> getFloorColor();
+      case '-' -> getFloorColor();
+      default -> throw new IllegalArgumentException(
+          "No available color for '" + value + "'");
+    };
     return color;
   }
 
@@ -79,6 +77,26 @@ public class DefaultColorTheme implements ColorTheme {
 
   @Override
   public Color getClockColor() {
+    return Color.WHITE;
+  }
+
+  @Override
+  public Color getPausedTextColor() {
+    return Color.WHITE;
+  }
+
+  @Override
+  public Color getTransparentScreenColor() {
+    return new Color(0, 0, 0, 128);
+  }
+
+  @Override
+  public Color getDrawTextColor() {
+    return Color.WHITE;
+  }
+
+  @Override
+  public Color getPlayAgainTextColor() {
     return Color.WHITE;
   }
 }
