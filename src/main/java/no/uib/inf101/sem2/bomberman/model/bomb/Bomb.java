@@ -24,41 +24,36 @@ public class Bomb implements Iterable<GridCell<Character>> {
     int result = 1;
     result = prime * result + ((pos == null) ? 0 : pos.hashCode());
     result = prime * result + ((symbol == null) ? 0 : symbol.hashCode());
+    result = prime * result + clock;
     return result;
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     Bomb other = (Bomb) obj;
     if (pos == null) {
-      if (other.pos != null) return false;
-    } else if (!pos.equals(other.pos)) return false;
+      if (other.pos != null)
+        return false;
+    } else if (!pos.equals(other.pos))
+      return false;
     if (symbol == null) {
-      if (other.symbol != null) return false;
-    } else if (!symbol.equals(other.symbol)) return false;
+      if (other.symbol != null)
+        return false;
+    } else if (!symbol.equals(other.symbol))
+      return false;
+    if (clock != other.clock)
+      return false;
     return true;
   }
 
   public CellPosition getPos() {
     return this.pos;
-  }
-
-  /**
-   * Moves the player to a new position
-   *
-   * @param deltaRow the row to move by (can be negative)
-   * @param deltaCol the column to move by (can be negative)
-   * @return a new Bomb object with the new position
-   */
-  public Bomb shiftedBy(int deltaRow, int deltaCol) {
-    CellPosition newPos = new CellPosition(
-      this.pos.row() + deltaRow,
-      this.pos.col() + deltaCol
-    );
-    return new Bomb(newPos);
   }
 
   /**
@@ -94,5 +89,9 @@ public class Bomb implements Iterable<GridCell<Character>> {
 
   public void tick() {
     this.clock++;
+  }
+
+  char getSymbol() {
+    return this.symbol;
   }
 }

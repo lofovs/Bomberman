@@ -3,8 +3,9 @@ package no.uib.inf101.sem2.bomberman.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.Timer;
-import no.uib.inf101.sem2.bomberman.midi.BombermanSong;
+
 import no.uib.inf101.sem2.bomberman.model.GameState;
+import no.uib.inf101.sem2.bomberman.sound.midi.BombermanSong;
 import no.uib.inf101.sem2.bomberman.view.BombermanView;
 
 public class BombermanController implements java.awt.event.KeyListener {
@@ -23,7 +24,7 @@ public class BombermanController implements java.awt.event.KeyListener {
     this.timer = new Timer(model.getTimerInterval(), this::clockTick);
     this.timer.start();
     this.song = new BombermanSong("battle.mid");
-    this.song.run();
+    // this.song.run();
   }
 
   @Override

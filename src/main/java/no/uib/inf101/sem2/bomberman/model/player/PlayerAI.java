@@ -10,21 +10,17 @@ public class PlayerAI implements Iterable<GridCell<Character>>, IPlayer {
 
   private CellPosition pos;
   private Character symbol;
-  private int lives;
-  private int bombCount;
 
   public PlayerAI(CellPosition pos, Character symbol) {
     this.pos = pos;
     this.symbol = symbol;
-    this.bombCount = 0;
   }
 
   @Override
   public PlayerAI shiftedBy(int deltaRow, int deltaCol) {
     CellPosition newPos = new CellPosition(
-      this.pos.row() + deltaRow,
-      this.pos.col() + deltaCol
-    );
+        this.pos.row() + deltaRow,
+        this.pos.col() + deltaCol);
     return new PlayerAI(newPos, this.symbol);
   }
 
@@ -46,30 +42,37 @@ public class PlayerAI implements Iterable<GridCell<Character>>, IPlayer {
     int result = 1;
     result = prime * result + ((pos == null) ? 0 : pos.hashCode());
     result = prime * result + ((symbol == null) ? 0 : symbol.hashCode());
-    result = prime * result + lives;
-    result = prime * result + bombCount;
     return result;
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     PlayerAI other = (PlayerAI) obj;
     if (pos == null) {
-      if (other.pos != null) return false;
-    } else if (!pos.equals(other.pos)) return false;
+      if (other.pos != null)
+        return false;
+    } else if (!pos.equals(other.pos))
+      return false;
     if (symbol == null) {
-      if (other.symbol != null) return false;
-    } else if (!symbol.equals(other.symbol)) return false;
-    if (lives != other.lives) return false;
-    if (bombCount != other.bombCount) return false;
+      if (other.symbol != null)
+        return false;
+    } else if (!symbol.equals(other.symbol))
+      return false;
     return true;
   }
 
   @Override
   public PlayerAI shiftedToPosition(CellPosition pos) {
     return new PlayerAI(pos, this.symbol);
+  }
+
+  public char getSymbol() {
+    return this.symbol;
   }
 }

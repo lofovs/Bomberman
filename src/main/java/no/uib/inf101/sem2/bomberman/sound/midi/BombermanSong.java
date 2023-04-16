@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.bomberman.midi;
+package no.uib.inf101.sem2.bomberman.sound.midi;
 
 import java.io.InputStream;
 import javax.sound.midi.MidiSystem;
@@ -24,8 +24,7 @@ public class BombermanSong implements Runnable {
 
   @Override
   public void run() {
-    InputStream song =
-      BombermanSong.class.getClassLoader().getResourceAsStream(BOMBERMANMUSIC);
+    InputStream song = BombermanSong.class.getClassLoader().getResourceAsStream(BOMBERMANMUSIC);
     this.doPlayMidi(song, true);
   }
 
@@ -33,8 +32,7 @@ public class BombermanSong implements Runnable {
     try {
       this.doStopMidiSounds();
       (this.sequencer = MidiSystem.getSequencer()).setSequence(
-          MidiSystem.getSequence(is)
-        );
+          MidiSystem.getSequence(is));
       if (loop) {
         this.sequencer.setLoopCount(-1);
       }
@@ -60,7 +58,8 @@ public class BombermanSong implements Runnable {
 
   public void doPauseMidiSounds() {
     try {
-      if (this.sequencer == null || !this.sequencer.isRunning()) {}
+      if (this.sequencer == null || !this.sequencer.isRunning()) {
+      }
       this.sequencer.stop();
     } catch (Exception e) {
       this.midiError("" + e);
@@ -69,7 +68,8 @@ public class BombermanSong implements Runnable {
 
   public void doUnpauseMidiSounds() {
     try {
-      if (this.sequencer == null) {}
+      if (this.sequencer == null) {
+      }
       this.sequencer.start();
     } catch (Exception e) {
       this.midiError("" + e);
@@ -99,13 +99,5 @@ public class BombermanSong implements Runnable {
    */
   public void pause() {
     this.doPauseMidiSounds();
-  }
-
-  /**
-   * Change the song playing.
-   * @param BOMBERMANMUSIC
-   */
-  public void changeSong(String BOMBERMANMUSIC) {
-    this.BOMBERMANMUSIC = BOMBERMANMUSIC;
   }
 }

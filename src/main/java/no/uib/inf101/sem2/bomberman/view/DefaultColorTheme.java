@@ -26,7 +26,7 @@ public class DefaultColorTheme implements ColorTheme {
       // color for the player
       case 'W' -> Color.WHITE;
       // color for the bombs
-      case 'B' -> getFloorColor();
+      case 'B' -> Color.BLACK;
       case 'E' -> getFloorColor();
       case '-' -> getFloorColor();
       default -> throw new IllegalArgumentException(

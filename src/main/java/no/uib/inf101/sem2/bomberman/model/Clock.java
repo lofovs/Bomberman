@@ -6,7 +6,7 @@ public class Clock {
     private int seconds;
 
     public Clock() {
-        this.minutes = 1;
+        this.minutes = 2;
         this.seconds = 00;
     }
 

@@ -19,7 +19,6 @@ public class BombermanBoard extends Grid<Character> {
     this.row = row;
     this.col = col;
     this.defaultValue = '-';
-    this.clear();
   }
 
   /**
@@ -92,7 +91,7 @@ public class BombermanBoard extends Grid<Character> {
    * @return true if the cell is destructible, false otherwise
    */
   boolean isDestructible(CellPosition pos) {
-    if (get(pos) == 'X' || get(pos) == 'E' || get(pos) == '-') {
+    if (get(pos) == 'X' || get(pos) == 'E' || get(pos) == '-' || get(pos) == 'B') {
       return true;
     }
     return false;
@@ -125,18 +124,11 @@ public class BombermanBoard extends Grid<Character> {
     if (isBomb(pos)) {
       return true;
     }
-    // check if the immeditate neighbours are bombs
-    else if (isBomb(new CellPosition(pos.row() + 1, pos.col())) ||
-        isBomb(new CellPosition(pos.row() - 1, pos.col())) ||
-        isBomb(new CellPosition(pos.row(), pos.col() + 1)) ||
-        isBomb(new CellPosition(pos.row(), pos.col() - 1))) {
+    if (isExplosion(pos)) {
       return true;
     }
-    return false;
-  }
-
-  boolean isNextToBomb(CellPosition pos) {
-    if (isBomb(new CellPosition(pos.row() + 1, pos.col())) ||
+    // check if the immeditate neighbours are bombs
+    else if (isBomb(new CellPosition(pos.row() + 1, pos.col())) ||
         isBomb(new CellPosition(pos.row() - 1, pos.col())) ||
         isBomb(new CellPosition(pos.row(), pos.col() + 1)) ||
         isBomb(new CellPosition(pos.row(), pos.col() - 1))) {

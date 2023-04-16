@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 import no.uib.inf101.sem2.bomberman.model.GameState;
 import no.uib.inf101.sem2.grid.CellPosition;
@@ -104,6 +105,7 @@ public class BombermanView extends JPanel {
                 this.player4BackImage = Inf101Graphics.loadImageFromResources("player4Back.png");
                 this.player4LeftImage = Inf101Graphics.loadImageFromResources("player4Left.png");
                 this.player4RightImage = Inf101Graphics.loadImageFromResources("player4Right.png");
+
         }
 
         @Override
