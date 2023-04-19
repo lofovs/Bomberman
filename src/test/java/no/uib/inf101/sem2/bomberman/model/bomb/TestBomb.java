@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import no.uib.inf101.sem2.grid.CellPosition;
 
-public class BombTest {
+public class TestBomb {
 
     private Bomb bomb;
     private CellPosition pos;

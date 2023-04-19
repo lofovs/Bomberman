@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.awt.geom.Rectangle2D;
 
-public class CellPositionToPixelConverterTest {
+public class TestCellPositionToPixelConverter {
 
     @Test
     public void sanityTest() {

@@ -11,14 +11,16 @@ public class BombermanBoard extends Grid<Character> {
   /**
    * Creates a new BombermanBoard with the specified rows and cols
    *
-   * @param row how many rows the board should have
-   * @param col how many cols the board should have
+   * @param row how many rows the this should have
+   * @param col how many cols the this should have
    */
   public BombermanBoard(int row, int col) {
     super(row, col);
     this.row = row;
     this.col = col;
     this.defaultValue = '-';
+    this.clear();
+
   }
 
   /**
@@ -42,25 +44,25 @@ public class BombermanBoard extends Grid<Character> {
   }
 
   /**
-   * Clears the board
+   * Clears the this
    */
   public void clear() {
     super.fillGrid(this.row, this.col, this.defaultValue);
   }
 
   /**
-   * Gets the number of rows in the board
+   * Gets the number of rows in the this
    *
-   * @return the number of rows in the board
+   * @return the number of rows in the this
    */
   public int getRows() {
     return this.row;
   }
 
   /**
-   * Gets the number of cols in the board
+   * Gets the number of cols in the this
    *
-   * @return the number of cols in the board
+   * @return the number of cols in the this
    */
   public int getCols() {
     return this.col;
@@ -114,6 +116,14 @@ public class BombermanBoard extends Grid<Character> {
     return false;
   }
 
+  // private boolean isWall(CellPosition pos) {
+  // if (get(pos) == 'G' || get(pos) == 'X') {
+  // return true;
+  // } else {
+  // return false;
+  // }
+  // }
+
   /**
    * Checks if the cell at the specified position will become an explosion
    * 
@@ -121,6 +131,7 @@ public class BombermanBoard extends Grid<Character> {
    * @return
    */
   boolean isPotentialExplosion(CellPosition pos) {
+
     if (isBomb(pos)) {
       return true;
     }
@@ -132,8 +143,67 @@ public class BombermanBoard extends Grid<Character> {
         isBomb(new CellPosition(pos.row() - 1, pos.col())) ||
         isBomb(new CellPosition(pos.row(), pos.col() + 1)) ||
         isBomb(new CellPosition(pos.row(), pos.col() - 1))) {
+      // if immediate neighbours are bombs and the chosen cell is a bomb it will
+      // consider it not dangerous
+      if (get(pos) == 'B') {
+        return false;
+      }
       return true;
     }
     return false;
+  }
+
+  void createMap() {
+
+    this.clear();
+
+    // fill the outer walls with 'G'
+    for (int i = 0; i < this.getRows(); i++) {
+      for (int j = 0; j < this.getCols(); j++) {
+        if (i == 0 ||
+            i == this.getRows() - 1 ||
+            j == 0 ||
+            j == this.getCols() - 1) {
+          this.set(new CellPosition(i, j), 'G');
+        }
+      }
+    }
+
+    // create a maze of walls
+    for (int i = 0; i < this.getRows(); i++) {
+      for (int j = 0; j < this.getCols(); j++) {
+        if (i % 2 == 0 && j % 2 == 0) {
+          this.set(new CellPosition(i, j), 'G');
+        }
+      }
+    }
+
+    // create random placements of 'X' within the outer walls
+    for (int i = 0; i < this.getRows(); i++) {
+      for (int j = 0; j < this.getCols(); j++) {
+        if (this.get(new CellPosition(i, j)) == '-') {
+          if (Math.random() < 0.2) {
+            this.set(new CellPosition(i, j), 'X');
+          }
+        }
+      }
+    }
+
+    // create empty tiles around the corners so the players can spawn safely
+    this.set(new CellPosition(1, 1), '-');
+    this.set(new CellPosition(1, 2), '-');
+    this.set(new CellPosition(2, 1), '-');
+
+    this.set(new CellPosition(1, this.getCols() - 2), '-');
+    this.set(new CellPosition(1, this.getCols() - 3), '-');
+    this.set(new CellPosition(2, this.getCols() - 2), '-');
+
+    this.set(new CellPosition(this.getRows() - 2, 1), '-');
+    this.set(new CellPosition(this.getRows() - 3, 1), '-');
+    this.set(new CellPosition(this.getRows() - 2, 2), '-');
+
+    this.set(new CellPosition(this.getRows() - 2, this.getCols() - 2), '-');
+    this.set(new CellPosition(this.getRows() - 3, this.getCols() - 2), '-');
+    this.set(new CellPosition(this.getRows() - 2, this.getCols() - 3), '-');
   }
 }

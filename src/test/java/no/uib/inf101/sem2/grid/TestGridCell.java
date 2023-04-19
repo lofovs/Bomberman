@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Testing the class GridCell
  */
-public class GridCellTest {
+public class TestGridCell {
 
   @Test
   void sanityTest() {

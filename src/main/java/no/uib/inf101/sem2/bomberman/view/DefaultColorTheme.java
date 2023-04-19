@@ -19,15 +19,11 @@ public class DefaultColorTheme implements ColorTheme {
       case 'm' -> Color.MAGENTA;
       case 'c' -> Color.CYAN;
       case 'o' -> Color.ORANGE;
-      // color for the indestructible walls
       case 'G' -> Color.GRAY;
-      // color for the destructible walls
       case 'X' -> Color.DARK_GRAY;
-      // color for the player
       case 'W' -> Color.WHITE;
-      // color for the bombs
       case 'B' -> Color.BLACK;
-      case 'E' -> getFloorColor();
+      case 'E' -> Color.ORANGE;
       case '-' -> getFloorColor();
       default -> throw new IllegalArgumentException(
           "No available color for '" + value + "'");

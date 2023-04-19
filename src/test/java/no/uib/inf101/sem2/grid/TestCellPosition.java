@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Testing the class CellPosition
  */
-public class CellPositionTest {
+public class TestCellPosition {
 
   @Test
   void sanityTest() {

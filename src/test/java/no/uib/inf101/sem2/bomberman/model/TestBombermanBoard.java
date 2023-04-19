@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import no.uib.inf101.sem2.grid.CellPosition;
 
-public class BombermanBoardTest {
+public class TestBombermanBoard {
 
     /**
      * Create a BombermanBoard with the given contents.

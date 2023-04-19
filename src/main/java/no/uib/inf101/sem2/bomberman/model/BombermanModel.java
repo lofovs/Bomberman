@@ -1,12 +1,16 @@
 package no.uib.inf101.sem2.bomberman.model;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
+
 import no.uib.inf101.sem2.bomberman.controller.ControllableBombermanModel;
 import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
 import no.uib.inf101.sem2.bomberman.model.bomb.BombFactory;
 import no.uib.inf101.sem2.bomberman.model.player.IPlayer;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.bomberman.model.player.PlayerAI;
+import no.uib.inf101.sem2.bomberman.sound.wav.WavPlayer;
 import no.uib.inf101.sem2.bomberman.view.ViewableBombermanModel;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
@@ -61,6 +65,7 @@ public class BombermanModel
   private static final CellPosition PLAYER_DEAD_POS = new CellPosition(-2, -2);
 
   private Random random;
+  private WavPlayer wavPlayer;
 
   public BombermanModel(BombermanBoard board) {
     this.board = board;
@@ -68,6 +73,7 @@ public class BombermanModel
     this.gameState = GameState.NEW_GAME;
     this.random = new Random();
     this.newGame();
+    this.wavPlayer = new WavPlayer();
 
     // TODO: fix invisible tile bug
     // TODO: fix bomb explosion removing tiles after new game is started
@@ -131,7 +137,7 @@ public class BombermanModel
    * 
    * @param bomb the bomb to explode
    */
-  private void explodeBomb(Bomb bomb) {
+  void explodeBomb(Bomb bomb) {
 
     for (GridCell<Character> gridCell : bomb) {
       this.board.set(gridCell.pos(), 'E');
@@ -189,99 +195,138 @@ public class BombermanModel
     return false;
   }
 
-  /**
-   * Moves the AI in a random direction
-   * 
-   * @return true if the AI moved, false if it didn't
-   */
   private void moveAI(PlayerAI playerAI) {
-    // the AI will choose a direction to try to move in
     int deltaRow = 0;
     int deltaCol = 0;
-    int direction = this.random.nextInt(4);
-    if (direction == 0) {
-      deltaRow = -1;
-    } else if (direction == 1) {
-      deltaRow = 1;
-    } else if (direction == 2) {
-      deltaCol = -1;
-    } else if (direction == 3) {
-      deltaCol = 1;
+
+    // Choose a random direction to move in
+    Direction direction = chooseRandomDirection(playerAI.getPos());
+    switch (direction) {
+      case UP:
+        deltaRow = -1;
+        break;
+      case DOWN:
+        deltaRow = 1;
+        break;
+      case LEFT:
+        deltaCol = -1;
+        break;
+      case RIGHT:
+        deltaCol = 1;
+        break;
     }
 
-    // The AI will check if the chosen position is in danger of being an explosion,
-    // and if true it will not move.
-    // If the AI's position is currently on a bomb or in the vicinity of an
-    // explosion, it will ignore this precondition
-    // and move anyway
-    if (this.board.isPotentialExplosion(new CellPosition(playerAI.getPos().row() + deltaRow,
-        playerAI.getPos().col() + deltaCol))
-        && !playerAI.getPos().equals(this.bomb.getPos())
-        && !playerAI.getPos().equals(this.bomb2.getPos())
-        && !playerAI.getPos().equals(this.bomb3.getPos())
-        && !playerAI.getPos().equals(this.bomb4.getPos())
-        && !this.board.isPotentialExplosion(playerAI.getPos())) {
-      damagePlayer(playerAI);
+    // If the chosen position is in danger of being an explosion, and the player
+    // is not already on a bomb or in an explosion, do not move.
+    CellPosition newPosition = new CellPosition(playerAI.getPos().row() + deltaRow,
+        playerAI.getPos().col() + deltaCol);
+    if (shouldAvoidPosition(newPosition, playerAI.getPos())) {
       return;
     }
 
-    // If the AI is right next to a bomb, it will move to the first safe tile
-    // around it
-    if (this.board.isPotentialExplosion(playerAI.getPos())) {
-      if (this.board.canPlace(new CellPosition(playerAI.getPos().row() - 1,
-          playerAI.getPos().col()))) {
-        deltaRow = -1;
-        deltaCol = 0;
-      } else if (this.board.canPlace(new CellPosition(playerAI.getPos().row() + 1,
-          playerAI.getPos().col()))) {
-        deltaRow = 1;
-        deltaCol = 0;
-      } else if (this.board.canPlace(new CellPosition(playerAI.getPos().row(),
-          playerAI.getPos().col() - 1))) {
-        deltaRow = 0;
-        deltaCol = -1;
-      } else if (this.board.canPlace(new CellPosition(playerAI.getPos().row(),
-          playerAI.getPos().col() + 1))) {
-        deltaRow = 0;
-        deltaCol = 1;
+    // If the player is right next to a bomb, move to the first safe tile around it.
+    if (isAdjacentToBomb(playerAI.getPos())) {
+      Direction safeDirection = findSafeDirection(playerAI.getPos());
+      if (safeDirection != null) {
+        deltaRow = safeDirection.getDeltaRow();
+        deltaCol = safeDirection.getDeltaCol();
       }
     }
 
+    // If the AI can move to the new position, update the player's position and
+    // cause damage.
     PlayerAI newAI = playerAI.shiftedBy(deltaRow, deltaCol);
-    if (this.board.canPlace(newAI.getPos())) {
-      if (playerAI == this.player2) {
-        this.player2 = newAI;
-        changePlayerSprite(this.player2, deltaRow, deltaCol);
-        damagePlayer(this.player2);
-      } else if (playerAI == this.player3) {
-        this.player3 = newAI;
-        changePlayerSprite(this.player3, deltaRow, deltaCol);
-        damagePlayer(this.player3);
-      } else if (playerAI == this.player4) {
-        this.player4 = newAI;
-        changePlayerSprite(this.player4, deltaRow, deltaCol);
-        damagePlayer(this.player4);
-      }
+    if (canMoveToPosition(newAI.getPos())) {
+      updatePlayerPositionAndDamage(playerAI, newAI, deltaRow, deltaCol);
       return;
     }
 
-    // if the AI fails to move, it will try to move again. If it fails 3 times, it
-    // will stop trying
-    int tries = 0;
-    while (!this.board.canPlace(newAI.getPos()) && tries < 4) {
-      direction = this.random.nextInt(4);
-      if (direction == 0) {
-        deltaRow = -1;
-      } else if (direction == 1) {
-        deltaRow = 1;
-      } else if (direction == 2) {
-        deltaCol = -1;
-      } else if (direction == 3) {
-        deltaCol = 1;
-      }
-      newAI = playerAI.shiftedBy(deltaRow, deltaCol);
-      tries++;
+    // If the AI is boxed in, do not move.
+    if (isBoxedIn(playerAI.getPos())) {
+      return;
     }
+
+    // If the AI fails to move, try again.
+    moveAI(playerAI);
+  }
+
+  private void updatePlayerPositionAndDamage(PlayerAI playerAI, PlayerAI newAI, int deltaRow, int deltaCol) {
+    if (playerAI == this.player2) {
+      this.player2 = newAI;
+      changePlayerSprite(this.player2, deltaRow, deltaCol);
+      damagePlayer(this.player2);
+    } else if (playerAI == this.player3) {
+      this.player3 = newAI;
+      changePlayerSprite(this.player3, deltaRow, deltaCol);
+      damagePlayer(this.player3);
+    } else if (playerAI == this.player4) {
+      this.player4 = newAI;
+      changePlayerSprite(this.player4, deltaRow, deltaCol);
+      damagePlayer(this.player4);
+    }
+  }
+
+  private Direction chooseRandomDirection(CellPosition currentPosition) {
+    List<Direction> validDirections = new ArrayList<>();
+    for (Direction direction : Direction.values()) {
+      CellPosition nextPosition = new CellPosition(currentPosition.row() + direction.getDeltaRow(),
+          currentPosition.col() + direction.getDeltaCol());
+      if (this.board.canPlace(nextPosition) && !isBoxedIn(nextPosition)) {
+        validDirections.add(direction);
+      }
+    }
+    if (validDirections.isEmpty()) {
+      // The AI is boxed in, cannot move
+      return null;
+    }
+    int index = this.random.nextInt(validDirections.size());
+    return validDirections.get(index);
+  }
+
+  private boolean shouldAvoidPosition(CellPosition positionToCheck, CellPosition currentPlayerPosition) {
+    return this.board.isPotentialExplosion(positionToCheck)
+        && !positionToCheck.equals(this.bomb.getPos())
+        && !positionToCheck.equals(this.bomb2.getPos())
+        && !positionToCheck.equals(this.bomb3.getPos())
+        && !positionToCheck.equals(this.bomb4.getPos())
+        && !this.board.isPotentialExplosion(currentPlayerPosition);
+  }
+
+  private boolean isAdjacentToBomb(CellPosition currentPlayerPosition) {
+    return this.board.isPotentialExplosion(currentPlayerPosition);
+  }
+
+  private Direction findSafeDirection(CellPosition currentPlayerPosition) {
+    Direction[] directions = Direction.values();
+    for (Direction direction : directions) {
+      CellPosition adjacentPosition = new CellPosition(currentPlayerPosition.row() + direction.getDeltaRow(),
+          currentPlayerPosition.col() + direction.getDeltaCol());
+      if (this.board.canPlace(adjacentPosition)
+          && !this.board.isPotentialExplosion(adjacentPosition)) {
+        return direction;
+      }
+    }
+    return null;
+  }
+
+  private boolean canMoveToPosition(CellPosition positionToCheck) {
+    return this.board.canPlace(positionToCheck);
+  }
+
+  private boolean isBoxedIn(CellPosition currentPlayerPosition) {
+    CellPosition leftOfPlayer = new CellPosition(currentPlayerPosition.row(),
+        currentPlayerPosition.col() - 1);
+    CellPosition rightOfPlayer = new CellPosition(currentPlayerPosition.row(),
+        currentPlayerPosition.col() + 1);
+    CellPosition abovePlayer = new CellPosition(currentPlayerPosition.row() - 1,
+        currentPlayerPosition.col());
+    CellPosition belowPlayer = new CellPosition(currentPlayerPosition.row() + 1,
+        currentPlayerPosition.col());
+
+    return !this.board.canPlace(belowPlayer)
+        && !this.board.canPlace(abovePlayer)
+        && !this.board.canPlace(leftOfPlayer)
+        && !this.board.canPlace(rightOfPlayer);
   }
 
   @Override
@@ -324,18 +369,10 @@ public class BombermanModel
     }
   }
 
-  /**
-   * Checks if one second has passed in real time
-   * 
-   * @return true if one second has passed, false if it hasn't
-   */
   private boolean oneSecondRealTimeHasPassed() {
     return this.clockTick % 2 == 0;
   }
 
-  /**
-   * The events that happen for player 4 when the clock ticks
-   */
   private void player4ClockTick() {
     // checks if the bomb has exploded and if it has it will remove the explosion
     // tiles, create a new bomb and reset the explosion timer
@@ -371,9 +408,6 @@ public class BombermanModel
     removeDeadPlayerFromBoard(this.player4);
   }
 
-  /**
-   * The events that happen for player 3 when the clock ticks
-   */
   private void player3ClockTick() {
     // checks if the bomb has exploded and if it has it will remove the explosion
     // tiles, create a new bomb and reset the explosion timer
@@ -394,8 +428,6 @@ public class BombermanModel
       this.bomb3.tick();
     }
 
-    damagePlayer(this.player3);
-
     // checks if the player is alive and true it will move and place bombs
     if (isAlive(this.player3)) {
       moveAI(this.player3);
@@ -404,14 +436,13 @@ public class BombermanModel
       }
     }
 
+    damagePlayer(this.player3);
+
     // checks if the player is dead and if true it will remove the player from the
     // board
     removeDeadPlayerFromBoard(this.player3);
   }
 
-  /**
-   * The events that happen for player 2 when the clock ticks
-   */
   private void player2ClockTick() {
     // checks if the bomb has exploded and if it has it will remove the explosion
     // tiles, create a new bomb and reset the explosion timer
@@ -446,9 +477,6 @@ public class BombermanModel
     removeDeadPlayerFromBoard(this.player2);
   }
 
-  /**
-   * The events that happen for player 1 when the clock ticks
-   */
   private void player1ClockTick() {
     // checks if the bomb has exploded and if it has it will remove the explosion
     // tiles, create a new bomb and reset the explosion timer
@@ -556,8 +584,8 @@ public class BombermanModel
   }
 
   /**
-   * Checks if the player should take damage and reduces the player's lives if
-   * true
+   * Checks if the player is on an explosion tile and if true it will damage
+   * the player
    * 
    * @param player
    */
@@ -708,85 +736,53 @@ public class BombermanModel
       this.gameState = GameState.NEW_GAME;
     }
 
+    this.resetGame();
+    this.board.createMap();
+  }
+
+  private void resetGame() {
+    this.resetSprites();
+    this.resetBombCounts();
+    this.resetPlayerLives();
+    this.createPlayers();
+    this.createBombs();
+    this.player1MoveCount = 0;
+    this.clock = new Clock();
+  }
+
+  private void resetSprites() {
     this.player1Sprite = 0;
     this.player2Sprite = 0;
     this.player3Sprite = 0;
     this.player4Sprite = 0;
+  }
 
-    this.player1MoveCount = 0;
-
-    this.playerLives = 3;
-    this.player2Lives = 3;
-    this.player3Lives = 3;
-    this.player4Lives = 3;
-
+  private void resetBombCounts() {
     this.playerBombCount = 0;
     this.player2BombCount = 0;
     this.player3BombCount = 0;
     this.player4BombCount = 0;
+  }
 
+  private void createPlayers() {
     this.player = new Player(new CellPosition(board.rows() - 2, 1));
     this.player2 = new PlayerAI(new CellPosition(1, 1), 'b');
     this.player3 = new PlayerAI(new CellPosition(board.rows() - 2, board.cols() - 2), 'r');
     this.player4 = new PlayerAI(new CellPosition(1, board.cols() - 2), 'p');
+  }
 
+  private void createBombs() {
     this.bomb = bombFactory.createNewBomb();
     this.bomb2 = bombFactory.createNewBomb();
     this.bomb3 = bombFactory.createNewBomb();
     this.bomb4 = bombFactory.createNewBomb();
+  }
 
-    this.clock = new Clock();
-
-    this.board.clear();
-
-    // fill the outer walls with 'G'
-    for (int i = 0; i < board.getRows(); i++) {
-      for (int j = 0; j < board.getCols(); j++) {
-        if (i == 0 ||
-            i == board.getRows() - 1 ||
-            j == 0 ||
-            j == board.getCols() - 1) {
-          board.set(new CellPosition(i, j), 'G');
-        }
-      }
-    }
-
-    // create a maze of walls
-    for (int i = 0; i < board.getRows(); i++) {
-      for (int j = 0; j < board.getCols(); j++) {
-        if (i % 2 == 0 && j % 2 == 0) {
-          board.set(new CellPosition(i, j), 'G');
-        }
-      }
-    }
-
-    // create random placements of 'X' within the outer walls
-    for (int i = 0; i < board.getRows(); i++) {
-      for (int j = 0; j < board.getCols(); j++) {
-        if (board.get(new CellPosition(i, j)) == '-') {
-          if (Math.random() < 0.2) {
-            board.set(new CellPosition(i, j), 'X');
-          }
-        }
-      }
-    }
-
-    // create empty tiles around the corners so the players can spawn safely
-    board.set(new CellPosition(1, 1), '-');
-    board.set(new CellPosition(1, 2), '-');
-    board.set(new CellPosition(2, 1), '-');
-
-    board.set(new CellPosition(1, board.getCols() - 2), '-');
-    board.set(new CellPosition(1, board.getCols() - 3), '-');
-    board.set(new CellPosition(2, board.getCols() - 2), '-');
-
-    board.set(new CellPosition(board.getRows() - 2, 1), '-');
-    board.set(new CellPosition(board.getRows() - 3, 1), '-');
-    board.set(new CellPosition(board.getRows() - 2, 2), '-');
-
-    board.set(new CellPosition(board.getRows() - 2, board.getCols() - 2), '-');
-    board.set(new CellPosition(board.getRows() - 3, board.getCols() - 2), '-');
-    board.set(new CellPosition(board.getRows() - 2, board.getCols() - 3), '-');
+  private void resetPlayerLives() {
+    this.playerLives = 3;
+    this.player2Lives = 3;
+    this.player3Lives = 3;
+    this.player4Lives = 3;
   }
 
   @Override
@@ -859,4 +855,37 @@ public class BombermanModel
   public int getPlayer4Sprite() {
     return this.player4Sprite;
   }
+
+  int getPlayer1MoveCount() {
+    return this.player1MoveCount;
+  }
+
+  int getPlayerBombCount(IPlayer player) {
+    try {
+      if (player == this.player) {
+        return this.playerBombCount;
+      } else if (player == this.player2) {
+        return this.player2BombCount;
+      } else if (player == this.player3) {
+        return this.player3BombCount;
+      } else if (player == this.player4) {
+        return this.player4BombCount;
+      }
+      if (player == null) {
+        throw new IllegalArgumentException("Player cannot be null");
+      }
+    } catch (IllegalArgumentException e) {
+      e.printStackTrace();
+    }
+    return 0;
+  }
+
+  Bomb getExplodedBomb() {
+    return this.explodedBomb;
+  }
+
+  BombermanBoard getBoard() {
+    return this.board;
+  }
+
 }
