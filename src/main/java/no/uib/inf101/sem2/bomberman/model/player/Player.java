@@ -6,7 +6,7 @@ import java.util.List;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 
-public class Player implements Iterable<GridCell<Character>>, IPlayer {
+public abstract class Player implements Iterable<GridCell<Character>> {
 
   private CellPosition pos;
   private Character symbol;
@@ -16,7 +16,6 @@ public class Player implements Iterable<GridCell<Character>>, IPlayer {
     this.symbol = 'W';
   }
 
-  @Override
   public CellPosition getPos() {
     return this.pos;
   }
@@ -59,16 +58,7 @@ public class Player implements Iterable<GridCell<Character>>, IPlayer {
     return list.iterator();
   }
 
-  @Override
-  public Player shiftedBy(int deltaRow, int deltaCol) {
-    CellPosition newPos = new CellPosition(
-        this.pos.row() + deltaRow,
-        this.pos.col() + deltaCol);
-    return new Player(newPos);
-  }
+  public abstract Player shiftedBy(int deltaRow, int deltaCol);
 
-  @Override
-  public Player shiftedToPosition(CellPosition pos) {
-    return new Player(pos);
-  }
+  public abstract Player shiftedToPosition(CellPosition pos);
 }

@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
-import no.uib.inf101.sem2.bomberman.model.player.IPlayer;
+import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.CellPosition;
 
 public class TestBombermanModel {
@@ -18,7 +18,7 @@ public class TestBombermanModel {
         // Set up a test board and players
         BombermanBoard board = new BombermanBoard(10, 10);
         BombermanModel model = new BombermanModel(board);
-        IPlayer player1 = model.getPlayer();
+        Player player1 = model.getPlayer();
 
         // Test placing a bomb for player 1
         Bomb bomb = model.getBomb();
@@ -42,7 +42,7 @@ public class TestBombermanModel {
         board.clear();
 
         // place a bomb and explode it
-        IPlayer player = model.getPlayer();
+        Player player = model.getPlayer();
         Bomb bomb = model.getBomb();
         model.placeBomb(player, bomb);
 

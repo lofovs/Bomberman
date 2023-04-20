@@ -6,40 +6,37 @@ import java.util.List;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 
-public class PlayerAI implements Iterable<GridCell<Character>>, IPlayer {
+public class AIPlayer extends Player {
 
   private CellPosition pos;
   private Character symbol;
 
-  public PlayerAI(CellPosition pos, Character symbol) {
-    this.pos = pos;
+  public AIPlayer(CellPosition pos, Character symbol) {
+    super(pos);
     this.symbol = symbol;
   }
 
   @Override
-  public PlayerAI shiftedBy(int deltaRow, int deltaCol) {
+  public AIPlayer shiftedToPosition(CellPosition pos) {
+    return new AIPlayer(pos, this.symbol);
+  }
+
+  public char getSymbol() {
+    return this.symbol;
+  }
+
+  @Override
+  public Player shiftedBy(int deltaRow, int deltaCol) {
     CellPosition newPos = new CellPosition(
-        this.pos.row() + deltaRow,
-        this.pos.col() + deltaCol);
-    return new PlayerAI(newPos, this.symbol);
-  }
-
-  @Override
-  public CellPosition getPos() {
-    return this.pos;
-  }
-
-  @Override
-  public Iterator<GridCell<Character>> iterator() {
-    List<GridCell<Character>> list = new ArrayList<>();
-    list.add(new GridCell<>(this.pos, this.symbol));
-    return list.iterator();
+        this.getPos().row() + deltaRow,
+        this.getPos().col() + deltaCol);
+    return new AIPlayer(newPos, this.symbol);
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
-    int result = 1;
+    int result = super.hashCode();
     result = prime * result + ((pos == null) ? 0 : pos.hashCode());
     result = prime * result + ((symbol == null) ? 0 : symbol.hashCode());
     return result;
@@ -49,11 +46,11 @@ public class PlayerAI implements Iterable<GridCell<Character>>, IPlayer {
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
-    if (obj == null)
+    if (!super.equals(obj))
       return false;
     if (getClass() != obj.getClass())
       return false;
-    PlayerAI other = (PlayerAI) obj;
+    AIPlayer other = (AIPlayer) obj;
     if (pos == null) {
       if (other.pos != null)
         return false;
@@ -67,12 +64,4 @@ public class PlayerAI implements Iterable<GridCell<Character>>, IPlayer {
     return true;
   }
 
-  @Override
-  public PlayerAI shiftedToPosition(CellPosition pos) {
-    return new PlayerAI(pos, this.symbol);
-  }
-
-  public char getSymbol() {
-    return this.symbol;
-  }
 }

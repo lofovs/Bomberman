@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Testing the class Grid
  */
-public class TestGrid {
+public class GridTest {
 
   @Test
   void gridTestGetRowsAndCols() {

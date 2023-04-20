@@ -2,7 +2,6 @@ package no.uib.inf101.sem2.bomberman.controller;
 
 import no.uib.inf101.sem2.bomberman.model.GameState;
 import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
-import no.uib.inf101.sem2.bomberman.model.player.IPlayer;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
 
 public interface ControllableBombermanModel {
@@ -11,7 +10,7 @@ public interface ControllableBombermanModel {
    *
    * @return true if a bomb was placed, false otherwise
    */
-  boolean placeBomb(IPlayer player, Bomb bomb);
+  boolean placeBomb(Player player, Bomb bomb);
 
   /**
    * Move the player.
@@ -104,5 +103,5 @@ public interface ControllableBombermanModel {
    * @param i the row
    * @param j the column
    */
-  void changePlayerSprite(IPlayer player, int i, int j);
+  void changePlayerSprite(Player player, int i, int j);
 }

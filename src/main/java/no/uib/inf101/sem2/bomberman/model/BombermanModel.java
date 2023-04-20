@@ -2,14 +2,16 @@ package no.uib.inf101.sem2.bomberman.model;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import no.uib.inf101.sem2.bomberman.controller.ControllableBombermanModel;
 import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
 import no.uib.inf101.sem2.bomberman.model.bomb.BombFactory;
-import no.uib.inf101.sem2.bomberman.model.player.IPlayer;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
-import no.uib.inf101.sem2.bomberman.model.player.PlayerAI;
+import no.uib.inf101.sem2.bomberman.model.player.HumanPlayer;
+import no.uib.inf101.sem2.bomberman.model.player.AIPlayer;
 import no.uib.inf101.sem2.bomberman.sound.wav.WavPlayer;
 import no.uib.inf101.sem2.bomberman.view.ViewableBombermanModel;
 import no.uib.inf101.sem2.grid.CellPosition;
@@ -21,10 +23,10 @@ public class BombermanModel
 
   private BombermanBoard board;
 
-  private Player player;
-  private PlayerAI player2;
-  private PlayerAI player3;
-  private PlayerAI player4;
+  private HumanPlayer player;
+  private AIPlayer player2;
+  private AIPlayer player3;
+  private AIPlayer player4;
 
   private int playerLives;
   private int player2Lives;
@@ -90,7 +92,7 @@ public class BombermanModel
   }
 
   @Override
-  public boolean placeBomb(IPlayer player, Bomb bomb) {
+  public boolean placeBomb(Player player, Bomb bomb) {
     Bomb newBomb = bomb.shiftedToPosition(player.getPos());
 
     if (this.board.canPlace(newBomb.getPos())) {
@@ -119,11 +121,6 @@ public class BombermanModel
     return false;
   }
 
-  /**
-   * Adds the bomb to the board.
-   * 
-   * @param bomb the bomb to add
-   */
   private void addBombToBoard(Bomb bomb) {
     for (GridCell<Character> gridCell : bomb) {
       this.board.set(gridCell.pos(), gridCell.value());
@@ -138,32 +135,13 @@ public class BombermanModel
    * @param bomb the bomb to explode
    */
   void explodeBomb(Bomb bomb) {
-
     for (GridCell<Character> gridCell : bomb) {
-      this.board.set(gridCell.pos(), 'E');
-      if (this.board.isDestructible(
-          new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col()))) {
-        this.board.set(
-            new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col()),
-            'E');
-      }
-      if (this.board.isDestructible(
-          new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col()))) {
-        this.board.set(
-            new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col()),
-            'E');
-      }
-      if (this.board.isDestructible(
-          new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1))) {
-        this.board.set(
-            new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1),
-            'E');
-      }
-      if (this.board.isDestructible(
-          new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1))) {
-        this.board.set(
-            new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1),
-            'E');
+      setExplodedTile(gridCell.pos());
+      for (Direction direction : Direction.values()) {
+        CellPosition adjacentPos = gridCell.pos().shiftedBy(direction);
+        if (this.board.isDestructible(adjacentPos)) {
+          setExplodedTile(adjacentPos);
+        }
       }
     }
     if (bomb == this.bomb) {
@@ -181,10 +159,14 @@ public class BombermanModel
     }
   }
 
+  private void setExplodedTile(CellPosition pos) {
+    this.board.set(pos, 'E');
+  }
+
   @Override
   public boolean movePlayer(int deltaRow, int deltaCol) {
     if (player1MoveCount < 1) {
-      Player newPlayer = this.player.shiftedBy(deltaRow, deltaCol);
+      HumanPlayer newPlayer = this.player.shiftedBy(deltaRow, deltaCol);
       if (this.board.canPlace(newPlayer.getPos())) {
         this.player = newPlayer;
         this.player1MoveCount++;
@@ -195,25 +177,30 @@ public class BombermanModel
     return false;
   }
 
-  private void moveAI(PlayerAI playerAI) {
+  private void moveAI(AIPlayer playerAI) {
     int deltaRow = 0;
     int deltaCol = 0;
 
     // Choose a random direction to move in
     Direction direction = chooseRandomDirection(playerAI.getPos());
-    switch (direction) {
-      case UP:
-        deltaRow = -1;
-        break;
-      case DOWN:
-        deltaRow = 1;
-        break;
-      case LEFT:
-        deltaCol = -1;
-        break;
-      case RIGHT:
-        deltaCol = 1;
-        break;
+    if (direction != null) {
+      switch (direction) {
+        case UP:
+          deltaRow = -1;
+          break;
+        case DOWN:
+          deltaRow = 1;
+          break;
+        case LEFT:
+          deltaCol = -1;
+          break;
+        case RIGHT:
+          deltaCol = 1;
+          break;
+      }
+    } else {
+      deltaRow = 0;
+      deltaCol = 0;
     }
 
     // If the chosen position is in danger of being an explosion, and the player
@@ -235,7 +222,7 @@ public class BombermanModel
 
     // If the AI can move to the new position, update the player's position and
     // cause damage.
-    PlayerAI newAI = playerAI.shiftedBy(deltaRow, deltaCol);
+    AIPlayer newAI = (AIPlayer) playerAI.shiftedBy(deltaRow, deltaCol);
     if (canMoveToPosition(newAI.getPos())) {
       updatePlayerPositionAndDamage(playerAI, newAI, deltaRow, deltaCol);
       return;
@@ -250,7 +237,7 @@ public class BombermanModel
     moveAI(playerAI);
   }
 
-  private void updatePlayerPositionAndDamage(PlayerAI playerAI, PlayerAI newAI, int deltaRow, int deltaCol) {
+  private void updatePlayerPositionAndDamage(AIPlayer playerAI, AIPlayer newAI, int deltaRow, int deltaCol) {
     if (playerAI == this.player2) {
       this.player2 = newAI;
       changePlayerSprite(this.player2, deltaRow, deltaCol);
@@ -506,37 +493,50 @@ public class BombermanModel
   }
 
   private void checkWin() {
-    if (this.playerLives > 0 &&
-        this.player2Lives == 0 &&
-        this.player3Lives == 0 &&
-        this.player4Lives == 0) {
-      this.gameState = GameState.PLAYER1_WON;
-    } else if (this.playerLives == 0 &&
-        this.player2Lives > 0 &&
-        this.player3Lives == 0 &&
-        this.player4Lives == 0) {
-      this.gameState = GameState.PLAYER2_WON;
-    } else if (this.playerLives == 0 &&
-        this.player2Lives == 0 &&
-        this.player3Lives > 0 &&
-        this.player4Lives == 0) {
-      this.gameState = GameState.PLAYER3_WON;
-    } else if (this.playerLives == 0 &&
-        this.player2Lives == 0 &&
-        this.player3Lives == 0 &&
-        this.player4Lives > 0) {
-      this.gameState = GameState.PLAYER4_WON;
-    } else if (this.playerLives == 0 &&
-        this.player2Lives == 0 &&
-        this.player3Lives == 0 &&
-        this.player4Lives == 0 ||
-        this.clock.getTime() == 0) {
+    int numPlayers = 4;
+    int[] playerLives = { this.playerLives, this.player2Lives, this.player3Lives, this.player4Lives };
+    int numAlivePlayers = 0;
+    int lastAlivePlayerIndex = -1;
+
+    // Count the number of alive players and the last alive player index
+    for (int i = 0; i < numPlayers; i++) {
+      if (playerLives[i] > 0) {
+        numAlivePlayers++;
+        lastAlivePlayerIndex = i;
+      }
+    }
+
+    // Set the game state based on the number of alive players
+    switch (numAlivePlayers) {
+      case 1:
+        switch (lastAlivePlayerIndex) {
+          case 0:
+            this.gameState = GameState.PLAYER1_WON;
+            break;
+          case 1:
+            this.gameState = GameState.PLAYER2_WON;
+            break;
+          case 2:
+            this.gameState = GameState.PLAYER3_WON;
+            break;
+          case 3:
+            this.gameState = GameState.PLAYER4_WON;
+            break;
+        }
+        break;
+      case 0:
+        this.gameState = GameState.DRAW;
+        break;
+    }
+
+    // Check for end of game based on time
+    if (this.clock.getTime() == 0 && this.gameState == GameState.ACTIVE_GAME) {
       this.gameState = GameState.DRAW;
     }
   }
 
   @Override
-  public void changePlayerSprite(IPlayer player, int row, int col) {
+  public void changePlayerSprite(Player player, int row, int col) {
     if (player == this.player) {
       if (row == 1) {
         player1Sprite = 0;
@@ -620,7 +620,7 @@ public class BombermanModel
    * @param player the player to check
    * @return true if the player is alive, false otherwise
    */
-  private boolean isAlive(IPlayer player) {
+  private boolean isAlive(Player player) {
     if (player == this.player) {
       return this.playerLives > 0;
     } else if (player == this.player2) {
@@ -639,32 +639,23 @@ public class BombermanModel
    * @param bomb the bomb that has exploded
    */
   private void removeExplodedTiles(Bomb explodedBomb) {
+    Set<CellPosition> affectedCells = new HashSet<>();
     for (GridCell<Character> gridCell : explodedBomb) {
-      this.board.set(gridCell.pos(), '-');
-      if (this.board.isDestructible(
-          new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col()))) {
-        this.board.set(
-            new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col()),
-            '-');
+      affectedCells.add(gridCell.pos());
+      CellPosition[] neighbors = new CellPosition[] {
+          new CellPosition(gridCell.pos().row() - 1, gridCell.pos().col()),
+          new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col()),
+          new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1),
+          new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1)
+      };
+      for (CellPosition neighbor : neighbors) {
+        if (this.board.isDestructible(neighbor)) {
+          affectedCells.add(neighbor);
+        }
       }
-      if (this.board.isDestructible(
-          new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col()))) {
-        this.board.set(
-            new CellPosition(gridCell.pos().row() + 1, gridCell.pos().col()),
-            '-');
-      }
-      if (this.board.isDestructible(
-          new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1))) {
-        this.board.set(
-            new CellPosition(gridCell.pos().row(), gridCell.pos().col() - 1),
-            '-');
-      }
-      if (this.board.isDestructible(
-          new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1))) {
-        this.board.set(
-            new CellPosition(gridCell.pos().row(), gridCell.pos().col() + 1),
-            '-');
-      }
+    }
+    for (CellPosition affectedCell : affectedCells) {
+      this.board.set(affectedCell, '-');
     }
   }
 
@@ -675,7 +666,7 @@ public class BombermanModel
    * @param player the dead player
    * @return the dead player
    */
-  private void removeDeadPlayerFromBoard(IPlayer player) {
+  private void removeDeadPlayerFromBoard(Player player) {
     if (!isAlive(player)) {
       if (player == this.player) {
         this.player = this.player.shiftedToPosition(PLAYER_DEAD_POS);
@@ -765,10 +756,10 @@ public class BombermanModel
   }
 
   private void createPlayers() {
-    this.player = new Player(new CellPosition(board.rows() - 2, 1));
-    this.player2 = new PlayerAI(new CellPosition(1, 1), 'b');
-    this.player3 = new PlayerAI(new CellPosition(board.rows() - 2, board.cols() - 2), 'r');
-    this.player4 = new PlayerAI(new CellPosition(1, board.cols() - 2), 'p');
+    this.player = new HumanPlayer(new CellPosition(board.rows() - 2, 1));
+    this.player2 = new AIPlayer(new CellPosition(1, 1), 'b');
+    this.player3 = new AIPlayer(new CellPosition(board.rows() - 2, board.cols() - 2), 'r');
+    this.player4 = new AIPlayer(new CellPosition(1, board.cols() - 2), 'p');
   }
 
   private void createBombs() {
@@ -860,7 +851,7 @@ public class BombermanModel
     return this.player1MoveCount;
   }
 
-  int getPlayerBombCount(IPlayer player) {
+  int getPlayerBombCount(Player player) {
     try {
       if (player == this.player) {
         return this.playerBombCount;
