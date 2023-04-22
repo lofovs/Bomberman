@@ -7,20 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import no.uib.inf101.sem2.grid.CellPosition;
 
-public class HumanPlayerTest {
-
-    @Test
-    public void testShiftedBy() {
-        // Create a player object with position (2, 2)
-        Player player = new HumanPlayer(new CellPosition(2, 2));
-
-        // Shift the player by 1 row and 1 column
-        Player newPlayer = player.shiftedBy(1, 1);
-
-        // Check that the new player has the correct position
-        assertEquals(3, newPlayer.getPos().row());
-        assertEquals(3, newPlayer.getPos().col());
-    }
+public class TestHumanPlayer {
 
     @Test
     public void testHashCode() {
@@ -43,18 +30,4 @@ public class HumanPlayerTest {
         assertEquals(player1, player2);
         assertNotEquals(player1, player3);
     }
-
-    @Test
-    public void testShiftedToPosition() {
-        // Create a new player object
-        Player player = new HumanPlayer(new CellPosition(2, 2));
-
-        // Shift the player to a new position
-        CellPosition newPosition = new CellPosition(3, 3);
-        Player shiftedPlayer = player.shiftedToPosition(newPosition);
-
-        // Check that the new player object has the correct position
-        assertEquals(newPosition, shiftedPlayer.getPos());
-    }
-
 }

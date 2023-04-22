@@ -1,6 +1,7 @@
 package no.uib.inf101.sem2.bomberman.view;
 
 import no.uib.inf101.sem2.bomberman.model.GameState;
+import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
 
@@ -24,84 +25,14 @@ public interface ViewableBombermanModel {
    *
    * @return an iterable of grid cells
    */
-  Iterable<GridCell<Character>> getPlayerTile();
-
-  /**
-   * Get the AI tile
-   *
-   * @return an iterable of grid cells
-   */
-  Iterable<GridCell<Character>> getPlayer2Tile();
-
-  /**
-   * Get the AI tile
-   *
-   * @return an iterable of grid cells
-   */
-  Iterable<GridCell<Character>> getPlayer3Tile();
-
-  /**
-   * Get the AI tile
-   *
-   * @return an iterable of grid cells
-   */
-  Iterable<GridCell<Character>> getPlayer4Tile();
+  Iterable<GridCell<Character>> getPlayerTile(int playerNumber);
 
   /**
    * Get the bomb tile
    *
    * @return an iterable of grid cells
    */
-  Iterable<GridCell<Character>> getBombTile();
-
-  /**
-   * Get the bomb 2 tile
-   *
-   * @return an iterable of grid cells
-   */
-  Iterable<GridCell<Character>> getBomb2Tile();
-
-  /**
-   * Get the bomb 3 tile
-   *
-   * @return an iterable of grid cells
-   */
-  Iterable<GridCell<Character>> getBomb3Tile();
-
-  /**
-   * Get the bomb 4 tile
-   *
-   * @return an iterable of grid cells
-   */
-  Iterable<GridCell<Character>> getBomb4Tile();
-
-  /**
-   * Get the player lives
-   * 
-   * @return the player lives
-   */
-  int getPlayerLives();
-
-  /**
-   * Get the AI lives
-   * 
-   * @return the AI lives
-   */
-  int getPlayer2Lives();
-
-  /**
-   * Get the AI 2 lives
-   * 
-   * @return the AI 2 lives
-   */
-  int getPlayer3Lives();
-
-  /**
-   * Get the AI 3 lives
-   * 
-   * @return the AI 3 lives
-   */
-  int getPlayer4Lives();
+  Iterable<GridCell<Character>> getBombTile(int playerNumber);
 
   /**
    * Get the game state
@@ -118,22 +49,11 @@ public interface ViewableBombermanModel {
   String getTime();
 
   /**
-   * Get the player 1 sprite
+   * Get the player
+   * 
+   * @return the player
    */
-  int getPlayer1Sprite();
+  Player getPlayer(int playerNumber);
 
-  /**
-   * Get the player 2 sprite
-   */
-  int getPlayer2Sprite();
-
-  /**
-   * Get the player 3 sprite
-   */
-  int getPlayer3Sprite();
-
-  /**
-   * Get the player 4 sprite
-   */
-  int getPlayer4Sprite();
+  Player[] getPlayers();
 }

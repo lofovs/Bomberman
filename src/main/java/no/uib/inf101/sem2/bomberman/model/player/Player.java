@@ -3,17 +3,34 @@ package no.uib.inf101.sem2.bomberman.model.player;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import no.uib.inf101.sem2.bomberman.model.Direction;
+import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
+import no.uib.inf101.sem2.bomberman.model.bomb.BombFactory;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 
 public abstract class Player implements Iterable<GridCell<Character>> {
 
   private CellPosition pos;
-  private Character symbol;
+  protected Character symbol;
+  private BombFactory bombFactory;
+  protected Bomb bomb;
+  protected Bomb explodedBomb;
+  protected int explosionTimer;
+  protected int bombCount;
+  private int lives;
+  private Direction sprite;
 
   public Player(CellPosition pos) {
     this.pos = pos;
-    this.symbol = 'W';
+    this.lives = 3;
+    this.sprite = Direction.DOWN;
+    this.bombFactory = new BombFactory();
+    this.bomb = this.bombFactory.createNewBomb();
+    this.explodedBomb = this.bombFactory.createNewBomb();
+    this.explosionTimer = 0;
+    this.bombCount = 0;
   }
 
   public CellPosition getPos() {
@@ -58,7 +75,79 @@ public abstract class Player implements Iterable<GridCell<Character>> {
     return list.iterator();
   }
 
-  public abstract Player shiftedBy(int deltaRow, int deltaCol);
+  public void shiftPositionBy(int deltaRow, int deltaCol) {
+    this.pos = this.pos.shiftedBy(deltaRow, deltaCol);
+  }
 
-  public abstract Player shiftedToPosition(CellPosition pos);
+  public void setPosition(CellPosition pos) {
+    this.pos = pos;
+  }
+
+  public Bomb getBomb() {
+    return this.bomb;
+  }
+
+  public void setBomb(Bomb bomb) {
+    this.bomb = bomb;
+  }
+
+  public Bomb getExplodedBomb() {
+    return this.explodedBomb;
+  }
+
+  public void setExplodedBomb(Bomb explodedBomb) {
+    this.explodedBomb = explodedBomb;
+  }
+
+  public int getExplosionTimer() {
+    return this.explosionTimer;
+  }
+
+  public void incrementExplosionTimer() {
+    this.explosionTimer++;
+  }
+
+  public void resetExplosionTimer() {
+    this.explosionTimer = 0;
+  }
+
+  public int getBombCount() {
+    return this.bombCount;
+  }
+
+  public void incrementBombCount() {
+    this.bombCount++;
+  }
+
+  public void decrementBombCount() {
+    this.bombCount--;
+  }
+
+  public int getLives() {
+    return this.lives;
+  }
+
+  public void decrementLives() {
+    this.lives--;
+  }
+
+  public Direction getSprite() {
+    return this.sprite;
+  }
+
+  public void setSprite(Direction sprite) {
+    this.sprite = sprite;
+  }
+
+  public void resetBombCount() {
+    this.bombCount = 0;
+  }
+
+  public void resetLives() {
+    this.lives = 3;
+  }
+
+  public void getNewBomb() {
+    this.bomb = this.bombFactory.createNewBomb();
+  }
 }

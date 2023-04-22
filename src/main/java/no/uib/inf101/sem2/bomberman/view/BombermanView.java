@@ -2,14 +2,18 @@ package no.uib.inf101.sem2.bomberman.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
+
+import no.uib.inf101.sem2.bomberman.model.Direction;
 import no.uib.inf101.sem2.bomberman.model.GameState;
+import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
@@ -20,6 +24,12 @@ public class BombermanView extends JPanel {
         private static final double INNERMARGIN = 2;
         private static final double SQUARESIZE = 30;
         private static final double SCOREBOARDHEIGHT = 50;
+        private static final double LOGO_SCALE = 1.5;
+        private static final double UNIT_SCALE = 1.5;
+        private static final Font MAIN_TEXT_FONT = new Font("Monospaced", Font.BOLD, 40);
+        private static final Font UNDER_TEXT_FONT = new Font("Monospaced", Font.BOLD, 20);
+        private static final String NEW_GAME_TEXT = "PRESS ENTER TO PLAY";
+        private static final String PLAY_AGAIN_TEXT = "PRESS ENTER TO PLAY AGAIN";
 
         private ViewableBombermanModel model;
         private ColorTheme theme;
@@ -57,7 +67,11 @@ public class BombermanView extends JPanel {
         private BufferedImage player4LeftImage;
         private BufferedImage player4RightImage;
 
-        /** Construct a new BombermanView */
+        @SuppressWarnings("unchecked")
+        private final Iterable<GridCell<Character>>[] playerTiles = new Iterable[4];
+        @SuppressWarnings("unchecked")
+        private final Iterable<GridCell<Character>>[] bombTiles = new Iterable[4];
+
         public BombermanView(ViewableBombermanModel model) {
                 this.model = model;
                 this.setFocusable(true);
@@ -105,7 +119,6 @@ public class BombermanView extends JPanel {
                 this.player4BackImage = Inf101Graphics.loadImageFromResources("player4Back.png");
                 this.player4LeftImage = Inf101Graphics.loadImageFromResources("player4Left.png");
                 this.player4RightImage = Inf101Graphics.loadImageFromResources("player4Right.png");
-
         }
 
         @Override
@@ -128,33 +141,28 @@ public class BombermanView extends JPanel {
                 double gameHeight = this.getHeight() - (2 * OUTERMARGIN) - SCOREBOARDHEIGHT;
                 double windowWidth = this.getWidth();
                 double windowHeight = this.getHeight();
-
-                // variables for the scoreboard
-                double textWidth = gameWidth / 4 - 2 * INNERMARGIN;
-                double textHeight = SCOREBOARDHEIGHT / 2;
-                double textX = x + INNERMARGIN;
-                double textY = y + gameHeight + textHeight;
-
                 GridDimension gd = model.getDimension();
-
                 Iterable<GridCell<Character>> grid = model.getTilesOnBoard();
 
-                Iterable<GridCell<Character>> playerModel = model.getPlayerTile();
-                Iterable<GridCell<Character>> player2Model = model.getPlayer2Tile();
-                Iterable<GridCell<Character>> player3Model = model.getPlayer3Tile();
-                Iterable<GridCell<Character>> player4Model = model.getPlayer4Tile();
+                // player tiles
+                for (int i = 0; i < 4; i++) {
+                        playerTiles[i] = model.getPlayerTile(i + 1);
+                }
 
-                Iterable<GridCell<Character>> bomb1Model = model.getBombTile();
-                Iterable<GridCell<Character>> bomb2Model = model.getBomb2Tile();
-                Iterable<GridCell<Character>> bomb3Model = model.getBomb3Tile();
-                Iterable<GridCell<Character>> bomb4Model = model.getBomb4Tile();
+                // bomb tiles
+                for (int i = 0; i < 4; i++) {
+                        bombTiles[i] = model.getBombTile(i + 1);
+                }
 
+                // variables for the scoreboard
+                double textHeight = SCOREBOARDHEIGHT / 2;
+
+                // shapes
                 Rectangle2D windowRectangle = new Rectangle2D.Double(
                                 0,
                                 0,
                                 windowWidth,
                                 windowHeight);
-
                 Rectangle2D tileRectangle = new Rectangle2D.Double(
                                 x,
                                 y,
@@ -172,407 +180,328 @@ public class BombermanView extends JPanel {
                                 gd,
                                 INNERMARGIN);
 
-                if (this.model.getGameState() == GameState.NEW_GAME) {
-                        // draws a black background
-                        g2.setColor(Color.BLACK);
-                        g2.fill(windowRectangle);
-
-                        // draws the bomberman logo in the upper middle of the screen
-                        Inf101Graphics.drawCenteredImage(
-                                        g2,
-                                        bombermanLogo,
-                                        (x + windowWidth / 2),
-                                        (y + windowHeight / 3),
-                                        1.5);
-
-                        // draws the player sprites in the lower middle of the screen
-                        Inf101Graphics.drawCenteredImage(
-                                        g2,
-                                        player1FrontImage,
-                                        (x + windowWidth / 2) - 150,
-                                        (y + windowHeight / 3) + 100,
-                                        1.5);
-                        Inf101Graphics.drawCenteredImage(
-                                        g2,
-                                        player2FrontImage,
-                                        (x + windowWidth / 2) - 50,
-                                        (y + windowHeight / 3) + 100,
-                                        1.5);
-                        Inf101Graphics.drawCenteredImage(
-                                        g2,
-                                        player3FrontImage,
-                                        (x + windowWidth / 2) + 50,
-                                        (y + windowHeight / 3) + 100,
-                                        1.5);
-                        Inf101Graphics.drawCenteredImage(
-                                        g2,
-                                        player4FrontImage,
-                                        (x + windowWidth / 2) + 150,
-                                        (y + windowHeight / 3) + 100,
-                                        1.5);
-
-                        // draws the new game text
-                        g2.setColor(theme.getNewGameTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "PRESS ENTER TO PLAY",
-                                        tileRectangle.getX(),
-                                        tileRectangle.getY(),
-                                        gameWidth,
-                                        gameHeight * 1.5);
+                GameState gameState = this.model.getGameState();
+                switch (gameState) {
+                        case NEW_GAME:
+                                drawNewGame(g2, windowRectangle, tileRectangle, x, y, windowWidth, windowHeight,
+                                                gameWidth, gameHeight);
+                                break;
+                        case PAUSED_GAME:
+                                drawPausedGame(g2, windowRectangle, tileRectangle, x, y, gameWidth, gameHeight,
+                                                scoreboardRectangle, textHeight, cellPositionToPixelConverter, grid);
+                                break;
+                        case ACTIVE_GAME:
+                                drawActiveGame(g2, windowRectangle, tileRectangle, x, y, windowWidth, windowHeight,
+                                                scoreboardRectangle, textHeight, cellPositionToPixelConverter, grid);
+                                break;
+                        case DRAW:
+                                drawDraw(g2, windowRectangle, tileRectangle, x, y, gameWidth, gameHeight, grid,
+                                                scoreboardRectangle, cellPositionToPixelConverter,
+                                                textHeight);
+                                break;
+                        case PLAYER1_WON:
+                                drawWonGame(g2, windowRectangle, tileRectangle, x, y, windowWidth, windowHeight,
+                                                gameWidth, gameHeight, grid, scoreboardRectangle,
+                                                cellPositionToPixelConverter, textHeight, gameState);
+                                break;
+                        case PLAYER2_WON:
+                                drawWonGame(g2, windowRectangle, tileRectangle, x, y, windowWidth, windowHeight,
+                                                gameWidth, gameHeight, grid, scoreboardRectangle,
+                                                cellPositionToPixelConverter, textHeight, gameState);
+                                break;
+                        case PLAYER3_WON:
+                                drawWonGame(g2, windowRectangle, tileRectangle, x, y, windowWidth, windowHeight,
+                                                gameWidth, gameHeight, grid, scoreboardRectangle,
+                                                cellPositionToPixelConverter, textHeight, gameState);
+                                break;
+                        case PLAYER4_WON:
+                                drawWonGame(g2, windowRectangle, tileRectangle, x, y, windowWidth, windowHeight,
+                                                gameWidth, gameHeight, grid, scoreboardRectangle,
+                                                cellPositionToPixelConverter, textHeight, gameState);
+                                break;
+                        default:
+                                break;
                 }
 
-                if (this.model.getGameState() != GameState.NEW_GAME) {
+        }
 
-                        // draws the board
-                        g2.setColor(theme.getFrameColor());
-                        g2.fill(tileRectangle);
+        private void drawTextInCenter(Graphics2D g2, String text, Rectangle2D tileRectangle, double gameWidth,
+                        double gameHeight) {
+                g2.setFont(MAIN_TEXT_FONT);
+                Inf101Graphics.drawCenteredString(
+                                g2,
+                                text,
+                                tileRectangle.getX(),
+                                tileRectangle.getY(),
+                                gameWidth,
+                                gameHeight);
 
-                        // draws the grid
-                        drawImageCells(g2, grid, cellPositionToPixelConverter, theme);
-                        // drawCells(g2, grid, cellPositionToPixelConverter, theme);
+        }
 
-                        // draws the players depending on their direction
-                        if (this.model.getPlayer1Sprite() == 0) {
+        private void drawTransparentScreen(Graphics2D g2, Rectangle2D windowRectangle, ColorTheme theme) {
+                g2.setColor(theme.getTransparentScreenColor());
+                g2.fill(windowRectangle);
+        }
 
-                                drawCells(
-                                                g2,
-                                                playerModel,
-                                                cellPositionToPixelConverter,
-                                                player1FrontImage);
-                        }
-                        if (this.model.getPlayer1Sprite() == 1) {
+        /**
+         * Draws the scoreboard at the bottom of the game area.
+         *
+         * @param g2                  the graphics object to use for drawing
+         * @param scoreboardRectangle the rectangle representing the scoreboard area
+         * @param textHeight          the height of the text to be drawn
+         * @param gameWidth           the width of the game area
+         * @param gameHeight          the height of the game area
+         */
+        private void drawScoreboard(Graphics2D g2, Rectangle2D scoreboardRectangle, double textHeight, double gameWidth,
+                        double gameHeight) {
+                // Draw the scoreboard area
+                g2.setColor(theme.getScoreBoardColor());
+                g2.fill(scoreboardRectangle);
 
-                                drawCells(
-                                                g2,
-                                                playerModel,
-                                                cellPositionToPixelConverter,
-                                                player1BackImage);
-                        }
-                        if (this.model.getPlayer1Sprite() == 2) {
+                // Draw the clock background
+                Rectangle2D clockRect = new Rectangle2D.Double(
+                                scoreboardRectangle.getX() + scoreboardRectangle.getWidth() / 2 - 50,
+                                scoreboardRectangle.getY() + scoreboardRectangle.getHeight() / 10,
+                                100,
+                                40);
+                g2.setColor(Color.BLACK);
+                g2.fill(clockRect);
 
-                                drawCells(
-                                                g2,
-                                                playerModel,
-                                                cellPositionToPixelConverter,
-                                                player1LeftImage);
-                        }
-                        if (this.model.getPlayer1Sprite() == 3) {
+                // Draw the clock text
+                g2.setFont(UNDER_TEXT_FONT);
+                g2.setColor(theme.getClockColor());
+                Inf101Graphics.drawCenteredString(
+                                g2,
+                                "" + model.getTime(),
+                                scoreboardRectangle.getX(),
+                                scoreboardRectangle.getY(),
+                                scoreboardRectangle.getWidth(),
+                                SCOREBOARDHEIGHT);
 
-                                drawCells(
-                                                g2,
-                                                playerModel,
-                                                cellPositionToPixelConverter,
-                                                player1RightImage);
-                        }
+                g2.setColor(theme.getScoreBoardTextColor());
+                g2.setFont(UNDER_TEXT_FONT);
 
-                        if (this.model.getPlayer2Sprite() == 0) {
+                Inf101Graphics.drawCenteredString(
+                                g2,
+                                "" + model.getPlayer(1).getLives(),
+                                scoreboardRectangle.getX(),
+                                scoreboardRectangle.getY(),
+                                gameWidth / 4,
+                                SCOREBOARDHEIGHT);
 
-                                drawCells(
-                                                g2,
-                                                player2Model,
-                                                cellPositionToPixelConverter,
-                                                player2FrontImage);
-                        }
-                        if (this.model.getPlayer2Sprite() == 1) {
+                Inf101Graphics.drawCenteredString(
+                                g2,
+                                "" + model.getPlayer(2).getLives(),
+                                scoreboardRectangle.getX(),
+                                scoreboardRectangle.getY(),
+                                gameWidth / 2,
+                                SCOREBOARDHEIGHT);
 
-                                drawCells(
-                                                g2,
-                                                player2Model,
-                                                cellPositionToPixelConverter,
-                                                player2BackImage);
-                        }
-                        if (this.model.getPlayer2Sprite() == 2) {
+                // draw the player 3 and 4 lives next to each other horizontally on the right
+                // side of the clock
 
-                                drawCells(
-                                                g2,
-                                                player2Model,
-                                                cellPositionToPixelConverter,
-                                                player2LeftImage);
-                        }
+                Inf101Graphics.drawCenteredString(
+                                g2,
+                                "" + model.getPlayer(3).getLives(),
+                                scoreboardRectangle.getX() + gameWidth / 2,
+                                scoreboardRectangle.getY(),
+                                gameWidth / 2,
+                                SCOREBOARDHEIGHT);
 
-                        if (this.model.getPlayer2Sprite() == 3) {
+                Inf101Graphics.drawCenteredString(
+                                g2,
+                                "" + model.getPlayer(4).getLives(),
+                                scoreboardRectangle.getX() + gameWidth / 2,
+                                scoreboardRectangle.getY(),
+                                gameWidth / 4 * 3,
+                                SCOREBOARDHEIGHT);
 
-                                drawCells(
-                                                g2,
-                                                player2Model,
-                                                cellPositionToPixelConverter,
-                                                player2RightImage);
-                        }
+                // draw the player 1 and player 2 icons to the left of their lives horizontally
+                Inf101Graphics.drawCenteredImage(
+                                g2,
+                                player1IconImage,
+                                scoreboardRectangle.getX() + gameWidth / 8 - gameWidth / 16,
+                                scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
+                                0.75);
 
-                        if (this.model.getPlayer3Sprite() == 0) {
+                Inf101Graphics.drawCenteredImage(
+                                g2,
+                                player2IconImage,
+                                scoreboardRectangle.getX() + gameWidth / 4 + gameWidth / 16,
+                                scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
+                                0.75);
 
-                                drawCells(
-                                                g2,
-                                                player3Model,
-                                                cellPositionToPixelConverter,
-                                                player3FrontImage);
-                        }
-                        if (this.model.getPlayer3Sprite() == 1) {
+                // draw the player 3 and player 4 icons to the right of their lives horizontally
+                Inf101Graphics.drawCenteredImage(
+                                g2,
+                                player3IconImage,
+                                scoreboardRectangle.getX() + gameWidth / 4 * 3 - gameWidth / 16,
+                                scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
+                                0.75);
 
-                                drawCells(
-                                                g2,
-                                                player3Model,
-                                                cellPositionToPixelConverter,
-                                                player3BackImage);
-                        }
-                        if (this.model.getPlayer3Sprite() == 2) {
+                Inf101Graphics.drawCenteredImage(
+                                g2,
+                                player4IconImage,
+                                scoreboardRectangle.getX() + gameWidth - gameWidth / 16,
+                                scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
+                                0.75);
 
-                                drawCells(
-                                                g2,
-                                                player3Model,
-                                                cellPositionToPixelConverter,
-                                                player3LeftImage);
-                        }
+        }
 
-                        if (this.model.getPlayer3Sprite() == 3) {
-
-                                drawCells(
-                                                g2,
-                                                player3Model,
-                                                cellPositionToPixelConverter,
-                                                player3RightImage);
-                        }
-
-                        if (this.model.getPlayer4Sprite() == 0) {
-
-                                drawCells(
-                                                g2,
-                                                player4Model,
-                                                cellPositionToPixelConverter,
-                                                player4FrontImage);
-                        }
-                        if (this.model.getPlayer4Sprite() == 1) {
-
-                                drawCells(
-                                                g2,
-                                                player4Model,
-                                                cellPositionToPixelConverter,
-                                                player4BackImage);
-                        }
-                        if (this.model.getPlayer4Sprite() == 2) {
-
-                                drawCells(
-                                                g2,
-                                                player4Model,
-                                                cellPositionToPixelConverter,
-                                                player4LeftImage);
-                        }
-
-                        if (this.model.getPlayer4Sprite() == 3) {
-
-                                drawCells(
-                                                g2,
-                                                player4Model,
-                                                cellPositionToPixelConverter,
-                                                player4RightImage);
-                        }
-
-                        // draws the bombs
-                        drawCells(g2, bomb1Model, cellPositionToPixelConverter, bombImage);
-                        drawCells(g2, bomb2Model, cellPositionToPixelConverter, bombImage);
-                        drawCells(g2, bomb3Model, cellPositionToPixelConverter, bombImage);
-                        drawCells(g2, bomb4Model, cellPositionToPixelConverter, bombImage);
-
-                        // draw the scoreboard under the game
-                        g2.setColor(theme.getScoreBoardColor());
-                        g2.fill(scoreboardRectangle);
-
-                        // draws a black rectangle behind the clock
-                        Rectangle2D clockRectangle = new Rectangle2D.Double(
-                                        x + gameWidth / 2 - 50,
-                                        y + gameHeight + (scoreboardRectangle.getHeight() / 10),
-                                        100,
-                                        40);
-                        g2.setColor(Color.BLACK);
-                        g2.fill(clockRectangle);
-
-                        // draw a clock in the middle of the scoreboard
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                        g2.setColor(theme.getClockColor());
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "" + model.getTime(),
-                                        scoreboardRectangle.getX(),
-                                        scoreboardRectangle.getY(),
-                                        gameWidth,
-                                        SCOREBOARDHEIGHT);
-
-                        g2.setColor(theme.getScoreBoardTextColor());
-                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-
-                        // draw the player 1 and 2 lives next to each other horizontally on the left
-                        // side of the clock
-
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "" + model.getPlayerLives(),
-                                        scoreboardRectangle.getX(),
-                                        scoreboardRectangle.getY(),
-                                        gameWidth / 4,
-                                        SCOREBOARDHEIGHT);
-
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "" + model.getPlayer2Lives(),
-                                        scoreboardRectangle.getX(),
-                                        scoreboardRectangle.getY(),
-                                        gameWidth / 2,
-                                        SCOREBOARDHEIGHT);
-
-                        // draw the player 3 and 4 lives next to each other horizontally on the right
-                        // side of the clock
-
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "" + model.getPlayer3Lives(),
-                                        scoreboardRectangle.getX() + gameWidth / 2,
-                                        scoreboardRectangle.getY(),
-                                        gameWidth / 2,
-                                        SCOREBOARDHEIGHT);
-
-                        Inf101Graphics.drawCenteredString(
-                                        g2,
-                                        "" + model.getPlayer4Lives(),
-                                        scoreboardRectangle.getX() + gameWidth / 2,
-                                        scoreboardRectangle.getY(),
-                                        gameWidth / 4 * 3,
-                                        SCOREBOARDHEIGHT);
-
-                        // draw the player 1 and player 2 icons to the left of their lives horizontally
-                        Inf101Graphics.drawCenteredImage(
-                                        g2,
-                                        player1IconImage,
-                                        scoreboardRectangle.getX() + gameWidth / 8 - gameWidth / 16,
-                                        scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
-                                        0.75);
-
-                        Inf101Graphics.drawCenteredImage(
-                                        g2,
-                                        player2IconImage,
-                                        scoreboardRectangle.getX() + gameWidth / 4 + gameWidth / 16,
-                                        scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
-                                        0.75);
-
-                        // draw the player 3 and player 4 icons to the right of their lives horizontally
-                        Inf101Graphics.drawCenteredImage(
-                                        g2,
-                                        player3IconImage,
-                                        scoreboardRectangle.getX() + gameWidth / 4 * 3 - gameWidth / 16,
-                                        scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
-                                        0.75);
-
-                        Inf101Graphics.drawCenteredImage(
-                                        g2,
-                                        player4IconImage,
-                                        scoreboardRectangle.getX() + gameWidth - gameWidth / 16,
-                                        scoreboardRectangle.getY() + SCOREBOARDHEIGHT / 2,
-                                        0.75);
-
-                        if (this.model.getGameState() == GameState.PAUSED_GAME
-                                        || this.model.getGameState() == GameState.PLAYER1_WON
-                                        || this.model.getGameState() == GameState.PLAYER2_WON
-                                        || this.model.getGameState() == GameState.PLAYER3_WON
-                                        || this.model.getGameState() == GameState.PLAYER4_WON
-                                        || this.model.getGameState() == GameState.DRAW) {
-
-                                // draw a transparent layer over the game
-                                g2.setColor(theme.getTransparentScreenColor());
-                                g2.fill(windowRectangle);
-
-                                if (this.model.getGameState() == GameState.DRAW) {
-                                        // draw the draw text
-                                        g2.setColor(theme.getDrawTextColor());
-                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
-                                        Inf101Graphics.drawCenteredString(
-                                                        g2,
-                                                        "DRAW",
-                                                        tileRectangle.getX(),
-                                                        tileRectangle.getY(),
-                                                        gameWidth,
-                                                        gameHeight);
-                                }
-                                if (this.model.getGameState() == GameState.PAUSED_GAME) {
-                                        // draw the paused text
-                                        g2.setColor(theme.getPausedTextColor());
-                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
-                                        Inf101Graphics.drawCenteredString(
-                                                        g2,
-                                                        "PAUSED",
-                                                        tileRectangle.getX(),
-                                                        tileRectangle.getY(),
-                                                        gameWidth,
-                                                        gameHeight);
-
-                                }
-                                if (this.model.getGameState() == GameState.PLAYER1_WON) {
-                                        // draw the player 1 won text
-                                        g2.setColor(theme.getGameWonTextColor());
-                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
-                                        Inf101Graphics.drawCenteredString(
-                                                        g2,
-                                                        "PLAYER 1 WON",
-                                                        tileRectangle.getX(),
-                                                        tileRectangle.getY(),
-                                                        gameWidth,
-                                                        gameHeight);
-                                }
-                                if (this.model.getGameState() == GameState.PLAYER2_WON) {
-                                        // draw the player 2 won text
-                                        g2.setColor(theme.getGameWonTextColor());
-                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
-                                        Inf101Graphics.drawCenteredString(
-                                                        g2,
-                                                        "PLAYER 2 WON",
-                                                        tileRectangle.getX(),
-                                                        tileRectangle.getY(),
-                                                        gameWidth,
-                                                        gameHeight);
-                                }
-                                if (this.model.getGameState() == GameState.PLAYER3_WON) {
-                                        // draw the player 3 won text
-                                        g2.setColor(theme.getGameWonTextColor());
-                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
-                                        Inf101Graphics.drawCenteredString(
-                                                        g2,
-                                                        "PLAYER 3 WON",
-                                                        tileRectangle.getX(),
-                                                        tileRectangle.getY(),
-                                                        gameWidth,
-                                                        gameHeight);
-                                }
-                                if (this.model.getGameState() == GameState.PLAYER4_WON) {
-                                        // draw the player 4 won text
-                                        g2.setColor(theme.getGameWonTextColor());
-                                        g2.setFont(new Font("Monospaced", Font.BOLD, 40));
-                                        Inf101Graphics.drawCenteredString(
-                                                        g2,
-                                                        "PLAYER 4 WON",
-                                                        tileRectangle.getX(),
-                                                        tileRectangle.getY(),
-                                                        gameWidth,
-                                                        gameHeight);
-                                }
-                                if (this.model.getGameState() == GameState.DRAW
-                                                || this.model.getGameState() == GameState.PLAYER1_WON
-                                                || this.model.getGameState() == GameState.PLAYER2_WON
-                                                || this.model.getGameState() == GameState.PLAYER3_WON
-                                                || this.model.getGameState() == GameState.PLAYER4_WON) {
-                                        // draw the play again text
-                                        g2.setColor(theme.getPlayAgainTextColor());
-                                        g2.setFont(new Font("Monospaced", Font.BOLD, 20));
-                                        Inf101Graphics.drawCenteredString(
-                                                        g2,
-                                                        "Press ENTER to play again",
-                                                        tileRectangle.getX(),
-                                                        windowRectangle.getY() + windowRectangle.getHeight() / 4,
-                                                        gameWidth,
-                                                        gameHeight);
-                                }
-                        }
-
+        private void drawBombs(Graphics2D g2, CellPositionToPixelConverter cellPositionToPixelConverter) {
+                for (Iterable<GridCell<Character>> bombTile : bombTiles) {
+                        drawCells(g2, bombTile, cellPositionToPixelConverter, bombImage);
                 }
+        }
+
+        private void drawPlayers(Graphics2D g2, CellPositionToPixelConverter cellPositionToPixelConverter) {
+                BufferedImage[][] playerImages = new BufferedImage[][] {
+                                { player1FrontImage, player1BackImage, player1LeftImage, player1RightImage },
+                                { player2FrontImage, player2BackImage, player2LeftImage, player2RightImage },
+                                { player3FrontImage, player3BackImage, player3LeftImage, player3RightImage },
+                                { player4FrontImage, player4BackImage, player4LeftImage, player4RightImage }
+                };
+
+                // loop through each player tile and draw their corresponding image based on
+                // their direction
+                for (int i = 0; i < playerTiles.length; i++) {
+                        Iterable<GridCell<Character>> playerTile = playerTiles[i];
+                        if (playerTile != null) {
+                                BufferedImage[] images = playerImages[i];
+                                Direction direction = model.getPlayer(i + 1).getSprite();
+                                int imageIndex = 0;
+                                if (direction == Direction.UP) {
+                                        imageIndex = 1;
+                                } else if (direction == Direction.LEFT) {
+                                        imageIndex = 2;
+                                } else if (direction == Direction.RIGHT) {
+                                        imageIndex = 3;
+                                }
+                                drawCells(g2, playerTile, cellPositionToPixelConverter, images[imageIndex]);
+                        }
+                }
+        }
+
+        private void drawWonGame(Graphics2D g2, Rectangle2D windowRectangle, Rectangle2D tileRectangle, double x,
+                        double y, double windowWidth, double windowHeight, double gameWidth, double gameHeight,
+                        Iterable<GridCell<Character>> grid, Rectangle2D scoreboardRectangle,
+                        CellPositionToPixelConverter cellPositionToPixelConverter, double textHeight,
+                        GameState gameState) {
+
+                drawDarkenedBackground(g2, windowRectangle, tileRectangle, x, y, gameWidth,
+                                gameHeight,
+                                grid, scoreboardRectangle, cellPositionToPixelConverter, textHeight);
+
+                String string = "";
+                switch (gameState) {
+                        case PLAYER1_WON:
+                                string = "PLAYER 1 WON!";
+                                break;
+                        case PLAYER2_WON:
+                                string = "PLAYER 2 WON!";
+                                break;
+                        case PLAYER3_WON:
+                                string = "PLAYER 3 WON!";
+                                break;
+                        case PLAYER4_WON:
+                                string = "PLAYER 4 WON!";
+                                break;
+                        default:
+                                break;
+                }
+
+                // draws the player won text
+                g2.setColor(theme.getGameWonTextColor());
+                drawTextInCenter(g2, string, tileRectangle, gameWidth, gameHeight);
+
+                // draws the press enter to play again text
+                g2.setColor(theme.getPlayAgainTextColor());
+                drawTextUnderCenter(g2, "Press ENTER to play again", gameWidth, gameHeight, windowRectangle);
+
+        }
+
+        private void drawDarkenedBackground(Graphics2D g2, Rectangle2D windowRectangle, Rectangle2D tileRectangle,
+                        double x, double y, double gameWidth,
+                        double gameHeight, Iterable<GridCell<Character>> grid, Rectangle2D scoreboardRectangle,
+                        CellPositionToPixelConverter cellPositionToPixelConverter, double textHeight) {
+
+                drawBaseGame(g2, windowRectangle, tileRectangle, x, y, gameWidth, gameHeight, grid, scoreboardRectangle,
+                                cellPositionToPixelConverter, textHeight);
+
+                drawTransparentScreen(g2, windowRectangle, theme);
+
+        }
+
+        private void drawDraw(Graphics2D g2, Rectangle2D windowRectangle, Rectangle2D tileRectangle, double x,
+                        double y, double gameWidth, double gameHeight, Iterable<GridCell<Character>> grid,
+                        Rectangle2D scoreboardRectangle, CellPositionToPixelConverter cellPositionToPixelConverter,
+                        double textHeight) {
+
+                drawDarkenedBackground(g2, windowRectangle, tileRectangle, x, y, gameWidth, gameHeight,
+                                grid, scoreboardRectangle, cellPositionToPixelConverter, textHeight);
+
+                // draws the paused text
+                g2.setColor(theme.getPausedTextColor());
+                drawTextInCenter(g2, "DRAW", tileRectangle, gameWidth, gameHeight);
+
+                // draws the press enter to play again text
+                g2.setColor(theme.getPlayAgainTextColor());
+                drawTextUnderCenter(g2, "Press ENTER to play again", gameWidth, gameHeight, windowRectangle);
+        }
+
+        private void drawTextUnderCenter(Graphics2D g2, String string, double gameWidth,
+                        double gameHeight, RectangularShape windowRectangle) {
+                g2.setFont(UNDER_TEXT_FONT);
+                Inf101Graphics.drawCenteredString(
+                                g2,
+                                string,
+                                windowRectangle.getX(),
+                                windowRectangle.getY() + windowRectangle.getHeight() / 4,
+                                gameWidth,
+                                gameHeight);
+
+        }
+
+        private void drawActiveGame(Graphics2D g2, Rectangle2D windowRectangle, Rectangle2D tileRectangle, double x,
+                        double y, double windowWidth, double windowHeight, Rectangle2D scoreboardRectangle,
+                        double textHeight, CellPositionToPixelConverter cellPositionToPixelConverter,
+                        Iterable<GridCell<Character>> grid) {
+                drawBaseGame(g2, windowRectangle, tileRectangle, x, y, windowWidth, windowHeight, grid,
+                                scoreboardRectangle, cellPositionToPixelConverter, textHeight);
+        }
+
+        private void drawBoard(Graphics2D g2, Rectangle2D tileRectangle) {
+                g2.setColor(theme.getFrameColor());
+                g2.fill(tileRectangle);
+        }
+
+        private void drawPausedGame(Graphics2D g2, Rectangle2D windowRectangle, Rectangle2D tileRectangle, double x,
+                        double y, double gameWidth, double gameHeight, Rectangle2D scoreboardRectangle,
+                        double textHeight, CellPositionToPixelConverter cellPositionToPixelConverter,
+                        Iterable<GridCell<Character>> grid) {
+
+                drawDarkenedBackground(g2, windowRectangle, tileRectangle, x, y, gameWidth,
+                                gameHeight, grid, scoreboardRectangle,
+                                cellPositionToPixelConverter, textHeight);
+
+                // draws the paused text
+                g2.setColor(theme.getPausedTextColor());
+                g2.setFont(MAIN_TEXT_FONT);
+                drawTextInCenter(g2, "PAUSED", tileRectangle, gameWidth, gameHeight);
+        }
+
+        private void drawBaseGame(Graphics2D g2, Rectangle2D windowRectangle, Rectangle2D tileRectangle, double x,
+                        double y, double gameWidth, double gameHeight, Iterable<GridCell<Character>> grid,
+                        Rectangle2D scoreboardRectangle, CellPositionToPixelConverter cellPositionToPixelConverter,
+                        double textHeight) {
+                // draws the board
+                drawBoard(g2, tileRectangle);
+
+                // draws the grid
+                drawImageCells(g2, grid, cellPositionToPixelConverter, theme);
+                drawPlayers(g2, cellPositionToPixelConverter);
+                drawBombs(g2, cellPositionToPixelConverter);
+                drawScoreboard(g2, scoreboardRectangle, textHeight, gameWidth, gameHeight);
         }
 
         private void drawCells(
@@ -589,6 +518,44 @@ public class BombermanView extends JPanel {
                         g2.setColor(color);
                         g2.fill(r);
                 }
+        }
+
+        private void drawNewGame(Graphics2D g2, Rectangle2D windowRectangle, Rectangle2D tileRectangle, double x,
+                        double y, double windowWidth, double windowHeight, double gameWidth, double gameHeight) {
+                double halfWindowWidth = windowWidth / 2;
+                double thirdWindowHeight = windowHeight / 3;
+                int playerOffset = 100;
+
+                // draws a black background
+                g2.setColor(Color.BLACK);
+                g2.fill(windowRectangle);
+
+                // draws the bomberman logo in the upper middle of the screen
+                Inf101Graphics.drawCenteredImage(
+                                g2,
+                                bombermanLogo,
+                                (x + halfWindowWidth),
+                                (y + thirdWindowHeight),
+                                LOGO_SCALE);
+
+                // Draw player sprites in a loop
+                BufferedImage[] playerImages = { player1FrontImage, player2FrontImage, player3FrontImage,
+                                player4FrontImage };
+                int[] playerPositions = { -150, -50, 50, 150 };
+                for (int i = 0; i < playerImages.length; i++) {
+                        Inf101Graphics.drawCenteredImage(
+                                        g2,
+                                        playerImages[i],
+                                        (x + halfWindowWidth) + playerPositions[i],
+                                        (y + thirdWindowHeight) + playerOffset,
+                                        UNIT_SCALE);
+                }
+
+                // draws the new game text
+                g2.setColor(theme.getNewGameTextColor());
+                g2.setFont(UNDER_TEXT_FONT);
+                drawTextUnderCenter(g2, "Press ENTER to start", gameWidth, gameHeight,
+                                windowRectangle);
         }
 
         private void drawCells(

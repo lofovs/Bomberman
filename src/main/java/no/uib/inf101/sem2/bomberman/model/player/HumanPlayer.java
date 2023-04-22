@@ -4,23 +4,23 @@ import no.uib.inf101.sem2.grid.CellPosition;
 
 public class HumanPlayer extends Player {
 
+    private int moveCount;
+
     public HumanPlayer(CellPosition pos) {
         super(pos);
-
+        this.symbol = 'W';
+        this.moveCount = 0;
     }
 
-    @Override
-    public HumanPlayer shiftedBy(int deltaRow, int deltaCol) {
-        CellPosition newPos = new CellPosition(
-                this.getPos().row() + deltaRow,
-                this.getPos().col() + deltaCol);
-        return new HumanPlayer(newPos);
+    public int getMoveCount() {
+        return moveCount;
     }
 
-    @Override
-    public HumanPlayer shiftedToPosition(CellPosition pos) {
-        return new HumanPlayer(pos);
-
+    public void incrementMoveCount() {
+        this.moveCount++;
     }
 
+    public void resetMoveCount() {
+        this.moveCount = 0;
+    }
 }

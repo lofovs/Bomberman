@@ -33,22 +33,22 @@ public class BombermanController implements java.awt.event.KeyListener {
 
   @Override
   public void keyPressed(KeyEvent e) {
-    if (this.model.getPlayerLives() > 0 &&
+    if (this.model.getPlayer(1).getLives() > 0 &&
         this.model.getGameState() == GameState.ACTIVE_GAME) {
       if (e.getKeyCode() == KeyEvent.VK_UP) {
         model.movePlayer(-1, 0);
-        model.changePlayerSprite(this.model.getPlayer(), -1, 0);
+        model.changePlayerSprite(this.model.getPlayer(1), -1, 0);
       } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
         model.movePlayer(1, 0);
-        model.changePlayerSprite(this.model.getPlayer(), 1, 0);
+        model.changePlayerSprite(this.model.getPlayer(1), 1, 0);
       } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
         model.movePlayer(0, -1);
-        model.changePlayerSprite(this.model.getPlayer(), 0, -1);
+        model.changePlayerSprite(this.model.getPlayer(1), 0, -1);
       } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
         model.movePlayer(0, 1);
-        model.changePlayerSprite(this.model.getPlayer(), 0, 1);
+        model.changePlayerSprite(this.model.getPlayer(1), 0, 1);
       } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-        model.placeBomb(model.getPlayer(), model.getBomb());
+        model.placeBomb(model.getPlayer(1));
       }
     }
 

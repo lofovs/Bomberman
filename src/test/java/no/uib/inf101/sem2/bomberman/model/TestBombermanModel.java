@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.CellPosition;
 
@@ -18,19 +17,17 @@ public class TestBombermanModel {
         // Set up a test board and players
         BombermanBoard board = new BombermanBoard(10, 10);
         BombermanModel model = new BombermanModel(board);
-        Player player1 = model.getPlayer();
+        Player player1 = model.getPlayer(1);
 
         // Test placing a bomb for player 1
-        Bomb bomb = model.getBomb();
-        assertTrue(model.placeBomb(player1, bomb));
-        assertEquals(1, model.getPlayerBombCount(player1));
-        assertEquals(model.getBomb().getPos(), player1.getPos());
+        assertTrue(model.placeBomb(player1));
+        assertEquals(1, player1.getBombCount());
+        assertEquals(player1.getPos(), player1.getBomb().getPos());
 
         // Test placing a second bomb for player 1
-        Bomb bomb2 = new Bomb(player1.getPos());
         model.movePlayer(-1, 0);
-        assertFalse(model.placeBomb(model.getPlayer(), bomb2));
-        assertEquals(1, model.getPlayerBombCount(model.getPlayer()));
+        assertFalse(model.placeBomb(player1));
+        assertEquals(1, player1.getBombCount());
     }
 
     @Test
@@ -42,12 +39,11 @@ public class TestBombermanModel {
         board.clear();
 
         // place a bomb and explode it
-        Player player = model.getPlayer();
-        Bomb bomb = model.getBomb();
-        model.placeBomb(player, bomb);
+        Player player1 = model.getPlayer(1);
+        model.placeBomb(player1);
 
         // explode the bomb and check that the surrounding tiles have turned to 'E'
-        model.explodeBomb(model.getBomb());
+        model.explodeBomb(player1);
 
         board = model.getBoard();
 
@@ -59,9 +55,9 @@ public class TestBombermanModel {
 
         // check that the bomb has been removed from the board and that the bomb has
         // been replaced by the exploded bomb
-        assertNotEquals(model.getExplodedBomb().getPos(), model.getBomb().getPos());
-        assertEquals(model.getExplodedBomb().getPos(), model.getPlayer().getPos());
-        assertEquals(model.getBomb().getPos(), new CellPosition(-1, -1));
+        assertNotEquals(player1.getExplodedBomb().getPos(), player1.getBomb().getPos());
+        assertEquals(player1.getExplodedBomb().getPos(), player1.getPos());
+        assertEquals(player1.getBomb().getPos(), new CellPosition(-1, -1));
 
         // check that the bomb has
 

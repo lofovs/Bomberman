@@ -10,4 +10,8 @@ public record CellPosition(int row, int col) {
     public CellPosition shiftedBy(Direction direction) {
         return new CellPosition(row + direction.getDeltaRow(), col + direction.getDeltaCol());
     }
+
+    public CellPosition shiftedBy(int deltaRow, int deltaCol) {
+        return new CellPosition(row + deltaRow, col + deltaCol);
+    }
 }

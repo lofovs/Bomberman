@@ -10,7 +10,7 @@ public interface ControllableBombermanModel {
    *
    * @return true if a bomb was placed, false otherwise
    */
-  boolean placeBomb(Player player, Bomb bomb);
+  boolean placeBomb(Player player);
 
   /**
    * Move the player.
@@ -60,42 +60,7 @@ public interface ControllableBombermanModel {
    * 
    * @return the player
    */
-  Player getPlayer();
-
-  /**
-   * Get the player lives.
-   * 
-   * @return the player lives
-   */
-  int getPlayerLives();
-
-  /**
-   * Get the bomb.
-   * 
-   * @return the bomb
-   */
-  Bomb getBomb();
-
-  /**
-   * Get the second bomb.
-   * 
-   * @return the bomb
-   */
-  Bomb getBomb2();
-
-  /**
-   * Get the third bomb.
-   * 
-   * @return the bomb
-   */
-  Bomb getBomb3();
-
-  /**
-   * Get the fourth bomb.
-   * 
-   * @return the bomb
-   */
-  Bomb getBomb4();
+  Player getPlayer(int playerNumber);
 
   /**
    * Changes the player sprite depending on which direction the player is moving
@@ -104,4 +69,5 @@ public interface ControllableBombermanModel {
    * @param j the column
    */
   void changePlayerSprite(Player player, int i, int j);
+
 }
