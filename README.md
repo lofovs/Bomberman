@@ -11,11 +11,12 @@ Bomberman is a game involving 4 players. The goal of the game is to blow up all 
 ## How to play
 
 You play as the white bomberman starting in the lower left corner. The other 3 players are bots. 
-You use the arrow keys to move around, and the space bar to place a bomb. 
 
-'m' is used to mute/unmute the music.
-'p' is used to pause/unpause the game.
-'esc' is used to exit the game.
+- You use the arrow keys to move around, and the space bar to place a bomb. 
+
+- 'm' is used to mute/unmute the music.
+- 'p' is used to pause/unpause the game.
+- 'esc' is used to exit the game.
 
 # Behind the scenes
 
