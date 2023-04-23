@@ -18,7 +18,7 @@
 
         <!-- Properties required for packaging application as JAR and installer -->
         <app.main.class>${project.groupId}.Main</app.main.class> <!-- name of main class -->
-        <app.vendor>Torstein Strømme</app.vendor> <!-- replace with your name -->
+        <app.vendor>Runar Røssevold</app.vendor> <!-- replace with your name -->
         <app.version>1.0.0</app.version> <!-- version displayed in "about" -->
         <app.installer.macosx.type>dmg</app.installer.macosx.type> <!-- dmg, pkg -->
         <app.installer.windows.type>msi</app.installer.windows.type> <!-- msi, exe -->

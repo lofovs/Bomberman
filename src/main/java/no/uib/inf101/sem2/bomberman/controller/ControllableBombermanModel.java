@@ -1,7 +1,7 @@
 package no.uib.inf101.sem2.bomberman.controller;
 
+import no.uib.inf101.sem2.bomberman.model.BombermanBoard;
 import no.uib.inf101.sem2.bomberman.model.GameState;
-import no.uib.inf101.sem2.bomberman.model.bomb.Bomb;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
 
 public interface ControllableBombermanModel {
@@ -19,7 +19,7 @@ public interface ControllableBombermanModel {
    * @param deltaCol the column delta
    * @return true if the player was moved, false otherwise
    */
-  boolean movePlayer(int deltaRow, int deltaCol);
+  boolean movePlayer1(int deltaRow, int deltaCol);
 
   /**
    * Get the interval between clock ticks in milliseconds.

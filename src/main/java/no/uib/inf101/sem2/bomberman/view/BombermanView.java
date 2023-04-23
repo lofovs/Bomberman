@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 
 import no.uib.inf101.sem2.bomberman.model.Direction;
 import no.uib.inf101.sem2.bomberman.model.GameState;
-import no.uib.inf101.sem2.bomberman.model.player.Player;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
@@ -28,8 +27,6 @@ public class BombermanView extends JPanel {
         private static final double UNIT_SCALE = 1.5;
         private static final Font MAIN_TEXT_FONT = new Font("Monospaced", Font.BOLD, 40);
         private static final Font UNDER_TEXT_FONT = new Font("Monospaced", Font.BOLD, 20);
-        private static final String NEW_GAME_TEXT = "PRESS ENTER TO PLAY";
-        private static final String PLAY_AGAIN_TEXT = "PRESS ENTER TO PLAY AGAIN";
 
         private ViewableBombermanModel model;
         private ColorTheme theme;

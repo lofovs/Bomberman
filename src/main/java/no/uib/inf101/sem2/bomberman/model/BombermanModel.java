@@ -17,7 +17,7 @@ import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
 
 public class BombermanModel
-    implements ViewableBombermanModel, ControllableBombermanModel {
+    implements ViewableBombermanModel, ControllableBombermanModel, TestableBombermanModel {
 
   private BombermanBoard board;
 
@@ -31,6 +31,8 @@ public class BombermanModel
   private static final CellPosition PLAYER_DEAD_POS = new CellPosition(-2, -2);
 
   private Random random;
+
+  private int realTime;
 
   public BombermanModel(BombermanBoard board) {
     this.board = board;
@@ -73,15 +75,7 @@ public class BombermanModel
     }
   }
 
-  /**
-   * Explodes the bomb, creating an explosion covering the bomb tile and the 4
-   * adjacent tiles.
-   * Gets a new bomb for the player and sets the player's exploded bomb to the old
-   * bomb.
-   * 
-   * @param player the player who placed the bomb
-   */
-  void explodeBomb(Player player) {
+  private void explodeBomb(Player player) {
     Bomb bomb = player.getBomb();
     for (GridCell<Character> gridCell : bomb) {
       setExplodedTile(gridCell.pos());
@@ -101,7 +95,7 @@ public class BombermanModel
   }
 
   @Override
-  public boolean movePlayer(int deltaRow, int deltaCol) {
+  public boolean movePlayer1(int deltaRow, int deltaCol) {
     if (((HumanPlayer) this.players[0]).getMoveCount() < 1) {
       CellPosition newPosition = players[0].getPos().shiftedBy(deltaRow, deltaCol);
       if (this.board.canPlace(newPosition)) {
@@ -261,12 +255,16 @@ public class BombermanModel
   public void clockTick() {
     if (this.gameState == GameState.ACTIVE_GAME) {
       for (Player player : this.players) {
-        playerClockTick(player);
+        removeDeadPlayerFromBoard(player);
+        if (isAlive(player)) {
+          playerClockTick(player);
+        }
       }
       checkWin();
       this.clockTick++;
       if (oneSecondRealTimeHasPassed()) {
         this.clock.tick();
+        this.realTime++;
       }
     }
   }
@@ -311,10 +309,6 @@ public class BombermanModel
     if (player instanceof HumanPlayer) {
       ((HumanPlayer) player).resetMoveCount();
     }
-
-    // checks if the player is dead and if true it will remove the player from the
-    // board
-    removeDeadPlayerFromBoard(player);
   }
 
   private void checkWin() {
@@ -376,14 +370,6 @@ public class BombermanModel
     }
   }
 
-  /**
-   * Checks if the player is on an explosion tile and if true it will damage
-   * the player. The player will have a cooldown period after taking damage during
-   * which
-   * they will not be damaged again.
-   * 
-   * @param player the player to check for damage
-   */
   private void damagePlayer(Player player) {
     if (isAlive(player)) {
       CellPosition pos = player.getPos();
@@ -394,21 +380,10 @@ public class BombermanModel
     }
   }
 
-  /**
-   * Checks if the given player is alive
-   * 
-   * @param player the player to check
-   * @return true if the player is alive, false otherwise
-   */
   private boolean isAlive(Player player) {
     return player.getLives() > 0;
   }
 
-  /**
-   * Replaces the explosion tiles with empty tiles, if the tiles are destructible
-   * 
-   * @param bomb the bomb that has exploded
-   */
   private void removeExplodedTiles(Bomb explodedBomb) {
     Set<CellPosition> affectedCells = new HashSet<>();
     for (GridCell<Character> gridCell : explodedBomb) {
@@ -430,13 +405,6 @@ public class BombermanModel
     }
   }
 
-  /**
-   * Checks if the player is dead, and if true it will remove the player from the
-   * board
-   * 
-   * @param player the dead player
-   * @return the dead player
-   */
   private void removeDeadPlayerFromBoard(Player player) {
     if (!isAlive(player)) {
       player.setPosition(PLAYER_DEAD_POS);
@@ -474,7 +442,6 @@ public class BombermanModel
     } else {
       this.gameState = GameState.NEW_GAME;
     }
-
     this.resetGame();
     this.board.createMap();
   }
@@ -486,6 +453,7 @@ public class BombermanModel
     this.resetSprites();
     ((HumanPlayer) this.players[0]).resetMoveCount();
     this.clock = new Clock();
+    this.realTime = 0;
   }
 
   private void resetSprites() {
@@ -520,7 +488,8 @@ public class BombermanModel
     return timeString;
   }
 
-  BombermanBoard getBoard() {
+  @Override
+  public BombermanBoard getBoard() {
     return this.board;
   }
 
@@ -532,6 +501,16 @@ public class BombermanModel
   @Override
   public Player[] getPlayers() {
     return this.players;
+  }
+
+  @Override
+  public int getRealTimeElapsed() {
+    return this.realTime;
+  }
+
+  @Override
+  public void setGameState(GameState gameState) {
+    this.gameState = gameState;
   }
 
 }

@@ -24,7 +24,7 @@ public class BombermanController implements java.awt.event.KeyListener {
     this.timer = new Timer(model.getTimerInterval(), this::clockTick);
     this.timer.start();
     this.song = new BombermanSong("battle.mid");
-    // this.song.run();
+    this.song.run();
   }
 
   @Override
@@ -36,16 +36,16 @@ public class BombermanController implements java.awt.event.KeyListener {
     if (this.model.getPlayer(1).getLives() > 0 &&
         this.model.getGameState() == GameState.ACTIVE_GAME) {
       if (e.getKeyCode() == KeyEvent.VK_UP) {
-        model.movePlayer(-1, 0);
+        model.movePlayer1(-1, 0);
         model.changePlayerSprite(this.model.getPlayer(1), -1, 0);
       } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-        model.movePlayer(1, 0);
+        model.movePlayer1(1, 0);
         model.changePlayerSprite(this.model.getPlayer(1), 1, 0);
       } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-        model.movePlayer(0, -1);
+        model.movePlayer1(0, -1);
         model.changePlayerSprite(this.model.getPlayer(1), 0, -1);
       } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-        model.movePlayer(0, 1);
+        model.movePlayer1(0, 1);
         model.changePlayerSprite(this.model.getPlayer(1), 0, 1);
       } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
         model.placeBomb(model.getPlayer(1));

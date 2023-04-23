@@ -44,7 +44,7 @@ public class BombermanBoard extends Grid<Character> {
   }
 
   /**
-   * Clears the this
+   * Clears the board, filling it up with the chosen default value
    */
   public void clear() {
     super.fillGrid(this.row, this.col, this.defaultValue);
@@ -115,14 +115,6 @@ public class BombermanBoard extends Grid<Character> {
     }
     return false;
   }
-
-  // private boolean isWall(CellPosition pos) {
-  // if (get(pos) == 'G' || get(pos) == 'X') {
-  // return true;
-  // } else {
-  // return false;
-  // }
-  // }
 
   /**
    * Checks if the cell at the specified position will become an explosion
