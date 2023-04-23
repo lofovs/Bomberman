@@ -17,11 +17,11 @@ You use the arrow keys to move around, and the space bar to place a bomb.
 'p' is used to pause/unpause the game.
 'esc' is used to exit the game.
 
-## Behind the scenes
+# Behind the scenes
 
 The game is built using the MVC architecture. 
 
-# Model 
+## Model 
 
 The most important classes in the model are:
 - 'BombermanModel' - contains the game logic, has methods for the AI behavior, and methods for placing bombs and moving the bomberman. Updates the view.
@@ -29,19 +29,19 @@ The most important classes in the model are:
 - 'Player, HumanPlayer and AIPlayer' - contains information about the players, such as their position, number of lives, and also contain the bomb objects.
 - 'Bomb' - contains information about the bombs, such as their position, and the timer for when they will explode.
 
-# View
+## View
 
 The view is almost entirely built up by the 'BombermanView' class. 
 - 'BombermanView' - draws the players, bombs, tiles, game window, scoreboard, and everything that is visible.
 
-# Controller
+## Controller
 
 The view is almost entirely built up by the 'BombermanController' class.
 - 'BombermanController' - handles the input from the user, and updates the model accordingly.
 
 
 
-## Link to video demonstration
+# Link to video demonstration
 https://youtu.be/Us2zqq0Nqa4
 
 
