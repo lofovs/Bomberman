@@ -40,7 +40,24 @@ The view is almost entirely built up by the 'BombermanView' class.
 The view is almost entirely built up by the 'BombermanController' class.
 - 'BombermanController' - handles the input from the user, and updates the model accordingly.
 
+# Manual testing
 
+## AI Behavior
+
+The AI behaves in a 'random' manner with some safety measures. This resulted in it being quite difficult to test the AI behavior, as it is not always clear what the AI should do, without installing external frameworks to steer the AI. 
+
+Ways to see if the AI is working as intended:
+- the AI places bombs randomly (33% chance)
+- the AI tries to avoid bombs and explosions
+- the AI avoids placing bombs where they would put themselves in danger
+
+## Game logic
+
+Ways to see if the game logic is working as intended:
+- the game ends when there is only one player left
+- the game ends in a draw when the clock reaches 0
+- the game ends in a draw when all players are dead
+- you can't go through walls
 
 # Link to video demonstration
 https://youtu.be/Us2zqq0Nqa4
