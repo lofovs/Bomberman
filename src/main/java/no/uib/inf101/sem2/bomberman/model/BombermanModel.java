@@ -296,6 +296,7 @@ public class BombermanModel
     }
 
     damagePlayer(player);
+    player.decrementDamageCooldown();
 
     // checks if the player is alive and if true it will move and place bombs
     if (player instanceof AIPlayer) {
@@ -377,14 +378,18 @@ public class BombermanModel
 
   /**
    * Checks if the player is on an explosion tile and if true it will damage
-   * the player
+   * the player. The player will have a cooldown period after taking damage during
+   * which
+   * they will not be damaged again.
    * 
-   * @param player
+   * @param player the player to check for damage
    */
   private void damagePlayer(Player player) {
     if (isAlive(player)) {
-      if (this.board.isExplosion(player.getPos())) {
+      CellPosition pos = player.getPos();
+      if (this.board.isExplosion(pos) && player.getDamageCooldown() <= 0) {
         player.decrementLives();
+        player.startDamageCooldown();
       }
     }
   }

@@ -12,6 +12,8 @@ import no.uib.inf101.sem2.grid.GridCell;
 
 public abstract class Player implements Iterable<GridCell<Character>> {
 
+  private static final int DAMAGE_COOLDOWN_DURATION = 6;
+
   private CellPosition pos;
   protected Character symbol;
   private BombFactory bombFactory;
@@ -21,6 +23,7 @@ public abstract class Player implements Iterable<GridCell<Character>> {
   protected int bombCount;
   private int lives;
   private Direction sprite;
+  private int damageCoolDown;
 
   public Player(CellPosition pos) {
     this.pos = pos;
@@ -31,6 +34,7 @@ public abstract class Player implements Iterable<GridCell<Character>> {
     this.explodedBomb = this.bombFactory.createNewBomb();
     this.explosionTimer = 0;
     this.bombCount = 0;
+    this.damageCoolDown = 0;
   }
 
   public CellPosition getPos() {
@@ -149,5 +153,17 @@ public abstract class Player implements Iterable<GridCell<Character>> {
 
   public void getNewBomb() {
     this.bomb = this.bombFactory.createNewBomb();
+  }
+
+  public int getDamageCooldown() {
+    return this.damageCoolDown;
+  }
+
+  public void decrementDamageCooldown() {
+    this.damageCoolDown--;
+  }
+
+  public void startDamageCooldown() {
+    this.damageCoolDown = DAMAGE_COOLDOWN_DURATION;
   }
 }

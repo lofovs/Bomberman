@@ -206,4 +206,5 @@ public class BombermanBoard extends Grid<Character> {
     this.set(new CellPosition(this.getRows() - 3, this.getCols() - 2), '-');
     this.set(new CellPosition(this.getRows() - 2, this.getCols() - 3), '-');
   }
+
 }
