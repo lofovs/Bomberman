@@ -12,7 +12,6 @@ import no.uib.inf101.sem2.grid.CellPosition;
 public class TestBomb {
 
     private Bomb bomb;
-    private CellPosition pos;
 
     @Test
     public void testShiftedToPosition() {

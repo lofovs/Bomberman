@@ -2,12 +2,12 @@ package no.uib.inf101.sem2.bomberman.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import no.uib.inf101.sem2.bomberman.model.player.Player;
-import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.bomberman.model.player.HumanPlayer;
 
 public class TestBombermanModel {
@@ -243,6 +243,72 @@ public class TestBombermanModel {
         assertEquals('-', model.getBoard().get(player1.getPos()));
 
         assertEquals(2, player1.getLives());
+    }
+
+    @Test
+    public void testClockTick_AIBehavior() {
+
+        BombermanBoard board = new BombermanBoard(10, 10);
+        TestableBombermanModel model = new BombermanModel(board);
+        String originalBoard = model.getBoard().prettyString();
+
+        // Set the model state to ACTIVE_GAME and add a bomb to the board
+        model.setGameState(GameState.ACTIVE_GAME);
+
+        for (int i = 0; i < 20; i++) {
+            model.clockTick();
+        }
+
+        String newBoard = model.getBoard().prettyString();
+
+        // check that the AI has moved and/or affected the map
+
+        assertNotEquals(originalBoard, newBoard);
+    }
+
+    @Test
+    public void testChangePlayerSpriteDown() {
+        BombermanBoard board = new BombermanBoard(10, 10);
+        TestableBombermanModel model = new BombermanModel(board);
+        Player player = model.getPlayer(1);
+        model.changePlayerSprite(player, 1, 0);
+        assertEquals(Direction.DOWN, player.getSprite());
+    }
+
+    @Test
+    public void testChangePlayerSpriteUp() {
+        BombermanBoard board = new BombermanBoard(10, 10);
+        TestableBombermanModel model = new BombermanModel(board);
+        Player player = model.getPlayer(1);
+        model.changePlayerSprite(player, -1, 0);
+        assertEquals(Direction.UP, player.getSprite());
+    }
+
+    @Test
+    public void testChangePlayerSpriteRight() {
+        BombermanBoard board = new BombermanBoard(10, 10);
+        TestableBombermanModel model = new BombermanModel(board);
+        Player player = model.getPlayer(1);
+        model.changePlayerSprite(player, 0, 1);
+        assertEquals(Direction.RIGHT, player.getSprite());
+    }
+
+    @Test
+    public void testChangePlayerSpriteLeft() {
+        BombermanBoard board = new BombermanBoard(10, 10);
+        TestableBombermanModel model = new BombermanModel(board);
+        Player player = model.getPlayer(1);
+        model.changePlayerSprite(player, 0, -1);
+        assertEquals(Direction.LEFT, player.getSprite());
+    }
+
+    @Test
+    public void testChangePlayerSpriteNoChange() {
+        BombermanBoard board = new BombermanBoard(10, 10);
+        TestableBombermanModel model = new BombermanModel(board);
+        Player player = model.getPlayer(1);
+        model.changePlayerSprite(player, 0, 0);
+        assertEquals(Direction.DOWN, player.getSprite());
     }
 
 }

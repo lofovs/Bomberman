@@ -39,9 +39,6 @@ public class BombermanModel
     this.gameState = GameState.NEW_GAME;
     this.random = new Random();
     this.newGame();
-
-    // TODO: fix invisible tile bug
-    // TODO: fix bomb explosion removing tiles after new game is started
   }
 
   @Override
@@ -112,7 +109,6 @@ public class BombermanModel
     int deltaRow = 0;
     int deltaCol = 0;
 
-    // Choose a random direction to move in
     Direction direction = chooseRandomDirection(playerAI.getPos());
     if (direction != null) {
       switch (direction) {
@@ -142,7 +138,6 @@ public class BombermanModel
       return;
     }
 
-    // If the player is right next to a bomb, move to the first safe tile around it.
     if (isAdjacentToBomb(playerAI.getPos())) {
       Direction safeDirection = findSafeDirection(playerAI.getPos());
       if (safeDirection != null) {
@@ -151,20 +146,16 @@ public class BombermanModel
       }
     }
 
-    // If the AI can move to the new position, update the player's position and
-    // cause damage.
     CellPosition newPositionAI = playerAI.getPos().shiftedBy(deltaRow, deltaCol);
     if (canMoveToPosition(newPositionAI)) {
       updatePlayerPositionAndDamage(playerAI, newPositionAI, deltaRow, deltaCol);
       return;
     }
 
-    // If the AI is boxed in, do not move.
     if (isBoxedIn(playerAI.getPos())) {
       return;
     }
 
-    // If the AI fails to move, try again 3 times.
     for (int tries = 0; tries < 3; tries++) {
       moveAI(playerAI);
     }

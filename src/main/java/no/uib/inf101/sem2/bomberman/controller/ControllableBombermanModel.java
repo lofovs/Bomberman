@@ -1,6 +1,5 @@
 package no.uib.inf101.sem2.bomberman.controller;
 
-import no.uib.inf101.sem2.bomberman.model.BombermanBoard;
 import no.uib.inf101.sem2.bomberman.model.GameState;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
 
@@ -8,6 +7,7 @@ public interface ControllableBombermanModel {
   /**
    * Place a bomb at the player's position.
    *
+   * @param player the player to place a bomb for
    * @return true if a bomb was placed, false otherwise
    */
   boolean placeBomb(Player player);
@@ -65,8 +65,9 @@ public interface ControllableBombermanModel {
   /**
    * Changes the player sprite depending on which direction the player is moving
    *
-   * @param i the row
-   * @param j the column
+   * @param player   the player to change sprite for
+   * @param deltaRow the row
+   * @param deltaCol the column
    */
   void changePlayerSprite(Player player, int i, int j);
 

@@ -78,4 +78,13 @@ public interface TestableBombermanModel {
      * @return the game state
      */
     GameState getGameState();
+
+    /**
+     * Change the player sprite depending on the direction the player is moving
+     * 
+     * @param player   the player to change sprite for
+     * @param deltaRow the row delta
+     * @param deltaCol the column delta
+     */
+    void changePlayerSprite(Player player, int i, int j);
 }
