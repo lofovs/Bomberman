@@ -7,9 +7,9 @@ import no.uib.inf101.sem2.grid.GridDimension;
 
 public interface ViewableBombermanModel {
   /**
-   * Gets the dimension
+   * Gets the dimension of the grid
    *
-   * @return the dimension
+   * @return the dimension of the grid
    */
   GridDimension getDimension();
 
@@ -49,11 +49,16 @@ public interface ViewableBombermanModel {
   String getTime();
 
   /**
-   * Get the player
+   * Get the player with the given number
    * 
    * @return the player
    */
   Player getPlayer(int playerNumber);
 
+  /**
+   * Get all the players
+   * 
+   * @return the players
+   */
   Player[] getPlayers();
 }

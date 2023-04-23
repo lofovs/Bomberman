@@ -3,6 +3,9 @@ package no.uib.inf101.sem2.bomberman.controller;
 import no.uib.inf101.sem2.bomberman.model.GameState;
 import no.uib.inf101.sem2.bomberman.model.player.Player;
 
+/**
+ * The interface for the controllable model.
+ */
 public interface ControllableBombermanModel {
   /**
    * Place a bomb at the player's position.
@@ -13,7 +16,7 @@ public interface ControllableBombermanModel {
   boolean placeBomb(Player player);
 
   /**
-   * Move the player.
+   * Move player1 by the given row and column.
    *
    * @param deltaRow the row delta
    * @param deltaCol the column delta
@@ -56,8 +59,9 @@ public interface ControllableBombermanModel {
   void newGame();
 
   /**
-   * Get the player.
+   * Get the player with the given number.
    * 
+   * @param playerNumber the player number
    * @return the player
    */
   Player getPlayer(int playerNumber);
@@ -69,6 +73,6 @@ public interface ControllableBombermanModel {
    * @param deltaRow the row
    * @param deltaCol the column
    */
-  void changePlayerSprite(Player player, int i, int j);
+  void changePlayerSprite(Player player, int deltaRow, int deltaCol);
 
 }

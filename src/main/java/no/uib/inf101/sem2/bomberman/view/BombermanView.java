@@ -125,12 +125,8 @@ public class BombermanView extends JPanel {
                 drawGame(g2);
         }
 
-        /**
-         * Draws the game
-         *
-         * @param g2 the Graphics2D object to draw on
-         */
-        public void drawGame(Graphics2D g2) {
+        private void drawGame(Graphics2D g2) {
+
                 // variables for the board
                 double x = OUTERMARGIN;
                 double y = OUTERMARGIN;
@@ -240,15 +236,6 @@ public class BombermanView extends JPanel {
                 g2.fill(windowRectangle);
         }
 
-        /**
-         * Draws the scoreboard at the bottom of the game area.
-         *
-         * @param g2                  the graphics object to use for drawing
-         * @param scoreboardRectangle the rectangle representing the scoreboard area
-         * @param textHeight          the height of the text to be drawn
-         * @param gameWidth           the width of the game area
-         * @param gameHeight          the height of the game area
-         */
         private void drawScoreboard(Graphics2D g2, Rectangle2D scoreboardRectangle, double textHeight, double gameWidth,
                         double gameHeight) {
                 // Draw the scoreboard area
@@ -499,22 +486,6 @@ public class BombermanView extends JPanel {
                 drawPlayers(g2, cellPositionToPixelConverter);
                 drawBombs(g2, cellPositionToPixelConverter);
                 drawScoreboard(g2, scoreboardRectangle, textHeight, gameWidth, gameHeight);
-        }
-
-        private void drawCells(
-                        Graphics2D g2,
-                        Iterable<GridCell<Character>> cells,
-                        CellPositionToPixelConverter cellPositionToPixelConverter,
-                        ColorTheme theme) {
-                for (GridCell<Character> cell : cells) {
-                        Character value = cell.value();
-                        CellPosition pos = cell.pos();
-                        Rectangle2D r = cellPositionToPixelConverter.getBoundsForCell(pos);
-                        Color color = theme.getCellColor(value);
-
-                        g2.setColor(color);
-                        g2.fill(r);
-                }
         }
 
         private void drawNewGame(Graphics2D g2, Rectangle2D windowRectangle, Rectangle2D tileRectangle, double x,

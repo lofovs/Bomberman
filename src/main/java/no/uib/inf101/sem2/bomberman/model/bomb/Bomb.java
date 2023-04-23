@@ -6,12 +6,20 @@ import java.util.List;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 
+/**
+ * A class for representing a bomb
+ */
 public class Bomb implements Iterable<GridCell<Character>> {
 
   private CellPosition pos;
   private Character symbol;
   private int clock;
 
+  /**
+   * Creates a new bomb at the given position
+   *
+   * @param pos the position of the bomb
+   */
   public Bomb(CellPosition pos) {
     this.pos = pos;
     this.symbol = 'B';
@@ -52,6 +60,11 @@ public class Bomb implements Iterable<GridCell<Character>> {
     return true;
   }
 
+  /**
+   * Returns the position of the bomb
+   *
+   * @return the position of the bomb
+   */
   public CellPosition getPos() {
     return this.pos;
   }

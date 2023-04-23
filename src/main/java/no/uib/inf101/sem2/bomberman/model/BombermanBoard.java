@@ -3,6 +3,11 @@ package no.uib.inf101.sem2.bomberman.model;
 import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.Grid;
 
+/**
+ * A class representing a Bomberman board
+ * 
+ */
+
 public class BombermanBoard extends Grid<Character> {
 
   private int row;
@@ -11,8 +16,8 @@ public class BombermanBoard extends Grid<Character> {
   /**
    * Creates a new BombermanBoard with the specified rows and cols
    *
-   * @param row how many rows the this should have
-   * @param col how many cols the this should have
+   * @param row how many rows the board should have
+   * @param col how many cols the board should have
    */
   public BombermanBoard(int row, int col) {
     super(row, col);
@@ -20,13 +25,12 @@ public class BombermanBoard extends Grid<Character> {
     this.col = col;
     this.defaultValue = '-';
     this.clear();
-
   }
 
   /**
    * Gets the grid in string format
    *
-   * @return a string representation of the grid
+   * @return a string representation of the board
    */
   public String prettyString() {
     String stringBoard = "";
@@ -51,18 +55,18 @@ public class BombermanBoard extends Grid<Character> {
   }
 
   /**
-   * Gets the number of rows in the this
+   * Gets the number of rows in the board
    *
-   * @return the number of rows in the this
+   * @return the number of rows in the board
    */
   public int getRows() {
     return this.row;
   }
 
   /**
-   * Gets the number of cols in the this
+   * Gets the number of cols in the board
    *
-   * @return the number of cols in the this
+   * @return the number of cols in the board
    */
   public int getCols() {
     return this.col;
@@ -145,11 +149,14 @@ public class BombermanBoard extends Grid<Character> {
     return false;
   }
 
+  /**
+   * Creates a map with walls and destructible tiles
+   */
   void createMap() {
 
     this.clear();
 
-    // fill the outer walls with 'G'
+    // fill the outer walls with indestructible tiles
     for (int i = 0; i < this.getRows(); i++) {
       for (int j = 0; j < this.getCols(); j++) {
         if (i == 0 ||
@@ -161,7 +168,7 @@ public class BombermanBoard extends Grid<Character> {
       }
     }
 
-    // create a maze of walls
+    // create a maze of indestructible tiles inside the map
     for (int i = 0; i < this.getRows(); i++) {
       for (int j = 0; j < this.getCols(); j++) {
         if (i % 2 == 0 && j % 2 == 0) {
@@ -170,7 +177,7 @@ public class BombermanBoard extends Grid<Character> {
       }
     }
 
-    // create random placements of 'X' within the outer walls
+    // create random placements of destructible tiles inside the map
     for (int i = 0; i < this.getRows(); i++) {
       for (int j = 0; j < this.getCols(); j++) {
         if (this.get(new CellPosition(i, j)) == '-') {

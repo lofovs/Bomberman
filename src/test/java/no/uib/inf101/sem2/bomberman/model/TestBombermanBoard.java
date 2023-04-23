@@ -56,4 +56,72 @@ public class TestBombermanBoard {
         assertTrue(board.isPotentialExplosion(new CellPosition(0, 1)));
         assertTrue(board.isPotentialExplosion(new CellPosition(2, 1)));
     }
+
+    @Test
+    void testMapBoundaries() {
+        // check that the outer walls of the board are indestructible
+        BombermanBoard board = new BombermanBoard(13, 11);
+        board.createMap();
+        for (int i = 0; i < board.getRows(); i++) {
+            for (int j = 0; j < board.getCols(); j++) {
+                if (i == 0 || i == board.getRows() - 1 || j == 0 || j == board.getCols() - 1) {
+                    assertEquals('G', board.get(new CellPosition(i, j)));
+                }
+            }
+        }
+    }
+
+    @Test
+    void testMaze() {
+        // check that the maze is created with indestructible tiles
+        BombermanBoard board = new BombermanBoard(13, 11);
+        board.createMap();
+        for (int i = 0; i < board.getRows(); i++) {
+            for (int j = 0; j < board.getCols(); j++) {
+                if (i % 2 == 0 && j % 2 == 0) {
+                    assertEquals('G', board.get(new CellPosition(i, j)));
+                }
+            }
+        }
+    }
+
+    @Test
+    void testDestructibleTiles() {
+        // check that there are some destructible tiles created randomly inside the
+        // board
+        BombermanBoard board = new BombermanBoard(13, 11);
+        board.createMap();
+        boolean destructibleTilesExist = false;
+        for (int i = 0; i < board.getRows(); i++) {
+            for (int j = 0; j < board.getCols(); j++) {
+                if (board.get(new CellPosition(i, j)) == 'X') {
+                    destructibleTilesExist = true;
+                    break;
+                }
+            }
+        }
+        assertTrue(destructibleTilesExist);
+    }
+
+    @Test
+    void testEmptyTiles() {
+        // check that there are empty tiles created around the corners of the board
+        BombermanBoard board = new BombermanBoard(13, 11);
+        board.createMap();
+        assertEquals('-', board.get(new CellPosition(1, 1)));
+        assertEquals('-', board.get(new CellPosition(1, 2)));
+        assertEquals('-', board.get(new CellPosition(2, 1)));
+
+        assertEquals('-', board.get(new CellPosition(1, board.getCols() - 2)));
+        assertEquals('-', board.get(new CellPosition(1, board.getCols() - 3)));
+        assertEquals('-', board.get(new CellPosition(2, board.getCols() - 2)));
+
+        assertEquals('-', board.get(new CellPosition(board.getRows() - 2, 1)));
+        assertEquals('-', board.get(new CellPosition(board.getRows() - 3, 1)));
+        assertEquals('-', board.get(new CellPosition(board.getRows() - 2, 2)));
+
+        assertEquals('-', board.get(new CellPosition(board.getRows() - 2, board.getCols() - 2)));
+        assertEquals('-', board.get(new CellPosition(board.getRows() - 3, board.getCols() - 2)));
+        assertEquals('-', board.get(new CellPosition(board.getRows() - 2, board.getCols() - 3)));
+    }
 }

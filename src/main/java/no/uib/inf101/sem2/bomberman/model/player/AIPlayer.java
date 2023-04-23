@@ -2,10 +2,20 @@ package no.uib.inf101.sem2.bomberman.model.player;
 
 import no.uib.inf101.sem2.grid.CellPosition;
 
+/**
+ * A class for representing an AI player
+ * 
+ */
 public class AIPlayer extends Player {
 
   private CellPosition pos;
 
+  /**
+   * Creates an AI Player with a given position and symbol
+   * 
+   * @param pos    the position of the player
+   * @param symbol the symbol of the player
+   */
   public AIPlayer(CellPosition pos, Character symbol) {
     super(pos);
     this.symbol = symbol;

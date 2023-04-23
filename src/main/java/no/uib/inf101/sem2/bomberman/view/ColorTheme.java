@@ -54,13 +54,6 @@ public interface ColorTheme {
   Color getNewGameTextColor();
 
   /**
-   * Get the color of the game won screen
-   * 
-   * @return the color of the game won screen
-   */
-  Color getWonGameColor();
-
-  /**
    * Get the color of the game won text
    * 
    * @return the color of the game won text

@@ -16,6 +16,10 @@ import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
 
+/**
+ * The model of the game, containing the board, players, and game state.
+ * 
+ */
 public class BombermanModel
     implements ViewableBombermanModel, ControllableBombermanModel, TestableBombermanModel {
 
@@ -247,9 +251,7 @@ public class BombermanModel
     if (this.gameState == GameState.ACTIVE_GAME) {
       for (Player player : this.players) {
         removeDeadPlayerFromBoard(player);
-        if (isAlive(player)) {
-          playerClockTick(player);
-        }
+        playerClockTick(player);
       }
       checkWin();
       this.clockTick++;

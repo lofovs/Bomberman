@@ -1,5 +1,8 @@
 package no.uib.inf101.sem2.bomberman.model;
 
+/**
+ * The direction of a move.
+ */
 public enum Direction {
     UP, DOWN, LEFT, RIGHT;
 

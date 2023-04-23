@@ -56,7 +56,7 @@ public class BombermanSong implements Runnable {
     this.sequencer = null;
   }
 
-  public void doPauseMidiSounds() {
+  private void doPauseMidiSounds() {
     try {
       if (this.sequencer == null || !this.sequencer.isRunning()) {
       }

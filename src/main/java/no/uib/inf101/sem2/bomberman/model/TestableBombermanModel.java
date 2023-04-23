@@ -2,6 +2,10 @@ package no.uib.inf101.sem2.bomberman.model;
 
 import no.uib.inf101.sem2.bomberman.model.player.Player;
 
+/**
+ * The interface for the testable bomberman model.
+ * 
+ */
 public interface TestableBombermanModel {
 
     /**

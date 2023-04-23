@@ -62,11 +62,6 @@ public class DefaultColorTheme implements ColorTheme {
   }
 
   @Override
-  public Color getWonGameColor() {
-    return new Color(0, 0, 0, 128);
-  }
-
-  @Override
   public Color getGameWonTextColor() {
     return Color.WHITE;
   }

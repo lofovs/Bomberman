@@ -71,10 +71,8 @@ public class BombermanController implements java.awt.event.KeyListener {
     if (e.getKeyCode() == KeyEvent.VK_P) {
       if (this.model.getGameState() == GameState.ACTIVE_GAME) {
         this.model.pauseGame();
-        this.song.pause();
       } else if (this.model.getGameState() == GameState.PAUSED_GAME) {
         this.model.playGame();
-        this.song.doUnpauseMidiSounds();
       }
     }
 
