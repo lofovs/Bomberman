@@ -27,7 +27,7 @@ ChatGPT was used to optimize and clean up existing code in the model, and many t
 
 The most important classes in the model are:
 - 'BombermanModel' - contains the game logic, has methods for the AI behavior, and methods for placing bombs and moving the bomberman. Updates the view.
-- 'BombermanBoard' - the board for the game, contains methods assisting the model in checking for collisions and updating the board. 
+- 'BombermanBoard' - the board for the game, contains methods assisting the model in checking for collisions, movement and explosions.
 - 'Player, HumanPlayer and AIPlayer' - contains information about the players, such as their position, number of lives, and also contain the bomb objects.
 - 'Bomb' - contains information about the bombs, such as their position, and the timer for when they will explode.
 
@@ -38,7 +38,7 @@ The view is almost entirely built up by the 'BombermanView' class.
 
 ## Controller
 
-The view is almost entirely built up by the 'BombermanController' class.
+The controller is almost entirely built up by the 'BombermanController' class.
 - 'BombermanController' - handles the input from the user, and updates the model accordingly.
 
 # Manual testing
@@ -49,6 +49,7 @@ The AI behaves in a 'random' manner with some safety measures. This resulted in 
 
 Ways to see if the AI is working as intended:
 - the AI places bombs randomly (33% chance)
+- the AI moves in a random direction 
 - the AI tries to avoid bombs and explosions
 - the AI avoids placing bombs where they would put themselves in danger
 
