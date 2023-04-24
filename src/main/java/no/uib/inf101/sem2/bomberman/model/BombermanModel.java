@@ -24,20 +24,21 @@ public class BombermanModel
     implements ViewableBombermanModel, ControllableBombermanModel, TestableBombermanModel {
 
   private BombermanBoard board;
-
   private Player[] players = new Player[4];
-
   private GameState gameState;
-
   private Clock clock;
   private int clockTick;
+  private Random random;
+  private int realTime;
 
   private static final CellPosition PLAYER_DEAD_POS = new CellPosition(-2, -2);
 
-  private Random random;
-
-  private int realTime;
-
+  /**
+   * Create a new BombermanModel.
+   * 
+   * @param board The board to use
+   * 
+   */
   public BombermanModel(BombermanBoard board) {
     this.board = board;
     this.gameState = GameState.NEW_GAME;
@@ -299,7 +300,7 @@ public class BombermanModel
       }
     }
 
-    if (player instanceof HumanPlayer) {
+    else if (player instanceof HumanPlayer) {
       ((HumanPlayer) player).resetMoveCount();
     }
   }

@@ -5,7 +5,6 @@ import no.uib.inf101.sem2.grid.Grid;
 
 /**
  * A class representing a Bomberman board
- * 
  */
 
 public class BombermanBoard extends Grid<Character> {

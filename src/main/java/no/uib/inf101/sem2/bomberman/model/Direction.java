@@ -6,6 +6,9 @@ package no.uib.inf101.sem2.bomberman.model;
 public enum Direction {
     UP, DOWN, LEFT, RIGHT;
 
+    /**
+     * Get the row delta for this direction.
+     */
     public int getDeltaRow() {
         if (this == UP) {
             return -1;
@@ -15,6 +18,9 @@ public enum Direction {
         return 0;
     }
 
+    /**
+     * Get the column delta for this direction.
+     */
     public int getDeltaCol() {
         if (this == LEFT) {
             return -1;
