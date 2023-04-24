@@ -21,6 +21,8 @@ You play as the white bomberman starting in the lower left corner. The other 3 p
 
 The game is built using the MVC architecture. The main premise behind the game logic is that the games takes place on an 13x11 grid, with randomly generated destructible tiles inside the grid and a wall of indestructible tiles around the grid. The players are spawned in each corner, and when they 'die' they get moved out of the grid. The same logic applies to the bombs - all the bombs are secretely placed right outside the grid, and get moved in whenever the respective player places a bomb - and only starts ticking when inside the grid. Each player has 2 types of bombs - one 'real' bomb and one 'placeholder' bomb. The placeholder bomb is used to hold the location of where the bomb was to create explosions. The explosions are just different colored tiles, and remove the destructible tiles they hit. The players only move once every clock tick, with special movement handicaps applied to the human player to prevent imbalance. The AI is programmed to move randomly but avoid bombs and explosions, and to not place bombs where they would put themselves in danger. 
 
+ChatGPT was used to optimize and clean up existing code in the model, and many tests were created with ChatGPT.
+
 ## Model 
 
 The most important classes in the model are:
