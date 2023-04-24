@@ -8,7 +8,7 @@
     <groupId>no.uib.inf101.sem2</groupId> <!-- must match package of Main class -->
     <artifactId>INF101Sem2</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>INF101 Sem 2</name>
+    <name>BOMBERMAN</name>
     <packaging>jar</packaging>
 
     <properties>
