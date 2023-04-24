@@ -17,9 +17,9 @@ You play as the white bomberman starting in the lower left corner. The other 3 p
 - 'p' is used to pause/unpause the game.
 - 'esc' is used to exit the game.
 
-# Behind the scenes
+# How the game works
 
-The game is built using the MVC architecture. 
+The game is built using the MVC architecture. The main premise behind the game logic is that the games takes place on an 13x11 grid, with randomly generated destructible tiles inside the grid and a wall of indestructible tiles around the grid. The players are spawned in each corner, and when they 'die' they get moved out of the grid. The same logic applies to the bombs - all the bombs are secretely placed right outside the grid, and get moved in whenever the respective player places a bomb - and only starts ticking when inside the grid. Each player has 2 types of bombs - one 'real' bomb and one 'placeholder' bomb. The placeholder bomb is used to hold the location of where the bomb was to create explosions. The explosions are just different colored tiles, and remove the destructible tiles they hit. The players only move once every clock tick, with special movement handicaps applied to the human player to prevent imbalance. The AI is programmed to move randomly but avoid bombs and explosions, and to not place bombs where they would put themselves in danger. 
 
 ## Model 
 
@@ -57,6 +57,9 @@ Ways to see if the game logic is working as intended:
 - the game ends in a draw when the clock reaches 0
 - the game ends in a draw when all players are dead
 - you can't go through walls
+- you can't go through bombs after they have been placed
+- explosions damage the player
+- explosions destroy cracked walls
 
 # Link to video demonstration
 https://youtu.be/Us2zqq0Nqa4
