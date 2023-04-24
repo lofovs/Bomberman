@@ -70,8 +70,8 @@ public interface ControllableBombermanModel {
    * Changes the player sprite depending on which direction the player is moving
    *
    * @param player   the player to change sprite for
-   * @param deltaRow the row
-   * @param deltaCol the column
+   * @param deltaRow the row delta
+   * @param deltaCol the column delta
    */
   void changePlayerSprite(Player player, int deltaRow, int deltaCol);
 

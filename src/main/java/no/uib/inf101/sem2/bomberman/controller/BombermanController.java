@@ -8,6 +8,9 @@ import no.uib.inf101.sem2.bomberman.model.GameState;
 import no.uib.inf101.sem2.bomberman.sound.midi.BombermanSong;
 import no.uib.inf101.sem2.bomberman.view.BombermanView;
 
+/**
+ * The controller for the Bomberman game.
+ */
 public class BombermanController implements java.awt.event.KeyListener {
 
   private ControllableBombermanModel model;
@@ -15,6 +18,12 @@ public class BombermanController implements java.awt.event.KeyListener {
   private Timer timer;
   private BombermanSong song;
 
+  /**
+   * Create a new controller.
+   *
+   * @param model The model to control
+   * @param view  The view to affect
+   */
   public BombermanController(
       ControllableBombermanModel model,
       BombermanView view) {
@@ -92,18 +101,12 @@ public class BombermanController implements java.awt.event.KeyListener {
   public void keyReleased(KeyEvent e) {
   }
 
-  /**
-   * Event that is called when the timer ticks.
-   */
   private void clockTick(ActionEvent ae) {
     this.model.clockTick();
     setTimerDelay();
     this.view.repaint();
   }
 
-  /**
-   * Sets the timer delay to the value in the model
-   */
   private void setTimerDelay() {
     this.timer.setInitialDelay(this.model.getTimerInterval());
     this.timer.setDelay(this.model.getTimerInterval());

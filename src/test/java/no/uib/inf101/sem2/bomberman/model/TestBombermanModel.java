@@ -191,6 +191,51 @@ public class TestBombermanModel {
     }
 
     @Test
+    public void testClockTick_Player2Wins() {
+        BombermanBoard board = new BombermanBoard(10, 10);
+        TestableBombermanModel model = new BombermanModel(board);
+
+        model.setGameState(GameState.ACTIVE_GAME);
+        for (int i = 0; i < 3; i++) {
+            model.getPlayers()[0].decrementLives();
+            model.getPlayers()[2].decrementLives();
+            model.getPlayers()[3].decrementLives();
+        }
+        model.clockTick();
+        assertEquals(GameState.PLAYER2_WON, model.getGameState());
+    }
+
+    @Test
+    public void testClockTick_Player3Wins() {
+        BombermanBoard board = new BombermanBoard(10, 10);
+        TestableBombermanModel model = new BombermanModel(board);
+
+        model.setGameState(GameState.ACTIVE_GAME);
+        for (int i = 0; i < 3; i++) {
+            model.getPlayers()[1].decrementLives();
+            model.getPlayers()[0].decrementLives();
+            model.getPlayers()[3].decrementLives();
+        }
+        model.clockTick();
+        assertEquals(GameState.PLAYER3_WON, model.getGameState());
+    }
+
+    @Test
+    public void testClockTick_Player4Wins() {
+        BombermanBoard board = new BombermanBoard(10, 10);
+        TestableBombermanModel model = new BombermanModel(board);
+
+        model.setGameState(GameState.ACTIVE_GAME);
+        for (int i = 0; i < 3; i++) {
+            model.getPlayers()[1].decrementLives();
+            model.getPlayers()[2].decrementLives();
+            model.getPlayers()[0].decrementLives();
+        }
+        model.clockTick();
+        assertEquals(GameState.PLAYER4_WON, model.getGameState());
+    }
+
+    @Test
     public void testClockTick_RealTimePassed() {
         BombermanBoard board = new BombermanBoard(10, 10);
         TestableBombermanModel model = new BombermanModel(board);

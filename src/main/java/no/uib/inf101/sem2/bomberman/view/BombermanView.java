@@ -17,6 +17,9 @@ import no.uib.inf101.sem2.grid.CellPosition;
 import no.uib.inf101.sem2.grid.GridCell;
 import no.uib.inf101.sem2.grid.GridDimension;
 
+/**
+ * A class for representing the view of the game.
+ */
 public class BombermanView extends JPanel {
 
         private static final double OUTERMARGIN = 0;

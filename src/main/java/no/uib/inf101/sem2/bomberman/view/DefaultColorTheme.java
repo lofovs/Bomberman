@@ -2,6 +2,9 @@ package no.uib.inf101.sem2.bomberman.view;
 
 import java.awt.Color;
 
+/**
+ * The default color theme.
+ */
 public class DefaultColorTheme implements ColorTheme {
 
   @Override

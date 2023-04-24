@@ -20,6 +20,9 @@ public class Clock {
         this.seconds = 00;
     }
 
+    /**
+     * Ticks the clock
+     */
     void tick() {
         if (this.seconds == 0) {
             this.seconds = 59;

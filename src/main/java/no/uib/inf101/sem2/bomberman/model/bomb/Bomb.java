@@ -96,14 +96,27 @@ public class Bomb implements Iterable<GridCell<Character>> {
     return new Bomb(pos);
   }
 
+  /**
+   * Returns the clock of the bomb
+   *
+   * @return the clock of the bomb
+   */
   public int getClock() {
     return this.clock;
   }
 
+  /**
+   * Increases the clock of the bomb by one
+   */
   public void tick() {
     this.clock++;
   }
 
+  /**
+   * Returns the symbol of the bomb
+   *
+   * @return the symbol of the bomb
+   */
   char getSymbol() {
     return this.symbol;
   }

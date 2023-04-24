@@ -21,6 +21,11 @@ public class AIPlayer extends Player {
     this.symbol = symbol;
   }
 
+  /**
+   * Get the symbol of the player
+   * 
+   * @return the symbol of the player
+   */
   public char getSymbol() {
     return this.symbol;
   }
