@@ -7,7 +7,6 @@ This is a Bomberman game made in Java using the Swing library. It is a school pr
 
 Bomberman is a game involving 4 players. The goal of the game is to blow up all the other players, and the last person standing wins. You can place one bomb at a time, which will explode after 3 seconds, blowing up the tiles around it. Players stepping on an explosion will lose 1 life, and enter a cooldown period where they can't take damage. There are destructible tiles that can be blown up, and indestructible tiles that cannot be blown up. There is a clock which will count down from 2 minutes at game start, resulting in a draw if the game is still on when the clock reaches 0.
 
-
 ## How to play
 
 You play as the white bomberman starting in the lower left corner. The other 3 players are bots. 
