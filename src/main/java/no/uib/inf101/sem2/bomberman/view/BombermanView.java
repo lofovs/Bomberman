@@ -69,6 +69,11 @@ public class BombermanView extends JPanel {
         @SuppressWarnings("unchecked")
         private final Iterable<GridCell<Character>>[] bombTiles = new Iterable[4];
 
+        /**
+         * Creates a new view for the given model
+         *
+         * @param model the model to view
+         */
         public BombermanView(ViewableBombermanModel model) {
                 this.model = model;
                 this.setFocusable(true);
