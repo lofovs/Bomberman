@@ -8,7 +8,7 @@ This is not a commercial repository and the project is merely a fan contribution
 You need 
 
 - Windows OS
-- Java Runtime (Java 17)
+- Java Runtime (Java 17) https://adoptium.net/temurin/releases/?os=windows&arch=x64&package=jdk&version=17
 
 Run the .msi file to install
 
