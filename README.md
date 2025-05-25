@@ -1,5 +1,8 @@
 # Bomberman
 
+# DISCLAIMER
+This is not a commercial repository and the project is merely a fan contribution
+
 # Install
 
 You need 
