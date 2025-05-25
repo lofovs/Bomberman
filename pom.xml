@@ -17,13 +17,13 @@
         <java.version>17</java.version>
 
         <!-- Properties required for packaging application as JAR and installer -->
-        <app.main.class>${project.groupId}.Main</app.main.class> <!-- name of main class -->
+        <app.main.class>no.uib.inf101.sem2.bomberman.Main</app.main.class>
         <app.vendor>Runar Røssevold</app.vendor> <!-- replace with your name -->
         <app.version>1.0.0</app.version> <!-- version displayed in "about" -->
         <app.installer.macosx.type>dmg</app.installer.macosx.type> <!-- dmg, pkg -->
-        <app.installer.windows.type>msi</app.installer.windows.type> <!-- msi, exe -->
+        <app.installer.windows.type>exe</app.installer.windows.type> <!-- msi, exe -->
         <app.macosx.icon.path>src/main/logo/macosx/logo.icns</app.macosx.icon.path>
-        <app.windows.icon.path>src/main/logo/windows/logo.ico</app.windows.icon.path>
+        <app.windows.icon.path>src/main/logo/windows/favicon.ico</app.windows.icon.path>
 
         <!-- Library and plugin versions -->
         <junit.version>5.9.1</junit.version>
@@ -153,6 +153,24 @@
                                 <PROJECT_VERSION>${project.version}</PROJECT_VERSION>
                             </environmentVariables>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.4.0</version>
+                    <executions>
+                        <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                        </execution>
+                    </executions>
                     </plugin>
                 </plugins>
             </build>

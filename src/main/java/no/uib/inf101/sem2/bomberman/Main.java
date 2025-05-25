@@ -6,7 +6,7 @@ import no.uib.inf101.sem2.bomberman.model.BombermanBoard;
 import no.uib.inf101.sem2.bomberman.model.BombermanModel;
 import no.uib.inf101.sem2.bomberman.view.BombermanView;
 
-public class BombermanMain {
+public class Main {
 
   public static void main(String[] args) {
     BombermanBoard board = new BombermanBoard(13, 11);
