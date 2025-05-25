@@ -4,6 +4,7 @@
 
 You need 
 
+- Windows OS
 - Java Runtime (Java 17)
 
 Run the .msi file to install
