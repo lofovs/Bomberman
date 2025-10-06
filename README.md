@@ -5,17 +5,17 @@ This is not a commercial repository and the project is merely a fan contribution
 
 # Install
 
-You need 
+You need: 
 
 - Windows OS
 - [Java Runtime (Java 17)](https://adoptium.net/temurin/releases/?os=windows&arch=x64&package=jdk&version=17)
 
-Run the .msi file to install
-You will find the game in the Bomberman folder in your program files
+Run the .msi file to install\n
+You will find the game in "Bomberman" folder in your program files.
 
 ## Description
 
-This is a Bomberman game made in Java using the Swing library. It is a school project for the course "Object-Oriented Programming" at the University of Bergen. 
+This is a Bomberman game made in Java using the Swing library. It's a school project for the course "Object-Oriented Programming" at the University of Bergen. 
 
 Bomberman is a game involving 4 players. The goal of the game is to blow up all the other players, and the last person standing wins. You can place one bomb at a time, which will explode after 3 seconds, blowing up the tiles around it. Players stepping on an explosion will lose 1 life, and enter a cooldown period where they can't take damage. There are destructible tiles that can be blown up, and indestructible tiles that cannot be blown up. There is a clock which will count down from 2 minutes at game start, resulting in a draw if the game is still on when the clock reaches 0.
 
