@@ -10,7 +10,7 @@ You need:
 - Windows OS
 - [Java Runtime (Java 17)](https://adoptium.net/temurin/releases/?os=windows&arch=x64&package=jdk&version=17)
 
-Run the .msi file to install\n
+Run the .msi file to install.  
 You will find the game in "Bomberman" folder in your program files.
 
 ## Description
